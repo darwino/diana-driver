@@ -33,11 +33,7 @@ import com.darwino.j2ee.platform.DefaultWebBeanExtension;
 import com.darwino.j2ee.platform.DefaultWebPropertiesExtension;
 import com.darwino.j2ee.servlet.authentication.AuthenticationService;
 
-
-
-/**
- * J2EE Plugin for registering the services.
- */
+@SuppressWarnings("nls")
 public class AppPlugin extends PluginImpl {
 	
 	public AppPlugin() {

@@ -44,7 +44,6 @@ import java.util.stream.Collectors;
 
 import static java.util.Objects.requireNonNull;
 import static java.util.stream.StreamSupport.stream;
-import static org.darwino.jnosql.diana.driver.EntityConverter.convert;
 
 final class EntityConverter {
 	/**
@@ -200,10 +199,12 @@ final class EntityConverter {
 		}
 	}
 	
+	@SuppressWarnings("rawtypes")
 	private static Consumer getSubDocument(JsonObject subJson) {
 		return e -> toJsonObject(subJson).accept((Document)e);
 	}
 	
+	@SuppressWarnings("unchecked")
 	private static boolean isSubDocument(Object value) {
 		return value instanceof Iterable && stream(Iterable.class.cast(value).spliterator(), false)
 				.allMatch(d -> org.jnosql.diana.api.document.Document.class.isInstance(d));

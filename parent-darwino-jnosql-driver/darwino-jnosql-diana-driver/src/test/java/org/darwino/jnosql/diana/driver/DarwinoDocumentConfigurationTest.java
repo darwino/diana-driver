@@ -29,7 +29,8 @@ import static org.junit.Assert.assertNotNull;
 
 public class DarwinoDocumentConfigurationTest extends AbstractDarwinoAppTest  {
 
-    @Test
+    @SuppressWarnings({ "resource", "rawtypes" })
+	@Test
     public void shouldCreateDocumentCollectionManagerFactoryByMap() {
 
         DarwinoDocumentConfiguration configuration = new DarwinoDocumentConfiguration();
@@ -37,7 +38,8 @@ public class DarwinoDocumentConfigurationTest extends AbstractDarwinoAppTest  {
         assertNotNull(managerFactory);
     }
 
-    @Test
+    @SuppressWarnings({ "rawtypes", "resource" })
+	@Test
     public void shouldCreateDocumentCollectionManagerFactoryByFile() {
         DarwinoDocumentConfiguration configuration = new DarwinoDocumentConfiguration();
         DocumentCollectionManagerFactory managerFactory = configuration.get();

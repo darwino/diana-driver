@@ -38,12 +38,14 @@ public class DarwinoDocumentCollectionManagerFactoryTest extends AbstractDarwino
 
 	}
 
+	@SuppressWarnings("resource")
 	@Test
 	public void shouldCreateEntityManager() {
 		DarwinoDocumentCollectionManagerFactory factory = configuration.get();
 		assertNotNull(factory.get(Database.STORE_DEFAULT));
 	}
 
+	@SuppressWarnings("resource")
 	@Test
 	public void shouldCreateEntityManagerAsync() {
 		DarwinoDocumentCollectionManagerFactory factory = configuration.getAsync();

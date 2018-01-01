@@ -30,7 +30,6 @@ import com.darwino.commons.Platform;
 import com.darwino.commons.json.JsonException;
 import com.darwino.commons.tasks.TaskProgress;
 import com.darwino.commons.tasks.scheduler.TaskScheduler;
-import com.darwino.commons.tasks.scheduler.schedulers.IntervalScheduler;
 import com.darwino.j2ee.application.AbstractDarwinoContextListener;
 import com.darwino.j2ee.application.BackgroundServletSynchronizationExecutor;
 import com.darwino.j2ee.application.DarwinoJ2EEApplication;
@@ -39,11 +38,7 @@ import com.darwino.platform.events.builder.StaticEventBuilder;
 import com.darwino.platform.events.jsonstore.JsonStoreChangesTrigger;
 import com.darwino.platform.persistence.JsonStorePersistenceService;
 
-/**
- * Servlet listener for initializing the application.
- * 
- * @author Philippe Riand
- */
+@SuppressWarnings("nls")
 public class AppContextListener extends AbstractDarwinoContextListener {
 	
 	public static final boolean HAS_TRIGGERS 	= false;
@@ -84,10 +79,6 @@ public class AppContextListener extends AbstractDarwinoContextListener {
 			syncExecutor.stop();
 			syncExecutor = null;
 		}
-		if(HAS_TRIGGERS && triggers!=null) {
-			triggers.uninstall();
-			triggers = null;
-		}		
 		if(HAS_TASKS) {
 			final TaskScheduler scheduler = Platform.getService(TaskScheduler.class);
 			scheduler.removeAllScheduledTasks();
@@ -126,7 +117,6 @@ public class AppContextListener extends AbstractDarwinoContextListener {
 	}
 
 	protected void initTasks(ServletContext servletContext, TaskProgress progress) throws JsonException {
-		final TaskScheduler scheduler = Platform.getService(TaskScheduler.class);
-		
+
 	}
 }

@@ -47,6 +47,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
+@SuppressWarnings({ "nls", "resource" })
 public class DarwinoDocumentCollectionManagerTest extends AbstractDarwinoAppTest {
 
 	public static final String COLLECTION_NAME = "person";
@@ -89,7 +90,8 @@ public class DarwinoDocumentCollectionManagerTest extends AbstractDarwinoAppTest
     public void shouldUpdateSave() {
     		try {
 	        DocumentEntity entity = getEntity();
-	        DocumentEntity documentEntity = entityManager.insert(entity);
+	        @SuppressWarnings("unused")
+			DocumentEntity documentEntity = entityManager.insert(entity);
 	        Document newField = Documents.of("newField", "10");
 	        entity.add(newField);
 	        DocumentEntity updated = entityManager.update(entity);

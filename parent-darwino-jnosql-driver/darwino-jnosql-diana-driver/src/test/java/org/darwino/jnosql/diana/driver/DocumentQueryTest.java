@@ -43,9 +43,10 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
+@SuppressWarnings({ "nls", "resource" })
 public class DocumentQueryTest extends AbstractDarwinoAppTest  {
 
-    public static final String COLLECTION_NAME = "person";
+	public static final String COLLECTION_NAME = "person";
     static String id1 = "id1" + System.nanoTime();
     static String id2 = "id2" + System.nanoTime();
     static String id3 = "id3" + System.nanoTime();
@@ -63,7 +64,7 @@ public class DocumentQueryTest extends AbstractDarwinoAppTest  {
     }
     
 
-    @BeforeClass
+	@BeforeClass
     public static void beforeClass() throws InterruptedException {
         DarwinoDocumentConfiguration configuration = new DarwinoDocumentConfiguration();
         DarwinoDocumentCollectionManagerFactory managerFactory = configuration.get();
@@ -137,7 +138,8 @@ public class DocumentQueryTest extends AbstractDarwinoAppTest  {
     }
 
 
-    @Test
+    @SuppressWarnings("unused")
+	@Test
     public void shouldSelectAll(){
         DocumentEntity entity = DocumentEntity.of("person", asList(Document.of("_id", id1)
                 , Document.of("name", "name")));
@@ -165,6 +167,7 @@ public class DocumentQueryTest extends AbstractDarwinoAppTest  {
         assertThat(entities, contains(entity));
     }
 
+    @SuppressWarnings("unused")
     @Test
     public void shouldFindDocumentByNameSortAsc() {
         DocumentEntity entity = DocumentEntity.of("person", asList(Document.of("_id", id4)
@@ -186,6 +189,7 @@ public class DocumentQueryTest extends AbstractDarwinoAppTest  {
         assertThat(result, contains("name", "name", "name", "name3"));
     }
 
+    @SuppressWarnings("unused")
     @Test
     public void shouldFindDocumentByNameSortDesc() {
         DocumentEntity entity = DocumentEntity.of("person", asList(Document.of("_id", id4)

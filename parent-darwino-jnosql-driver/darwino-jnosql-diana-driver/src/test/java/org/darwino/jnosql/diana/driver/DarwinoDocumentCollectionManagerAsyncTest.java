@@ -57,6 +57,7 @@ public class DarwinoDocumentCollectionManagerAsyncTest extends AbstractDarwinoAp
 		Thread.sleep(1_000L);
 	}
 
+	@SuppressWarnings("resource")
 	@Before
 	public void setUp() {
 		DarwinoDocumentConfiguration configuration = new DarwinoDocumentConfiguration();
@@ -65,6 +66,7 @@ public class DarwinoDocumentCollectionManagerAsyncTest extends AbstractDarwinoAp
 		entityManager = managerFactory.get(Database.STORE_DEFAULT);
 		DocumentEntity documentEntity = getEntity();
 		Optional<Document> id = documentEntity.find("name");
+		@SuppressWarnings("unused")
 		DocumentQuery query = select().from(COLLECTION_NAME)
 				.where("name").eq(id.get().get())
 				.build();
@@ -93,7 +95,8 @@ public class DarwinoDocumentCollectionManagerAsyncTest extends AbstractDarwinoAp
     public void shouldUpdateAsync() throws Exception {
 	    	try {
 	        DocumentEntity entity = getEntity();
-	        DocumentEntity documentEntity = entityManager.insert(entity);
+	        @SuppressWarnings("unused")
+			DocumentEntity documentEntity = entityManager.insert(entity);
 	        Document newField = Documents.of("newField", "10");
 	        entity.add(newField);
 	        entityManagerAsync.update(entity);
@@ -107,6 +110,7 @@ public class DarwinoDocumentCollectionManagerAsyncTest extends AbstractDarwinoAp
 	public void shouldRemoveEntityAsync() throws InterruptedException {
 		DocumentEntity documentEntity = entityManager.insert(getEntity());
 		Optional<Document> id = documentEntity.find("name");
+		@SuppressWarnings("unused")
 		DocumentQuery query = select().from(COLLECTION_NAME)
 				.where("name").eq(id.get().get())
 				.build();

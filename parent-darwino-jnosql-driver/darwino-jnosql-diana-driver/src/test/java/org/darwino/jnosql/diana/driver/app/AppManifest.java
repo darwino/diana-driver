@@ -29,11 +29,7 @@ import com.darwino.jsonstore.meta.DatabaseFactory;
 import com.darwino.platform.DarwinoContext;
 import com.darwino.platform.DarwinoManifest;
 
-/**
- * Application Manifest.
- * 
- * @author Philippe Riand
- */
+@SuppressWarnings("nls")
 public class AppManifest extends DarwinoManifest {
 	
 	public static String CONFIG_ID = "jnoqsql";

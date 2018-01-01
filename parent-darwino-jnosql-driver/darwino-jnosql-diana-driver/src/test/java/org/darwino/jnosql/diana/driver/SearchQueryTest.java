@@ -38,7 +38,7 @@ import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
-@SuppressWarnings("nls")
+@SuppressWarnings({ "nls", "resource" })
 public class SearchQueryTest extends AbstractDarwinoAppTest {
 
     public static final String COLLECTION_NAME = "person";

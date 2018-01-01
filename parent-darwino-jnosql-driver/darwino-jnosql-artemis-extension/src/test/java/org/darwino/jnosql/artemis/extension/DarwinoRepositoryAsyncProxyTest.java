@@ -103,7 +103,7 @@ public class DarwinoRepositoryAsyncProxyTest {
         ArgumentCaptor<JsonObject> captor = ArgumentCaptor.forClass(JsonObject.class);
         JsonObject params = JsonObject.of("name", "Ada");
         personRepository.queryName("Ada");
-        verify(template).jsqlQuery(Mockito.eq("select _unid unid from _default where form='Person' and name= ?"), captor.capture(),
+        verify(template).jsqlQuery(Mockito.eq("select _unid unid from _default where $.form='Person' and $.name= ?"), captor.capture(),
                 any(Consumer.class));
 
         JsonObject value = captor.getValue();
@@ -118,7 +118,7 @@ public class DarwinoRepositoryAsyncProxyTest {
         JsonObject params = JsonObject.of("name", "Ada");
         personRepository.queryName("Ada", callBack);
 
-        verify(template).jsqlQuery(Mockito.eq("select _unid unid from _default where form='Person' and name=?"), Mockito.eq(params), Mockito.eq(callBack));
+        verify(template).jsqlQuery(Mockito.eq("select _unid unid from _default where $.form='Person' and $.name=?"), Mockito.eq(params), Mockito.eq(callBack));
 
     }
 
@@ -127,10 +127,10 @@ public class DarwinoRepositoryAsyncProxyTest {
         Person findByName(String name);
 
 
-        @JSQL("select _unid unid from _default where form='Person' and name= ?")
+        @JSQL("select _unid unid from _default where $.form='Person' and $.name= ?")
         void queryName(@Param("name") String name);
 
-        @JSQL("select _unid unid from _default where form='Person' and name=?")
+        @JSQL("select _unid unid from _default where $.form='Person' and $.name=?")
         void queryName(@Param("name") String name, Consumer<List<Person>> callBack);
     }
 }

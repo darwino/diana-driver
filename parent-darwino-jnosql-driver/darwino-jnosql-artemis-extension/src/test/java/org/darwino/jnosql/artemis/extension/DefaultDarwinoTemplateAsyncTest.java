@@ -79,7 +79,7 @@ public class DefaultDarwinoTemplateAsyncTest {
     @SuppressWarnings("unchecked")
 	@Test
     public void shouldFind() {
-        String query = "select * from Person where name = ?";
+        String query = "select * from _default where $.name = ?";
         Consumer<List<Person>> callBack = p -> {
         };
         JsonObject params = JsonObject.of("name", "Ada");
@@ -104,7 +104,7 @@ public class DefaultDarwinoTemplateAsyncTest {
     @SuppressWarnings("unchecked")
 	@Test
     public void shouldFind1() {
-        String query = "select _unid unid from _default where form='Person' and name = ?";
+        String query = "select _unid unid from _default where $.form='Person' and $.name = ?";
         Consumer<List<Person>> callBack = p -> {
         };
         templateAsync.jsqlQuery(query, callBack);

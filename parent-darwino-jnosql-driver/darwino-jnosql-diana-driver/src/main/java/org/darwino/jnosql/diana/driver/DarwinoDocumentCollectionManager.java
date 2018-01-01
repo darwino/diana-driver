@@ -22,6 +22,7 @@ package org.darwino.jnosql.diana.driver;
 
 import com.darwino.commons.json.JsonObject;
 import com.darwino.jsonstore.Cursor;
+import com.darwino.jsonstore.JsqlCursor;
 
 import org.jnosql.diana.api.document.DocumentCollectionManager;
 import org.jnosql.diana.api.document.DocumentEntity;
@@ -67,4 +68,32 @@ public interface DarwinoDocumentCollectionManager extends DocumentCollectionMana
      */
     List<DocumentEntity> search(String query);
 
+    /**
+     * Executes the JSQL query with params and then returns the result
+     *
+     * @param jsqlQuery the query
+     * @param params    the params
+     * @return the query result
+     * @throws NullPointerException when either jsqlQuery or params are null
+     */
+    List<DocumentEntity> jsqlQuery(String jsqlQuery, JsonObject params) throws NullPointerException;
+
+    /**
+     * Executes the JSQL query with params and then returns the result
+     *
+     * @param jsqlQuery the query
+     * @param params    the params
+     * @return the query result
+     * @throws NullPointerException when either jsqlQuery or params are null
+     */
+    List<DocumentEntity> jsqlQuery(JsqlCursor jsqlQuery, JsonObject params) throws NullPointerException;
+
+    /**
+     * Executes the JSQL query and then returns the result
+     *
+     * @param jsqlQuery the query
+     * @return the query result
+     * @throws NullPointerException when either jsqlQuery or params are null
+     */
+    List<DocumentEntity> jsqlQuery(String jsqlQuery) throws NullPointerException;
 }

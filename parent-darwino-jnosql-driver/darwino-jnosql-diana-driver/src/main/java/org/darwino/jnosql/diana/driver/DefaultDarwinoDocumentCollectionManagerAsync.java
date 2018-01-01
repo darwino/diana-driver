@@ -27,6 +27,7 @@ import org.jnosql.diana.api.document.DocumentQuery;
 
 import com.darwino.commons.json.JsonObject;
 import com.darwino.jsonstore.Cursor;
+import com.darwino.jsonstore.JsqlCursor;
 
 import rx.functions.Action1;
 
@@ -128,5 +129,30 @@ class DefaultDarwinoDocumentCollectionManagerAsync implements DarwinoDocumentCol
 	@Override
 	public void close() {
 		manager.close();
+	}
+
+	@Override
+	public void search(String query, Consumer<List<DocumentEntity>> callback) throws ExecuteAsyncQueryException {
+		requireNonNull(callback, "callback is required");
+		just(query).map(manager::search).subscribe(callback::accept, ERROR_QUERY);
+	}
+
+	@Override
+	public void jsqlQuery(String jsqlQuery, JsonObject params, Consumer<List<DocumentEntity>> callback)
+			throws NullPointerException, ExecuteAsyncQueryException {
+		requireNonNull(callback, "callback is required");
+		just(jsqlQuery).map(n -> manager.jsqlQuery(n, params)).subscribe(callback::accept, ERROR_QUERY);
+	}
+
+	@Override
+	public void jsqlQuery(JsqlCursor jsqlQuery, JsonObject params, Consumer<List<DocumentEntity>> callback)
+			throws NullPointerException, ExecuteAsyncQueryException {
+		requireNonNull(callback, "callback is required");
+		just(jsqlQuery).map(n -> manager.jsqlQuery(n, params)).subscribe(callback::accept, ERROR_QUERY);
+	}
+
+	@Override
+	public void jsqlQuery(String jsqlQuery, Consumer<List<DocumentEntity>> callback) throws NullPointerException, ExecuteAsyncQueryException {
+		just(jsqlQuery).map(manager::jsqlQuery).subscribe(callback::accept, ERROR_QUERY);
 	}
 }

@@ -29,6 +29,7 @@ import com.darwino.commons.json.JsonException;
 import com.darwino.commons.json.JsonObject;
 import com.darwino.commons.util.StringUtil;
 import com.darwino.jsonstore.Cursor;
+import com.darwino.jsonstore.JsqlCursor;
 import com.darwino.jsonstore.Store;
 
 import java.util.ArrayList;
@@ -42,6 +43,7 @@ import java.util.stream.Collectors;
 
 import static java.util.Objects.requireNonNull;
 import static java.util.stream.StreamSupport.stream;
+import static org.darwino.jnosql.diana.driver.EntityConverter.convert;
 
 final class EntityConverter {
 	/**
@@ -81,6 +83,26 @@ final class EntityConverter {
 		List<DocumentEntity> result = new ArrayList<>();
 		cursor.find((entry) -> {
 			com.darwino.jsonstore.Document doc = entry.loadDocument();
+			String name = StringUtil.toString(doc.get(NAME_FIELD));
+			List<Document> documents = toDocuments(doc);
+			result.add(DocumentEntity.of(name, documents));
+			return true;
+		});
+		return result;
+	}
+	
+	static List<DocumentEntity> convert(Store store, JsqlCursor cursor) throws JsonException {
+		List<DocumentEntity> result = new ArrayList<>();
+		cursor.find(e -> {
+			Object id = e.getColumn("_unid"); //$NON-NLS-1$
+			if(id == null) {
+				id = e.getColumn("unid"); //$NON-NLS-1$
+			}
+			if(id == null || !(id instanceof CharSequence)) {
+				throw new RuntimeException("query must contain a unid column");
+			}
+
+			com.darwino.jsonstore.Document doc = store.loadDocument((String)id);
 			String name = StringUtil.toString(doc.get(NAME_FIELD));
 			List<Document> documents = toDocuments(doc);
 			result.add(DocumentEntity.of(name, documents));

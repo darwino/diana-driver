@@ -7,9 +7,8 @@
 		<artifactId>parent-darwino-jnosql-driver</artifactId>
 		<version>0.0.4-SNAPSHOT</version>
 	</parent>
-
-	<groupId>org.darwino</groupId>
 	<artifactId>darwino-jnosql-diana-driver</artifactId>
+	
 	<name>Darwino driver for JNoSQL Diana</name>
 	<url>http://darwino.com</url>
 
@@ -95,7 +94,6 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.11</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>

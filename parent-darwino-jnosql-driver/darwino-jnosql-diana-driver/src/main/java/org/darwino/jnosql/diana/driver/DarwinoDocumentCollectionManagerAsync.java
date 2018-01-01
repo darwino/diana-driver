@@ -26,6 +26,7 @@ import org.jnosql.diana.api.document.DocumentEntity;
 
 import com.darwino.commons.json.JsonObject;
 import com.darwino.jsonstore.Cursor;
+import com.darwino.jsonstore.JsqlCursor;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -47,7 +48,7 @@ public interface DarwinoDocumentCollectionManagerAsync extends DocumentCollectio
     void query(String query, JsonObject params, Consumer<List<DocumentEntity>> callback) throws ExecuteAsyncQueryException;
 
     /**
-     * Executes the query and then result que result
+     * Executes the query and then processes the result
      *
      * @param query the query
      * @param callback  the callback
@@ -56,12 +57,64 @@ public interface DarwinoDocumentCollectionManagerAsync extends DocumentCollectio
     void query(String query, Consumer<List<DocumentEntity>> callback) throws ExecuteAsyncQueryException;
 
     /**
-     * Executes the n1qlquery  plain query and then result que result
+     * Executes the query and then processes the result
      *
      * @param cursor the query
      * @param callback  the callback
      * @throws ExecuteAsyncQueryException an async error
      */
     void query(Cursor cursor, Consumer<List<DocumentEntity>> callback) throws ExecuteAsyncQueryException;
+
+    /**
+     * Searches in Darwino using Full Text Search
+     *
+     * @param query the query to be used
+     * @param callback  the callback
+     * @throws ExecuteAsyncQueryException an async error
+     */
+    void search(String query, Consumer<List<DocumentEntity>> callback) throws ExecuteAsyncQueryException;
+    
+    /**
+	 * Executes the JSQL query with params and then returns the result
+	 *
+	 * @param jsqlQuery
+	 *            the query
+	 * @param params
+	 *            the params
+	 * @param callback
+	 *            the callback
+	 * @throws NullPointerException
+	 *             when either jsqlQuery or params are null
+	 * @throws ExecuteAsyncQueryException an async error
+	 */
+	void jsqlQuery(String jsqlQuery, JsonObject params, Consumer<List<DocumentEntity>> callback) throws NullPointerException, ExecuteAsyncQueryException;
+
+	/**
+	 * Executes the JSQL query with params and then returns the result
+	 *
+	 * @param jsqlQuery
+	 *            the query
+	 * @param params
+	 *            the params
+	 * @param callback
+	 *            the callback
+	 * @throws NullPointerException
+	 *             when either jsqlQuery or params are null
+	 * @throws ExecuteAsyncQueryException an async error
+	 */
+	void jsqlQuery(JsqlCursor jsqlQuery, JsonObject params, Consumer<List<DocumentEntity>> callback) throws NullPointerException, ExecuteAsyncQueryException;
+
+	/**
+	 * Executes the JSQL query and then returns the result
+	 *
+	 * @param jsqlQuery
+	 *            the query
+	 * @param callback
+	 *            the callback
+	 * @throws NullPointerException
+	 *             when either jsqlQuery or params are null
+	 * @throws ExecuteAsyncQueryException an async error
+	 */
+	void jsqlQuery(String jsqlQuery, Consumer<List<DocumentEntity>> callback) throws NullPointerException, ExecuteAsyncQueryException;
 
 }

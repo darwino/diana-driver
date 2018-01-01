@@ -24,6 +24,7 @@ import com.darwino.commons.json.JsonException;
 import com.darwino.commons.json.JsonObject;
 import com.darwino.commons.util.StringUtil;
 import com.darwino.jsonstore.Cursor;
+import com.darwino.jsonstore.JsqlCursor;
 import com.darwino.jsonstore.Store;
 
 import org.jnosql.diana.api.document.Document;
@@ -34,6 +35,7 @@ import org.jnosql.diana.api.document.DocumentQuery;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -166,7 +168,37 @@ class DefaultDarwinoDocumentCollectionManager implements DarwinoDocumentCollecti
 	}
 
 	@Override
+	public List<DocumentEntity> jsqlQuery(String jsqlQuery, JsonObject params) throws NullPointerException {
+		try {
+			JsqlCursor cursor = store.getDatabase().getSession().openJsqlCursor()
+				.database(store.getDatabase().getId())
+				.query(jsqlQuery);
+			return jsqlQuery(cursor, params);
+		} catch(JsonException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	@Override
+	public List<DocumentEntity> jsqlQuery(JsqlCursor jsqlQuery, JsonObject params) throws NullPointerException {
+		try {
+			if(Objects.nonNull(params)) {
+				jsqlQuery.params(params);
+			}
+			return convert(store, jsqlQuery);
+		} catch(JsonException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	@Override
+	public List<DocumentEntity> jsqlQuery(String jsqlQuery) throws NullPointerException {
+		return jsqlQuery(jsqlQuery, null);
+	}
+
+	@Override
 	public void close() {
 
 	}
+
 }

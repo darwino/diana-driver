@@ -30,3 +30,4 @@ target/
 package-lock.json
 node_modules/
 MANIFEST.MF
+.vscode/

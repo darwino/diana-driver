@@ -2,28 +2,16 @@
 <project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
 	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<modelVersion>4.0.0</modelVersion>
-	<!-- <parent>
-		<groupId>org.jnosql.diana</groupId>
-		<artifactId>diana-driver</artifactId>
+	<parent>
+		<groupId>org.darwino</groupId>
+		<artifactId>parent-darwino-jnosql-driver</artifactId>
 		<version>0.0.4-SNAPSHOT</version>
-	</parent> -->
+	</parent>
 
 	<groupId>org.darwino</groupId>
 	<artifactId>darwino-jnosql-diana-driver</artifactId>
-	<version>0.0.4-SNAPSHOT</version>
 	<name>Darwino driver for JNoSQL Diana</name>
 	<url>http://darwino.com</url>
-
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<maven.compile.targetLevel>1.8</maven.compile.targetLevel>
-		<maven.compile.sourceLevel>1.8</maven.compile.sourceLevel>
-        <maven.compile.version>3.5.1</maven.compile.version>
-
-		<diana-version>0.0.4-SNAPSHOT</diana-version>
-		<hamcrest-all.version>1.3</hamcrest-all.version>
-		<darwino-version>2.1.0-SNAPSHOT</darwino-version>
-	</properties>
 
 	<licenses>
 		<license>
@@ -45,17 +33,17 @@
 		<dependency>
 			<groupId>org.jnosql.diana</groupId>
 			<artifactId>diana-driver-commons</artifactId>
-			<version>${diana-version}</version>
+			<version>${jnosql-version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.jnosql.diana</groupId>
 			<artifactId>diana-core</artifactId>
-			<version>${diana-version}</version>
+			<version>${jnosql-version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.jnosql.diana</groupId>
 			<artifactId>diana-document</artifactId>
-			<version>${diana-version}</version>
+			<version>${jnosql-version}</version>
 		</dependency>
 		<dependency>
 			<groupId>io.reactivex</groupId>
@@ -129,11 +117,6 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>${maven.compile.version}</version>
-				<configuration>
-					<target>1.8</target>
-					<source>1.8</source>
-				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -162,19 +145,6 @@
 			<plugin>
 				<groupId>com.mycila</groupId>
 				<artifactId>license-maven-plugin</artifactId>
-				<configuration>
-					<aggregate>true</aggregate>
-					<header>license.txt</header>
-					<excludes>
-						<exclude>**/*.Plugin</exclude>
-						<exclude>**/.darwino</exclude>
-						<exclude>**/pom.xml</exclude>
-						<exclude>**/.*project</exclude>
-					</excludes>
-					<properties>
-						<owner>Jesse Gallagher</owner>
-					</properties>
-				</configuration>
 			</plugin>
 		</plugins>
 	</build>

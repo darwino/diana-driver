@@ -41,7 +41,7 @@ import org.jnosql.artemis.DatabaseQualifier;
 import org.jnosql.artemis.reflection.ClassRepresentations;
 import org.jnosql.artemis.reflection.Reflections;
 
-public class DarwinoRepositoryBean implements Bean<DarwinoRepository<?>>, PassivationCapable {
+public class DarwinoRepositoryBean implements Bean<DarwinoRepository<?, ?>>, PassivationCapable {
 
 	private final Class<?> type;
 	private final BeanManager beanManager;
@@ -73,7 +73,7 @@ public class DarwinoRepositoryBean implements Bean<DarwinoRepository<?>>, Passiv
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
-	public DarwinoRepository<?> create(CreationalContext<DarwinoRepository<?>> creationalContext) {
+	public DarwinoRepository<?, ?> create(CreationalContext<DarwinoRepository<?, ?>> creationalContext) {
 		ClassRepresentations classRepresentations = getInstance(ClassRepresentations.class);
         DarwinoTemplate repository = getInstance(DarwinoTemplate.class);
 
@@ -102,7 +102,7 @@ public class DarwinoRepositoryBean implements Bean<DarwinoRepository<?>>, Passiv
     }
 
 	@Override
-	public void destroy(DarwinoRepository<?> instance, CreationalContext<DarwinoRepository<?>> creationalContext) {
+	public void destroy(DarwinoRepository<?, ?> instance, CreationalContext<DarwinoRepository<?, ?>> creationalContext) {
 		
 	}
 

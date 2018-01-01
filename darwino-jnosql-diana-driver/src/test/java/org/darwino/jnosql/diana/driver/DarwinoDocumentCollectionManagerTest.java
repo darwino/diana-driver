@@ -41,7 +41,6 @@ import java.util.Set;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.contains;
-import static org.jnosql.diana.api.document.DocumentCondition.eq;
 import static org.jnosql.diana.api.document.query.DocumentQueryBuilder.select;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
@@ -67,6 +66,14 @@ public class DarwinoDocumentCollectionManagerTest extends AbstractDarwinoAppTest
 		DocumentEntity entity = getEntity();
 		DocumentEntity documentEntity = entityManager.insert(entity);
 		assertEquals(entity, documentEntity);
+	}
+	
+	@Test
+	public void shouldSaveAutoUnid() {
+		DocumentEntity entity = getEntity();
+		entity.remove("_id");
+		DocumentEntity documentEntity = entityManager.insert(entity);
+		assertTrue(documentEntity.find("_id").isPresent());
 	}
 
 	@Test

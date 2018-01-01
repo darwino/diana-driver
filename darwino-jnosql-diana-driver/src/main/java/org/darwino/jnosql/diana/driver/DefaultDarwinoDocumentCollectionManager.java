@@ -34,6 +34,8 @@ import org.jnosql.diana.api.document.DocumentQuery;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 import static java.util.Objects.nonNull;
 import static java.util.Objects.requireNonNull;
@@ -53,14 +55,21 @@ class DefaultDarwinoDocumentCollectionManager implements DarwinoDocumentCollecti
 	public DocumentEntity insert(DocumentEntity entity) {
 		requireNonNull(entity, "entity is required");
 		JsonObject jsonObject = convert(entity);
-		Document id = entity.find(EntityConverter.ID_FIELD).orElseThrow(() -> new DarwinoNoKeyFoundException(entity.toString()));
+		Optional<Document> maybeId = entity.find(EntityConverter.ID_FIELD);
+		Document id;
+		if(maybeId.isPresent()) {
+			id = maybeId.get();
+		} else {
+			// Auto-insert a UNID
+			id = Document.of(EntityConverter.ID_FIELD, UUID.randomUUID().toString());
+			entity.add(id);
+		}
 
 		String unid = StringUtil.toString(id.get());
 		try {
 			com.darwino.jsonstore.Document doc = store.newDocument(unid);
 			doc.setJson(jsonObject);
 			doc.save();
-			entity.add(Document.of(EntityConverter.ID_FIELD, unid));
 			return entity;
 		} catch (JsonException e) {
 			throw new RuntimeException(e);
@@ -71,19 +80,7 @@ class DefaultDarwinoDocumentCollectionManager implements DarwinoDocumentCollecti
 	public DocumentEntity insert(DocumentEntity entity, Duration ttl) {
 		requireNonNull(entity, "entity is required");
 		requireNonNull(ttl, "ttl is required");
-		JsonObject jsonObject = convert(entity);
-		Document id = entity.find(EntityConverter.ID_FIELD).orElseThrow(() -> new DarwinoNoKeyFoundException(entity.toString()));
-		String unid = StringUtil.toString(id.get());
-		
-
-		try {
-			com.darwino.jsonstore.Document doc = store.newDocument(unid);
-			doc.setJson(jsonObject);
-			doc.save();
-		} catch (JsonException e) {
-			throw new RuntimeException(e);
-		}
-		return entity;
+		return insert(entity);
 	}
 
 	@Override
@@ -96,7 +93,6 @@ class DefaultDarwinoDocumentCollectionManager implements DarwinoDocumentCollecti
 			com.darwino.jsonstore.Document doc = store.loadDocument(unid);
 			doc.setJson(jsonObject);
 			doc.save();
-			entity.add(Document.of(EntityConverter.ID_FIELD, unid));
 			return entity;
 		} catch (JsonException e) {
 			throw new RuntimeException(e);

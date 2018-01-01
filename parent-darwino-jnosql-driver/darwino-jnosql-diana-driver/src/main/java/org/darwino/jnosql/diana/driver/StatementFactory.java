@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Includes code derived from the JNoSQL Diana Couchbase driver, copyright
- * Otavio Santana and others and available from:
+ * Includes code derived from the JNoSQL Diana Couchbase driver and Artemis
+ * extensions, copyright Otavio Santana and others and available from:
  *
  * https://github.com/eclipse/jnosql-diana-driver/tree/master/couchbase-driver
+ * https://github.com/eclipse/jnosql-artemis-extension/tree/master/couchbase-extension
  */
 package org.darwino.jnosql.diana.driver;
 

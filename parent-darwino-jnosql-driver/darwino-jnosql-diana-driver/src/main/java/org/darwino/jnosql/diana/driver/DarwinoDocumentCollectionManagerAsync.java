@@ -33,7 +33,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 /**
- * The Couchbase interface of {@link DocumentCollectionManagerAsync}
+ * The Darwino interface of {@link DocumentCollectionManagerAsync}
  */
 public interface DarwinoDocumentCollectionManagerAsync extends DocumentCollectionManagerAsync {
 

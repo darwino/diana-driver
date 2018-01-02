@@ -45,7 +45,7 @@ import static java.util.Objects.requireNonNull;
 import static org.darwino.jnosql.diana.driver.EntityConverter.convert;
 
 /**
- * The default implementation of {@link CouchbaseDocumentCollectionManager}
+ * The default implementation of {@link DarwinoDocumentCollectionManager}
  */
 class DefaultDarwinoDocumentCollectionManager implements DarwinoDocumentCollectionManager {
 	private final Store store;

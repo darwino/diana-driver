@@ -39,6 +39,12 @@
 			<organizationUrl>http://darwino.com</organizationUrl>
 		</developer>
 	</developers>
+	
+	<inceptionYear>2017</inceptionYear>
+	
+	<prerequisites>
+		<maven>3.0.0</maven>
+	</prerequisites>
 
 	<modules>
 		<module>darwino-jnosql-diana-driver</module>
@@ -97,6 +103,7 @@
 						</excludes>
 						<properties>
 							<owner>Jesse Gallagher</owner>
+							<copyrightYear>2018</copyrightYear>
 						</properties>
 					</configuration>
 				</plugin>

@@ -88,7 +88,7 @@
 					<version>3.0</version>
 					<configuration>
 						<aggregate>true</aggregate>
-						<header>../license.txt</header>
+						<header>license.txt</header>
 						<excludes>
 							<exclude>**/*.Plugin</exclude>
 							<exclude>**/.darwino</exclude>

@@ -71,7 +71,6 @@ public class DarwinoRepositoryBean implements Bean<DarwinoRepository<?, ?>>, Pas
 		return false;
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public DarwinoRepository<?, ?> create(CreationalContext<DarwinoRepository<?, ?>> creationalContext) {
 		ClassRepresentations classRepresentations = getInstance(ClassRepresentations.class);
@@ -80,9 +79,9 @@ public class DarwinoRepositoryBean implements Bean<DarwinoRepository<?, ?>>, Pas
         Reflections reflections = getInstance(Reflections.class);
         Converters converters = getInstance(Converters.class);
 
-        DarwinoDocumentRepositoryProxy handler = new DarwinoDocumentRepositoryProxy(repository,
+        DarwinoDocumentRepositoryProxy<DarwinoRepository<?, ?>> handler = new DarwinoDocumentRepositoryProxy<>(repository,
                 classRepresentations, type, reflections, converters);
-        return (DarwinoRepository) Proxy.newProxyInstance(type.getClassLoader(),
+        return (DarwinoRepository<?, ?>) Proxy.newProxyInstance(type.getClassLoader(),
                 new Class[]{type},
                 handler);
 	}
@@ -94,10 +93,10 @@ public class DarwinoRepositoryBean implements Bean<DarwinoRepository<?, ?>>, Pas
         return (T) beanManager.getReference(bean, clazz, ctx);
     }
 
-	@SuppressWarnings({ "unchecked", "unused", "rawtypes" })
+	@SuppressWarnings({ "unchecked", "unused" })
     private <T> T getInstance(Class<T> clazz, String name) {
-        Bean bean = beanManager.getBeans(clazz, DatabaseQualifier.ofDocument(name)).iterator().next();
-        CreationalContext ctx = beanManager.createCreationalContext(bean);
+        Bean<?> bean = beanManager.getBeans(clazz, DatabaseQualifier.ofDocument(name)).iterator().next();
+        CreationalContext<?> ctx = beanManager.createCreationalContext(bean);
         return (T) beanManager.getReference(bean, clazz, ctx);
     }
 

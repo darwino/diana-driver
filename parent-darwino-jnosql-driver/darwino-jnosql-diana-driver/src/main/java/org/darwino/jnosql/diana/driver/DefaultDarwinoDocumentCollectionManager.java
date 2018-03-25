@@ -56,7 +56,7 @@ class DefaultDarwinoDocumentCollectionManager implements DarwinoDocumentCollecti
 
 	@Override
 	public DocumentEntity insert(DocumentEntity entity) {
-		requireNonNull(entity, "entity is required");
+		requireNonNull(entity, "entity is required"); //$NON-NLS-1$
 		JsonObject jsonObject = convert(entity);
 		Optional<Document> maybeId = entity.find(EntityConverter.ID_FIELD);
 		Document id;
@@ -81,8 +81,8 @@ class DefaultDarwinoDocumentCollectionManager implements DarwinoDocumentCollecti
 
 	@Override
 	public DocumentEntity insert(DocumentEntity entity, Duration ttl) {
-		requireNonNull(entity, "entity is required");
-		requireNonNull(ttl, "ttl is required");
+		requireNonNull(entity, "entity is required"); //$NON-NLS-1$
+		requireNonNull(ttl, "ttl is required"); //$NON-NLS-1$
 		return insert(entity);
 	}
 
@@ -129,8 +129,8 @@ class DefaultDarwinoDocumentCollectionManager implements DarwinoDocumentCollecti
 
 	@Override
 	public List<DocumentEntity> query(String query, JsonObject params) throws NullPointerException {
-		requireNonNull(query, "query is required");
-		requireNonNull(params, "params is required");
+		requireNonNull(query, "query is required"); //$NON-NLS-1$
+		requireNonNull(params, "params is required"); //$NON-NLS-1$
 		try {
 			return convert(store.openCursor().query(query).params(params));
 		} catch (JsonException e) {
@@ -140,7 +140,7 @@ class DefaultDarwinoDocumentCollectionManager implements DarwinoDocumentCollecti
 
 	@Override
 	public List<DocumentEntity> query(String query) throws NullPointerException {
-		requireNonNull(query, "query is required");
+		requireNonNull(query, "query is required"); //$NON-NLS-1$
 		try {
 			return convert(store.openCursor().query(query));
 		} catch (JsonException e) {
@@ -150,7 +150,7 @@ class DefaultDarwinoDocumentCollectionManager implements DarwinoDocumentCollecti
 
 	@Override
 	public List<DocumentEntity> query(Cursor cursor) throws NullPointerException {
-		requireNonNull(cursor, "cursor is required");
+		requireNonNull(cursor, "cursor is required"); //$NON-NLS-1$
 		try {
 			return convert(cursor);
 		} catch (JsonException e) {

@@ -74,7 +74,6 @@ final class QueryConverter {
 		int firstResult = (int) query.getFirstResult();
 		int maxResult = (int) query.getMaxResults();
 
-		// TODO ordering
 		String[] sorts = query.getSorts().stream().map(s -> s.getName() + (s.getType() == SortType.DESC ? " d" : "")).toArray(String[]::new); //$NON-NLS-1$ //$NON-NLS-2$
 
 		if (query.getCondition().isPresent()) {
@@ -99,7 +98,7 @@ final class QueryConverter {
 
 	static QueryConverterResult delete(DocumentDeleteQuery query, String database, String store) throws JsonException {
 		JsonObject params = new JsonObject();
-		JsonObject condition = getCondition(query.getCondition().orElseThrow(() -> new IllegalArgumentException("Condition is required")), params);
+		JsonObject condition = getCondition(query.getCondition().orElseThrow(() -> new IllegalArgumentException("Condition is required")), params); //$NON-NLS-1$
 		
 		// Add in the form property if needed
 		condition = applyCollectionName(condition, query.getDocumentCollection());
@@ -151,7 +150,7 @@ final class QueryConverter {
 			DocumentCondition dc = document.get(DocumentCondition.class);
 			return JsonObject.of(BaseParser.Op.NOT.getValue(), getCondition(dc, params));
 		default:
-			throw new IllegalStateException("This condition is not supported in Darwino: " + condition.getCondition());
+			throw new IllegalStateException("This condition is not supported in Darwino: " + condition.getCondition()); //$NON-NLS-1$
 		}
 	}
 

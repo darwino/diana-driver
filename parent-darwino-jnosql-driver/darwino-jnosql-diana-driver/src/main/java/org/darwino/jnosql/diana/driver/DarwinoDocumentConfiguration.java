@@ -48,7 +48,7 @@ public class DarwinoDocumentConfiguration implements UnaryDocumentConfiguration<
 
 	@Override
 	public DarwinoDocumentCollectionManagerFactory get(Settings settings) throws NullPointerException {
-		requireNonNull(settings, "settings is required");
+		requireNonNull(settings, "settings is required"); //$NON-NLS-1$
 
 		Map<String, String> configurations = new HashMap<>();
 		settings.entrySet().forEach(e -> configurations.put(e.getKey(), e.getValue().toString()));

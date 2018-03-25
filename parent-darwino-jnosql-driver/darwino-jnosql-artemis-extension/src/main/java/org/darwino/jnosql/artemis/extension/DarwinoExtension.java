@@ -67,12 +67,12 @@ public class DarwinoExtension implements Extension {
 	}
 
 	void onAfterBeanDiscovery(@Observes final AfterBeanDiscovery afterBeanDiscovery, final BeanManager beanManager) {
-		LOGGER.info("Starting the onAfterBeanDiscovery with elements number: " + crudTypes.size());
+		LOGGER.info("Starting the onAfterBeanDiscovery with elements number: " + crudTypes.size()); //$NON-NLS-1$
 
 		crudTypes.forEach(type -> afterBeanDiscovery.addBean(new DarwinoRepositoryBean(type, beanManager)));
 
 		crudAsyncTypes.forEach(type -> afterBeanDiscovery.addBean(new DarwinoRepositoryAsyncBean(type, beanManager)));
 
-		LOGGER.info("Finished the onAfterBeanDiscovery");
+		LOGGER.info("Finished the onAfterBeanDiscovery"); //$NON-NLS-1$
 	}
 }

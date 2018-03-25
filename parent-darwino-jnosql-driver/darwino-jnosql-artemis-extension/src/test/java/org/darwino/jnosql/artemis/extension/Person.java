@@ -28,6 +28,7 @@ import org.jnosql.artemis.Id;
 import java.util.Objects;
 
 @Entity
+@SuppressWarnings("nls")
 public class Person {
 
     @Id
@@ -74,7 +75,7 @@ public class Person {
         return Objects.hash(name, age);
     }
 
-    @Override
+	@Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("Person{");
         sb.append("name='").append(name).append('\'');

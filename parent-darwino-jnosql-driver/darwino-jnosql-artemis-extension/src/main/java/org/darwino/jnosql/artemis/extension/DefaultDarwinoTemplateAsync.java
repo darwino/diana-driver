@@ -43,7 +43,7 @@ import java.util.function.Consumer;
 import static java.util.stream.Collectors.toList;
 
 /**
- * The default implementation of {@link CouchbaseTemplateAsync}
+ * The default implementation of {@link DarwinoTemplateAsync}
  */
 @Typed(DarwinoTemplateAsync.class)
 class DefaultDarwinoTemplateAsync extends AbstractDocumentTemplateAsync implements
@@ -95,9 +95,9 @@ class DefaultDarwinoTemplateAsync extends AbstractDocumentTemplateAsync implemen
     public <T> void jsqlQuery(String jsqlQuery, JsonObject params, Consumer<List<T>> callback)
             throws NullPointerException, ExecuteAsyncQueryException {
 
-        Objects.requireNonNull(jsqlQuery, "jsqlQuery is required");
-        Objects.requireNonNull(params, "params is required");
-        Objects.requireNonNull(callback, "callback is required");
+        Objects.requireNonNull(jsqlQuery, "jsqlQuery is required"); //$NON-NLS-1$
+        Objects.requireNonNull(params, "params is required"); //$NON-NLS-1$
+        Objects.requireNonNull(callback, "callback is required"); //$NON-NLS-1$
         Consumer<List<DocumentEntity>> dianaCallBack = d -> callback.accept(
                 d.stream()
                         .map(getConverter()::toEntity)
@@ -111,9 +111,9 @@ class DefaultDarwinoTemplateAsync extends AbstractDocumentTemplateAsync implemen
 	@Override
     public <T> void jsqlQuery(JsqlCursor jsqlQuery, JsonObject params, Consumer<List<T>> callback)
             throws NullPointerException, ExecuteAsyncQueryException {
-        Objects.requireNonNull(jsqlQuery, "jsqlQuery is required");
-        Objects.requireNonNull(params, "params is required");
-        Objects.requireNonNull(callback, "callback is required");
+        Objects.requireNonNull(jsqlQuery, "jsqlQuery is required"); //$NON-NLS-1$
+        Objects.requireNonNull(params, "params is required"); //$NON-NLS-1$
+        Objects.requireNonNull(callback, "callback is required"); //$NON-NLS-1$
         Consumer<List<DocumentEntity>> dianaCallBack = d -> callback.accept(
                 d.stream()
                         .map(getConverter()::toEntity)
@@ -127,8 +127,8 @@ class DefaultDarwinoTemplateAsync extends AbstractDocumentTemplateAsync implemen
     public <T> void jsqlQuery(String jsqlQuery, Consumer<List<T>> callback)
             throws NullPointerException, ExecuteAsyncQueryException {
 
-        Objects.requireNonNull(jsqlQuery, "jsqlQuery is required");
-        Objects.requireNonNull(callback, "callback is required");
+        Objects.requireNonNull(jsqlQuery, "jsqlQuery is required"); //$NON-NLS-1$
+        Objects.requireNonNull(callback, "callback is required"); //$NON-NLS-1$
 
         Consumer<List<DocumentEntity>> dianaCallBack = d -> callback.accept(
                 d.stream()
@@ -142,8 +142,8 @@ class DefaultDarwinoTemplateAsync extends AbstractDocumentTemplateAsync implemen
     @SuppressWarnings("unchecked")
 	@Override
 	public <T> void search(String query, Consumer<List<T>> callback) throws NullPointerException, ExecuteAsyncQueryException {
-		 Objects.requireNonNull(query, "query is required");
-	        Objects.requireNonNull(callback, "callback is required");
+		 Objects.requireNonNull(query, "query is required"); //$NON-NLS-1$
+	        Objects.requireNonNull(callback, "callback is required"); //$NON-NLS-1$
 
 	        Consumer<List<DocumentEntity>> dianaCallBack = d -> callback.accept(
 	                d.stream()

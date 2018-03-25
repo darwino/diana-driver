@@ -43,10 +43,10 @@ class DefaultDarwinoDocumentCollectionManagerAsync implements DarwinoDocumentCol
 
 	private static final Consumer<DocumentEntity> NOOP = d -> {
 	};
-	private static final Action1<Throwable> ERROR_SAVE = a -> new ExecuteAsyncQueryException("On error when try to execute Darwino save method");
-	private static final Action1<Throwable> ERROR_FIND = a -> new ExecuteAsyncQueryException("On error when try to execute Darwino find method");
-	private static final Action1<Throwable> ERROR_DELETE = a -> new ExecuteAsyncQueryException("On error when try to execute Darwino delete method");
-	private static final Action1<Throwable> ERROR_QUERY = a -> new ExecuteAsyncQueryException("On error when try to execute Darwino query method");
+	private static final Action1<Throwable> ERROR_SAVE = a -> new ExecuteAsyncQueryException("On error when try to execute Darwino save method"); //$NON-NLS-1$
+	private static final Action1<Throwable> ERROR_FIND = a -> new ExecuteAsyncQueryException("On error when try to execute Darwino find method"); //$NON-NLS-1$
+	private static final Action1<Throwable> ERROR_DELETE = a -> new ExecuteAsyncQueryException("On error when try to execute Darwino delete method"); //$NON-NLS-1$
+	private static final Action1<Throwable> ERROR_QUERY = a -> new ExecuteAsyncQueryException("On error when try to execute Darwino query method"); //$NON-NLS-1$
 
 	private final DarwinoDocumentCollectionManager manager;
 
@@ -66,14 +66,14 @@ class DefaultDarwinoDocumentCollectionManagerAsync implements DarwinoDocumentCol
 
 	@Override
 	public void insert(DocumentEntity entity, Consumer<DocumentEntity> callBack) throws ExecuteAsyncQueryException, UnsupportedOperationException {
-		requireNonNull(callBack, "callBack is required");
+		requireNonNull(callBack, "callBack is required"); //$NON-NLS-1$
 		just(entity).map(manager::insert).subscribe(callBack::accept, ERROR_SAVE);
 	}
 
 	@Override
 	public void insert(DocumentEntity entity, Duration ttl, Consumer<DocumentEntity> callBack)
 			throws ExecuteAsyncQueryException, UnsupportedOperationException {
-		requireNonNull(callBack, "callBack is required");
+		requireNonNull(callBack, "callBack is required"); //$NON-NLS-1$
 		just(entity).map(e -> manager.insert(e, ttl)).subscribe(callBack::accept, ERROR_SAVE);
 	}
 
@@ -95,8 +95,8 @@ class DefaultDarwinoDocumentCollectionManagerAsync implements DarwinoDocumentCol
 
 	@Override
 	public void delete(DocumentDeleteQuery query, Consumer<Void> callBack) throws ExecuteAsyncQueryException, UnsupportedOperationException {
-		requireNonNull(query, "query is required");
-		requireNonNull(callBack, "callBack is required");
+		requireNonNull(query, "query is required"); //$NON-NLS-1$
+		requireNonNull(callBack, "callBack is required"); //$NON-NLS-1$
 		just(query).map(q -> {
 			manager.delete(q);
 			return true;
@@ -111,19 +111,19 @@ class DefaultDarwinoDocumentCollectionManagerAsync implements DarwinoDocumentCol
 	@Override
 	public void query(String query, JsonObject params, Consumer<List<DocumentEntity>> callback)
 			throws NullPointerException, ExecuteAsyncQueryException {
-		requireNonNull(callback, "callback is required");
+		requireNonNull(callback, "callback is required"); //$NON-NLS-1$
 		just(query).map(n -> manager.query(n, params)).subscribe(callback::accept, ERROR_QUERY);
 	}
 
 	@Override
 	public void query(String query, Consumer<List<DocumentEntity>> callback) throws NullPointerException, ExecuteAsyncQueryException {
-		requireNonNull(callback, "callback is required");
+		requireNonNull(callback, "callback is required"); //$NON-NLS-1$
 		just(query).map(manager::query).subscribe(callback::accept, ERROR_QUERY);
 	}
 
 	@Override
 	public void query(Cursor cursor, Consumer<List<DocumentEntity>> callback) throws NullPointerException, ExecuteAsyncQueryException {
-		requireNonNull(callback, "callback is required");
+		requireNonNull(callback, "callback is required"); //$NON-NLS-1$
 		just(cursor).map(manager::query).subscribe(callback::accept, ERROR_QUERY);
 	}
 
@@ -134,21 +134,21 @@ class DefaultDarwinoDocumentCollectionManagerAsync implements DarwinoDocumentCol
 
 	@Override
 	public void search(String query, Consumer<List<DocumentEntity>> callback) throws ExecuteAsyncQueryException {
-		requireNonNull(callback, "callback is required");
+		requireNonNull(callback, "callback is required"); //$NON-NLS-1$
 		just(query).map(manager::search).subscribe(callback::accept, ERROR_QUERY);
 	}
 
 	@Override
 	public void jsqlQuery(String jsqlQuery, JsonObject params, Consumer<List<DocumentEntity>> callback)
 			throws NullPointerException, ExecuteAsyncQueryException {
-		requireNonNull(callback, "callback is required");
+		requireNonNull(callback, "callback is required"); //$NON-NLS-1$
 		just(jsqlQuery).map(n -> manager.jsqlQuery(n, params)).subscribe(callback::accept, ERROR_QUERY);
 	}
 
 	@Override
 	public void jsqlQuery(JsqlCursor jsqlQuery, JsonObject params, Consumer<List<DocumentEntity>> callback)
 			throws NullPointerException, ExecuteAsyncQueryException {
-		requireNonNull(callback, "callback is required");
+		requireNonNull(callback, "callback is required"); //$NON-NLS-1$
 		just(jsqlQuery).map(n -> manager.jsqlQuery(n, params)).subscribe(callback::accept, ERROR_QUERY);
 	}
 

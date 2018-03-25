@@ -99,7 +99,7 @@ final class EntityConverter {
 				id = e.getColumn("unid"); //$NON-NLS-1$
 			}
 			if(id == null || !(id instanceof CharSequence)) {
-				throw new RuntimeException("query must contain a unid column");
+				throw new RuntimeException("query must contain a unid column"); //$NON-NLS-1$
 			}
 
 			com.darwino.jsonstore.Document doc = store.loadDocument((String)id);

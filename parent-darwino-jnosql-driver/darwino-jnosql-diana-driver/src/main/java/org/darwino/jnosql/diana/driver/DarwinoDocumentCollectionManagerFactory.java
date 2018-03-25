@@ -51,7 +51,7 @@ public class DarwinoDocumentCollectionManagerFactory implements DocumentCollecti
 
 	@Override
 	public DarwinoDocumentCollectionManager get(String store) throws UnsupportedOperationException, NullPointerException {
-		Objects.requireNonNull(store, "store is required");
+		Objects.requireNonNull(store, "store is required"); //$NON-NLS-1$
 
 		try {
 			Database db = session.getDatabase(database);

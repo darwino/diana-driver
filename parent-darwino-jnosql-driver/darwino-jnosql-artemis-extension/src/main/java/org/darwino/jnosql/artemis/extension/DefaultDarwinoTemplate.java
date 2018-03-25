@@ -42,7 +42,7 @@ import java.util.stream.Collectors;
 import static java.util.Objects.requireNonNull;
 
 /**
- * The Default implementation of {@link CouchbaseTemplate}
+ * The Default implementation of {@link DarwinoTemplate}
  */
 @Typed(DarwinoTemplate.class)
 class DefaultDarwinoTemplate extends AbstractDocumentTemplate
@@ -110,8 +110,8 @@ class DefaultDarwinoTemplate extends AbstractDocumentTemplate
     @SuppressWarnings("unchecked")
     @Override
     public <T> List<T> jsqlQuery(String jsqlQuery, JsonObject params) throws NullPointerException {
-        requireNonNull(jsqlQuery, "jsqlQuery is required");
-        requireNonNull(params, "params is required");
+        requireNonNull(jsqlQuery, "jsqlQuery is required"); //$NON-NLS-1$
+        requireNonNull(params, "params is required"); //$NON-NLS-1$
         return manager.get().jsqlQuery(jsqlQuery, params).stream()
                 .map(converter::toEntity)
                 .map(d -> (T) d)
@@ -121,8 +121,8 @@ class DefaultDarwinoTemplate extends AbstractDocumentTemplate
     @SuppressWarnings("unchecked")
     @Override
     public <T> List<T> jsqlQuery(JsqlCursor jsqlQuery, JsonObject params) throws NullPointerException {
-        requireNonNull(jsqlQuery, "jsqlQuery is required");
-        requireNonNull(params, "params is required");
+        requireNonNull(jsqlQuery, "jsqlQuery is required"); //$NON-NLS-1$
+        requireNonNull(params, "params is required"); //$NON-NLS-1$
         return manager.get().jsqlQuery(jsqlQuery, params).stream()
                 .map(converter::toEntity)
                 .map(d -> (T) d)
@@ -132,7 +132,7 @@ class DefaultDarwinoTemplate extends AbstractDocumentTemplate
     @SuppressWarnings("unchecked")
 	@Override
     public <T> List<T> jsqlQuery(String jsqlQuery) throws NullPointerException {
-        requireNonNull(jsqlQuery, "jsqlQuery is required");
+        requireNonNull(jsqlQuery, "jsqlQuery is required"); //$NON-NLS-1$
         return manager.get().jsqlQuery(jsqlQuery).stream()
                 .map(converter::toEntity)
                 .map(d -> (T) d)
@@ -142,7 +142,7 @@ class DefaultDarwinoTemplate extends AbstractDocumentTemplate
     @SuppressWarnings("unchecked")
     @Override
     public <T> List<T> search(String query) throws NullPointerException {
-        requireNonNull(query, "query is required");
+        requireNonNull(query, "query is required"); //$NON-NLS-1$
         return manager.get().search(query).stream()
                 .map(converter::toEntity)
                 .map(d -> (T) d)

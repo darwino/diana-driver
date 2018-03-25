@@ -91,8 +91,8 @@ public class DefaultDarwinoTemplateTest {
     @Test
     public void shouldFindN1ql() {
         JsonObject params = JsonObject.of("name", "Ada");
-        template.jsqlQuery("select _unid unid from _default where form='Person' and name = ?", params);
-        Mockito.verify(manager).jsqlQuery("select _unid unid from _default where form='Person' and name = ?", params);
+        template.jsqlQuery("select _unid unid from _default where $.form='Person' and $.name=:name", params);
+        Mockito.verify(manager).jsqlQuery("select _unid unid from _default where $.form='Person' and $.name=:name", params);
     }
 
     @Test
@@ -106,8 +106,8 @@ public class DefaultDarwinoTemplateTest {
 
     @Test
     public void shouldFindN1ql2() {
-        template.jsqlQuery("select _unid unid from _default where form='Person' and name = ?");
-        Mockito.verify(manager).jsqlQuery("select _unid unid from _default where form='Person' and name = ?");
+        template.jsqlQuery("select _unid unid from _default where $.form='Person' and $.name=:name");
+        Mockito.verify(manager).jsqlQuery("select _unid unid from _default where $.form='Person' and $.name=:name");
     }
 
     @Test

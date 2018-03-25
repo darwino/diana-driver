@@ -81,14 +81,14 @@ public class DarwinoDocumentRepositoryProxyTest {
     @Test
     public void shouldFindAll() {
         personRepository.findAll();
-        verify(template).jsqlQuery("select _unid unid from _default where form='Person'");
+        verify(template).jsqlQuery("select _unid unid from _default where $.form='Person'");
     }
 
     @Test
     public void shouldFindByNameJsql() {
         ArgumentCaptor<JsonObject> captor = ArgumentCaptor.forClass(JsonObject.class);
         personRepository.findByName("Ada");
-        verify(template).jsqlQuery(Mockito.eq("select _unid unid from _default where form='Person' and name = ?"), captor.capture());
+        verify(template).jsqlQuery(Mockito.eq("select _unid unid from _default where $.form='Person' and $.name=:name"), captor.capture());
 
         JsonObject value = captor.getValue();
 
@@ -97,10 +97,10 @@ public class DarwinoDocumentRepositoryProxyTest {
 
     interface PersonRepository extends DarwinoRepository<Person, String> {
 
-        @JSQL("select _unid unid from _default where form='Person'")
+        @JSQL("select _unid unid from _default where $.form='Person'")
         List<Person> findAll();
 
-        @JSQL("select _unid unid from _default where form='Person' and name = ?")
+        @JSQL("select _unid unid from _default where $.form='Person' and $.name=:name")
         List<Person> findByName(@Param("name") String name);
     }
 }

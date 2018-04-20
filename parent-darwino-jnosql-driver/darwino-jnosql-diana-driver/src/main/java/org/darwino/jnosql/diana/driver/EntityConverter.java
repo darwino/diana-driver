@@ -151,7 +151,7 @@ public final class EntityConverter {
 		return Iterable.class.isInstance(value) && stream(Iterable.class.cast(value).spliterator(), false).allMatch(d -> Map.class.isInstance(d));
 	}
 
-	static JsonObject convert(DocumentEntity entity) {
+	public static JsonObject convert(DocumentEntity entity) {
 		requireNonNull(entity, "entity is required"); //$NON-NLS-1$
 
 		JsonObject jsonObject = new JsonObject.LinkedMap();

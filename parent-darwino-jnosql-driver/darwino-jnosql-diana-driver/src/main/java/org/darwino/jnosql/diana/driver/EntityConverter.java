@@ -45,7 +45,13 @@ import java.util.stream.Collectors;
 import static java.util.Objects.requireNonNull;
 import static java.util.stream.StreamSupport.stream;
 
-final class EntityConverter {
+/**
+ * Utility class for dealing with Darwino entities.
+ *  
+ * @author Jesse Gallagher
+ * @since 0.0.4
+ */
+public final class EntityConverter {
 	/**
 	 * The field used to store the UNID of the document during JSON
 	 * serialization, currently "_id"
@@ -111,7 +117,7 @@ final class EntityConverter {
 		return result;
 	}
 
-	private static List<Document> toDocuments(com.darwino.jsonstore.Document doc) throws JsonException {
+	public static List<Document> toDocuments(com.darwino.jsonstore.Document doc) throws JsonException {
 		List<Document> result = new ArrayList<>();
 		result.add(Document.of(ID_FIELD, doc.getUnid()));
 		JsonObject json = (JsonObject)doc.getJson();
@@ -121,7 +127,7 @@ final class EntityConverter {
 	}
 
 	@SuppressWarnings("unchecked")
-	private static List<Document> toDocuments(Map<String, Object> map) {
+	public static List<Document> toDocuments(Map<String, Object> map) {
 		List<Document> documents = new ArrayList<>();
 		for (String key : map.keySet()) {
 			Object value = map.get(key);

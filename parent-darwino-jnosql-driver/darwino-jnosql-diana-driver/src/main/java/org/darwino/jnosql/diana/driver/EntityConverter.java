@@ -151,13 +151,37 @@ public final class EntityConverter {
 		return Iterable.class.isInstance(value) && stream(Iterable.class.cast(value).spliterator(), false).allMatch(d -> Map.class.isInstance(d));
 	}
 
+	/**
+	 * Converts the provided {@link DocumentEntity} instance into a Darwino
+	 * {@link JsonObject}.
+	 * 
+	 * <p>This is equivalent to calling {@link #convert(DocumentEntity, boolean)} with
+	 * <code>false</code> as the second parameter.</p>
+	 * 
+	 * @param entity the entity instance to convert
+	 * @return the converted JSON object
+	 */
 	public static JsonObject convert(DocumentEntity entity) {
+		return convert(entity, false);
+	}
+	
+	/**
+	 * Converts the provided {@link DocumentEntity} instance into a Darwino
+	 * {@link JsonObject}.
+	 * 
+	 * @param entity the entity instance to convert
+	 * @param retainId whether or not to remove the {@link #ID_FIELD} field during conversion
+	 * @return the converted JSON object
+	 */
+	public static JsonObject convert(DocumentEntity entity, boolean retainId) {
 		requireNonNull(entity, "entity is required"); //$NON-NLS-1$
 
 		JsonObject jsonObject = new JsonObject.LinkedMap();
 		entity.getDocuments().stream().forEach(toJsonObject(jsonObject));
 		jsonObject.put(NAME_FIELD, entity.getName());
-		jsonObject.remove(ID_FIELD);
+		if(!retainId) {
+			jsonObject.remove(ID_FIELD);
+		}
 		return jsonObject;
 	}
 

@@ -130,6 +130,10 @@ public final class EntityConverter {
 	public static List<Document> toDocuments(Map<String, Object> map) {
 		List<Document> documents = new ArrayList<>();
 		for (String key : map.keySet()) {
+			if(StringUtil.isEmpty(key)) {
+				continue;
+			}
+			
 			Object value = map.get(key);
 			if (Map.class.isInstance(value)) {
 				documents.add(Document.of(key, toDocuments(Map.class.cast(value))));
@@ -139,7 +143,7 @@ public final class EntityConverter {
 					.map(m -> toDocuments(Map.class.cast(m)))
 					.forEach(e -> subDocuments.add((List<Document>)e));
 				documents.add(Document.of(key, subDocuments));
-			} else {
+			} else if(value != null) {
 				documents.add(Document.of(key, value));
 			}
 		}

@@ -30,18 +30,15 @@ import com.darwino.jsonstore.Session;
 import com.darwino.jsonstore.Store;
 import com.darwino.platform.DarwinoContext;
 
-import java.io.IOException;
 import java.util.Objects;
 
 public class DarwinoDocumentCollectionManagerFactory implements DocumentCollectionManagerFactory<DarwinoDocumentCollectionManager>,
 		DocumentCollectionManagerAsyncFactory<DarwinoDocumentCollectionManagerAsync> {
 
 	private final String database;
-	private final Session session;
 	
 	DarwinoDocumentCollectionManagerFactory(String database) throws JsonException {
 		this.database = database;
-		this.session = DarwinoContext.get().getSession();
 	}
 
 	@Override
@@ -54,6 +51,7 @@ public class DarwinoDocumentCollectionManagerFactory implements DocumentCollecti
 		Objects.requireNonNull(store, "store is required"); //$NON-NLS-1$
 
 		try {
+			Session session = DarwinoContext.get().getSession();
 			Database db = session.getDatabase(database);
 			Store st = db.getStore(store);
 			return new DefaultDarwinoDocumentCollectionManager(st);
@@ -64,10 +62,5 @@ public class DarwinoDocumentCollectionManagerFactory implements DocumentCollecti
 
 	@Override
 	public void close() {
-		try {
-			session.close();
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
 	}
 }

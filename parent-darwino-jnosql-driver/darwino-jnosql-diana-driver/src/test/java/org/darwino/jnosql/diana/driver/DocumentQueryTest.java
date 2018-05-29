@@ -112,7 +112,7 @@ public class DocumentQueryTest extends AbstractDarwinoAppTest  {
 
         DocumentQuery query = select().from(COLLECTION_NAME)
                 .where("name").eq(name.get().get())
-                .start(1L)
+                .skip(1L)
                 .build();
         List<DocumentEntity> entities = entityManager.select(query);
         assertEquals(2, entities.size());
@@ -128,7 +128,7 @@ public class DocumentQueryTest extends AbstractDarwinoAppTest  {
         Optional<Document> name = entity.find("name");
         DocumentQuery query = select().from(COLLECTION_NAME)
                 .where("name").eq(name.get().get())
-                .start(2L)
+                .skip(2L)
                 .limit(2L)
                 .build();
 

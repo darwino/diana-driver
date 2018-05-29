@@ -71,8 +71,8 @@ final class QueryConverter {
 		}
 
 		Cursor statement = null;
-		int firstResult = (int) query.getFirstResult();
-		int maxResult = (int) query.getMaxResults();
+		int skip = (int)query.getSkip();
+		int limit = (int)query.getLimit();
 
 		String[] sorts = query.getSorts().stream().map(s -> s.getName() + (s.getType() == SortType.DESC ? " d" : "")).toArray(String[]::new); //$NON-NLS-1$ //$NON-NLS-2$
 
@@ -81,16 +81,16 @@ final class QueryConverter {
 			// Add in the form property if needed
 			condition = applyCollectionName(condition, query.getDocumentCollection());
 			if (nonNull(condition)) {
-				statement = create(database, store, documents, firstResult, maxResult, sorts, condition);
+				statement = create(database, store, documents, skip, limit, sorts, condition);
 			} else {
 				statement = null;
 			}
 		} else {
 			JsonObject condition = applyCollectionName(null, query.getDocumentCollection());
 			if(condition != null) {
-				statement = create(database, store, documents, firstResult, maxResult, sorts, condition);
+				statement = create(database, store, documents, skip, limit, sorts, condition);
 			} else {
-				statement = create(database, store, documents, firstResult, maxResult, sorts);
+				statement = create(database, store, documents, skip, limit, sorts);
 			}
 		}
 		return new QueryConverterResult(params, statement);

@@ -31,39 +31,39 @@ final class StatementFactory {
 	private StatementFactory() {
 	}
 
-	static Cursor create(String database, String store, String[] documents, int firstResult, int maxResult, String[] sorts) throws JsonException {
+	static Cursor create(String database, String store, String[] documents, int skip, int limit, String[] sorts) throws JsonException {
 		if (sorts.length == 0) {
-			return get(database, store, documents, firstResult, maxResult);
+			return get(database, store, documents, skip, limit);
 		} else {
-			return get(database, store, documents, firstResult, maxResult, sorts);
+			return get(database, store, documents, skip, limit, sorts);
 		}
 	}
 
-	static Cursor create(String database, String store, String[] documents, int firstResult, int maxResult, String[] sorts, JsonObject condition) throws JsonException {
+	static Cursor create(String database, String store, String[] documents, int skip, int limit, String[] sorts, JsonObject condition) throws JsonException {
 
 		if (sorts.length == 0) {
-			return get(database, store, documents, firstResult, maxResult, condition);
+			return get(database, store, documents, skip, limit, condition);
 		} else {
-			return get(database, store, documents, firstResult, maxResult, sorts, condition);
+			return get(database, store, documents, skip, limit, sorts, condition);
 		}
 	}
 
-	private static Cursor get(String database, String store, String[] documents, int firstResult, int maxResult, JsonObject condition) throws JsonException {
+	private static Cursor get(String database, String store, String[] documents, int skip, int limit, JsonObject condition) throws JsonException {
 
-		boolean hasFistResult = firstResult > 0;
-		boolean hasMaxResult = maxResult > 0;
+		boolean hasFistResult = skip > 0;
+		boolean hasMaxResult = limit > 0;
 		
 		Cursor cursor = DarwinoContext.get().getSession().getDatabase(database).getStore(store).openCursor();
 
 		if (hasFistResult && hasMaxResult) {
 			return cursor
 				.query(condition)
-				.range(firstResult, maxResult);
+				.range(skip, limit);
 
 		} else if (hasFistResult) {
-			return cursor.query(condition).range(firstResult, -1);
+			return cursor.query(condition).range(skip, -1);
 		} else if (hasMaxResult) {
-			return cursor.query(condition).range(0, maxResult);
+			return cursor.query(condition).range(0, limit);
 		} else {
 			return cursor.query(condition);
 		}

@@ -74,7 +74,14 @@ public class DarwinoRepositoryBean implements Bean<DarwinoRepository<?, ?>>, Pas
 	@Override
 	public DarwinoRepository<?, ?> create(CreationalContext<DarwinoRepository<?, ?>> creationalContext) {
 		ClassRepresentations classRepresentations = getInstance(ClassRepresentations.class);
-        DarwinoTemplate repository = getInstance(DarwinoTemplate.class);
+        
+		DarwinoTemplate repository;
+		RepositoryProvider producerAnnotation = type.getAnnotation(RepositoryProvider.class);
+		if(producerAnnotation != null) {
+			repository = getInstance(DarwinoTemplate.class, producerAnnotation.value());
+		} else {
+			repository = getInstance(DarwinoTemplate.class);
+		}
 
         Reflections reflections = getInstance(Reflections.class);
         Converters converters = getInstance(Converters.class);
@@ -92,11 +99,11 @@ public class DarwinoRepositoryBean implements Bean<DarwinoRepository<?, ?>>, Pas
         CreationalContext<T> ctx = beanManager.createCreationalContext(bean);
         return (T) beanManager.getReference(bean, clazz, ctx);
     }
-
-	@SuppressWarnings({ "unchecked", "unused" })
-    private <T> T getInstance(Class<T> clazz, String name) {
-        Bean<?> bean = beanManager.getBeans(clazz, DatabaseQualifier.ofDocument(name)).iterator().next();
-        CreationalContext<?> ctx = beanManager.createCreationalContext(bean);
+	
+	@SuppressWarnings("unchecked")
+	private <T> T getInstance(Class<T> clazz, String provider) {
+        Bean<T> bean = (Bean<T>) beanManager.getBeans(clazz, DatabaseQualifier.ofDocument(provider)).iterator().next();
+        CreationalContext<T> ctx = beanManager.createCreationalContext(bean);
         return (T) beanManager.getReference(bean, clazz, ctx);
     }
 

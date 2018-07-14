@@ -156,4 +156,9 @@ class DefaultDarwinoDocumentCollectionManagerAsync implements DarwinoDocumentCol
 	public void jsqlQuery(String jsqlQuery, Consumer<List<DocumentEntity>> callback) throws NullPointerException, ExecuteAsyncQueryException {
 		just(jsqlQuery).map(manager::jsqlQuery).subscribe(callback::accept, ERROR_QUERY);
 	}
+
+	@Override
+	public void count(String documentCollection, Consumer<Long> callback) {
+		just(documentCollection).map(manager::count).subscribe(callback::accept, ERROR_QUERY);
+	}
 }

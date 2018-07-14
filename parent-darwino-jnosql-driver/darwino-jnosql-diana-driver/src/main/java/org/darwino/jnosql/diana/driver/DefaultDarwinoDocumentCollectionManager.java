@@ -202,4 +202,14 @@ class DefaultDarwinoDocumentCollectionManager implements DarwinoDocumentCollecti
 
 	}
 
+	@Override
+	public long count(String documentCollection) {
+		// TODO determine how to map "documentCollection"
+		try {
+			return store.documentCount();
+		} catch (JsonException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
 }

@@ -4,7 +4,7 @@
 	
 	<groupId>org.darwino</groupId>
 	<artifactId>parent-darwino-jnosql-driver</artifactId>
-	<version>0.0.6-SNAPSHOT</version>
+	<version>0.0.7-SNAPSHOT</version>
 	<name>Darwino driver components for JNoSQL</name>
 	<url>http://darwino.com</url>
 	<packaging>pom</packaging>
@@ -17,9 +17,9 @@
 		<maven.source.version>3.0.1</maven.source.version>
 		<maven.javadoc.version>3.0.0</maven.javadoc.version>
 
-		<jnosql-version>0.0.6-SNAPSHOT</jnosql-version>
+		<jnosql-version>0.0.7-SNAPSHOT</jnosql-version>
 		<hamcrest-all.version>1.3</hamcrest-all.version>
-		<darwino-version>2.1.0-SNAPSHOT</darwino-version>
+		<darwino-version>2.2.0-SNAPSHOT</darwino-version>
 		<junit-version>4.11</junit-version>
 		<weld-version>2.4.6.Final</weld-version>
 	</properties>

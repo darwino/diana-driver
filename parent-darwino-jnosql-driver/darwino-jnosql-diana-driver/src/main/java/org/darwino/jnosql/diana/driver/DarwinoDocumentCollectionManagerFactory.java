@@ -25,39 +25,27 @@ import org.jnosql.diana.api.document.DocumentCollectionManagerAsyncFactory;
 import org.jnosql.diana.api.document.DocumentCollectionManagerFactory;
 
 import com.darwino.commons.json.JsonException;
-import com.darwino.jsonstore.Database;
-import com.darwino.jsonstore.Session;
-import com.darwino.jsonstore.Store;
-import com.darwino.platform.DarwinoContext;
 
 import java.util.Objects;
 
 public class DarwinoDocumentCollectionManagerFactory implements DocumentCollectionManagerFactory<DarwinoDocumentCollectionManager>,
 		DocumentCollectionManagerAsyncFactory<DarwinoDocumentCollectionManagerAsync> {
 
-	private final String database;
+	private final String databaseName;
 	
-	DarwinoDocumentCollectionManagerFactory(String database) throws JsonException {
-		this.database = database;
+	DarwinoDocumentCollectionManagerFactory(String databaseName) throws JsonException {
+		this.databaseName = databaseName;
 	}
 
 	@Override
-	public DarwinoDocumentCollectionManagerAsync getAsync(String store) throws UnsupportedOperationException, NullPointerException {
-		return new DefaultDarwinoDocumentCollectionManagerAsync(get(store));
+	public DarwinoDocumentCollectionManagerAsync getAsync(String storeId) throws UnsupportedOperationException, NullPointerException {
+		return new DefaultDarwinoDocumentCollectionManagerAsync(get(storeId));
 	}
 
 	@Override
-	public DarwinoDocumentCollectionManager get(String store) throws UnsupportedOperationException, NullPointerException {
-		Objects.requireNonNull(store, "store is required"); //$NON-NLS-1$
-
-		try {
-			Session session = DarwinoContext.get().getSession();
-			Database db = session.getDatabase(database);
-			Store st = db.getStore(store);
-			return new DefaultDarwinoDocumentCollectionManager(st);
-		} catch(JsonException e) {
-			throw new RuntimeException(e);
-		}
+	public DarwinoDocumentCollectionManager get(String storeId) throws UnsupportedOperationException, NullPointerException {
+		Objects.requireNonNull(storeId, "storeId is required"); //$NON-NLS-1$
+		return new DefaultDarwinoDocumentCollectionManager(databaseName, storeId);
 	}
 
 	@Override

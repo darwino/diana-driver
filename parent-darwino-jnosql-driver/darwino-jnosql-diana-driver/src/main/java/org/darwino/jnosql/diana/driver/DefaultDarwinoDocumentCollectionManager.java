@@ -25,8 +25,11 @@ import com.darwino.commons.json.JsonException;
 import com.darwino.commons.json.JsonObject;
 import com.darwino.commons.util.StringUtil;
 import com.darwino.jsonstore.Cursor;
+import com.darwino.jsonstore.Database;
 import com.darwino.jsonstore.JsqlCursor;
+import com.darwino.jsonstore.Session;
 import com.darwino.jsonstore.Store;
+import com.darwino.platform.DarwinoContext;
 
 import org.jnosql.diana.api.document.Document;
 import org.jnosql.diana.api.document.DocumentDeleteQuery;
@@ -48,10 +51,12 @@ import static org.darwino.jnosql.diana.driver.EntityConverter.convert;
  * The default implementation of {@link DarwinoDocumentCollectionManager}
  */
 class DefaultDarwinoDocumentCollectionManager implements DarwinoDocumentCollectionManager {
-	private final Store store;
+	private final String databaseName;
+	private final String storeId;
 
-	DefaultDarwinoDocumentCollectionManager(Store store) {
-		this.store = store;
+	DefaultDarwinoDocumentCollectionManager(String databaseName, String storeId) {
+		this.databaseName = databaseName;
+		this.storeId = storeId;
 	}
 
 	@Override
@@ -70,7 +75,7 @@ class DefaultDarwinoDocumentCollectionManager implements DarwinoDocumentCollecti
 
 		String unid = StringUtil.toString(id.get());
 		try {
-			com.darwino.jsonstore.Document doc = store.newDocument(unid);
+			com.darwino.jsonstore.Document doc = getStore().newDocument(unid);
 			doc.setJson(jsonObject);
 			doc.save();
 			return entity;
@@ -93,7 +98,7 @@ class DefaultDarwinoDocumentCollectionManager implements DarwinoDocumentCollecti
 
 		String unid = StringUtil.toString(id.get());
 		try {
-			com.darwino.jsonstore.Document doc = store.loadDocument(unid);
+			com.darwino.jsonstore.Document doc = getStore().loadDocument(unid);
 			doc.setJson(jsonObject);
 			doc.save();
 			return entity;
@@ -105,7 +110,7 @@ class DefaultDarwinoDocumentCollectionManager implements DarwinoDocumentCollecti
 	@Override
 	public void delete(DocumentDeleteQuery query) {
 		try {
-			QueryConverter.QueryConverterResult delete = QueryConverter.delete(query, store.getDatabase().getId(), store.getId());
+			QueryConverter.QueryConverterResult delete = QueryConverter.delete(query, getStore().getDatabase().getId(), getStore().getId());
 			delete.getStatement().deleteAllDocuments(0);
 		} catch (JsonException e) {
 			throw new RuntimeException(e);
@@ -115,7 +120,7 @@ class DefaultDarwinoDocumentCollectionManager implements DarwinoDocumentCollecti
 	@Override
 	public List<DocumentEntity> select(DocumentQuery query) throws NullPointerException {
 		try {
-			QueryConverter.QueryConverterResult select = QueryConverter.select(query, store.getDatabase().getId(), store.getId());
+			QueryConverter.QueryConverterResult select = QueryConverter.select(query, getStore().getDatabase().getId(), getStore().getId());
 			List<DocumentEntity> entities = new ArrayList<>();
 			if (nonNull(select.getStatement())) {
 				entities.addAll(convert(select.getStatement().params(select.getParams())));
@@ -132,7 +137,7 @@ class DefaultDarwinoDocumentCollectionManager implements DarwinoDocumentCollecti
 		requireNonNull(query, "query is required"); //$NON-NLS-1$
 		requireNonNull(params, "params is required"); //$NON-NLS-1$
 		try {
-			return convert(store.openCursor().query(query).params(params));
+			return convert(getStore().openCursor().query(query).params(params));
 		} catch (JsonException e) {
 			throw new RuntimeException(e);
 		}
@@ -142,7 +147,7 @@ class DefaultDarwinoDocumentCollectionManager implements DarwinoDocumentCollecti
 	public List<DocumentEntity> query(String query) throws NullPointerException {
 		requireNonNull(query, "query is required"); //$NON-NLS-1$
 		try {
-			return convert(store.openCursor().query(query));
+			return convert(getStore().openCursor().query(query));
 		} catch (JsonException e) {
 			throw new RuntimeException(e);
 		}
@@ -161,7 +166,7 @@ class DefaultDarwinoDocumentCollectionManager implements DarwinoDocumentCollecti
 	@Override
 	public List<DocumentEntity> search(String query) {
 		try {
-			Cursor cursor = store.openCursor().ftSearch(query);
+			Cursor cursor = getStore().openCursor().ftSearch(query);
 			return convert(cursor);
 		} catch (JsonException e) {
 			throw new RuntimeException(e);
@@ -171,8 +176,8 @@ class DefaultDarwinoDocumentCollectionManager implements DarwinoDocumentCollecti
 	@Override
 	public List<DocumentEntity> jsqlQuery(String jsqlQuery, JsonObject params) throws NullPointerException {
 		try {
-			JsqlCursor cursor = store.getDatabase().getSession().openJsqlCursor()
-				.database(store.getDatabase().getId())
+			JsqlCursor cursor = getStore().getDatabase().getSession().openJsqlCursor()
+				.database(getStore().getDatabase().getId())
 				.query(jsqlQuery);
 			return jsqlQuery(cursor, params);
 		} catch(JsonException e) {
@@ -186,7 +191,7 @@ class DefaultDarwinoDocumentCollectionManager implements DarwinoDocumentCollecti
 			if(Objects.nonNull(params)) {
 				jsqlQuery.params(params);
 			}
-			return convert(store, jsqlQuery);
+			return convert(getStore(), jsqlQuery);
 		} catch(JsonException e) {
 			throw new RuntimeException(e);
 		}
@@ -206,10 +211,16 @@ class DefaultDarwinoDocumentCollectionManager implements DarwinoDocumentCollecti
 	public long count(String documentCollection) {
 		// TODO determine how to map "documentCollection"
 		try {
-			return store.documentCount();
+			return getStore().documentCount();
 		} catch (JsonException e) {
 			throw new RuntimeException(e);
 		}
+	}
+	
+	private Store getStore() throws JsonException {
+		Session session = DarwinoContext.get().getSession();
+		Database database = session.getDatabase(databaseName);
+		return database.getStore(storeId);
 	}
 
 }

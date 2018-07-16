@@ -68,6 +68,7 @@ public final class EntityConverter {
 	}
 
 	static List<DocumentEntity> convert(Collection<String> keys, Store store) {
+		// TODO create a lazy-loading list
 		return keys.stream().map(t -> {
 			try {
 				return store.loadDocument(t, Cursor.JSON_METADATA);
@@ -86,6 +87,7 @@ public final class EntityConverter {
 	}
 
 	static List<DocumentEntity> convert(Cursor cursor) throws JsonException {
+		// TODO create a lazy-loading list
 		List<DocumentEntity> result = new ArrayList<>();
 		cursor.find((entry) -> {
 			com.darwino.jsonstore.Document doc = entry.loadDocument();
@@ -98,6 +100,7 @@ public final class EntityConverter {
 	}
 	
 	static List<DocumentEntity> convert(Store store, JsqlCursor cursor) throws JsonException {
+		// TODO create a lazy-loading list
 		List<DocumentEntity> result = new ArrayList<>();
 		cursor.find(e -> {
 			Object id = e.getColumn("_unid"); //$NON-NLS-1$

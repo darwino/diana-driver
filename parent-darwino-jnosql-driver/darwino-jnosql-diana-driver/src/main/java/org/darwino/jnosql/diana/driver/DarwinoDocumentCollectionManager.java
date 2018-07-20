@@ -28,6 +28,7 @@ import com.darwino.jsonstore.JsqlCursor;
 import org.jnosql.diana.api.document.DocumentCollectionManager;
 import org.jnosql.diana.api.document.DocumentEntity;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -68,6 +69,15 @@ public interface DarwinoDocumentCollectionManager extends DocumentCollectionMana
      * @return the elements from the query
      */
     List<DocumentEntity> search(String query);
+
+    /**
+     * Searches in Darwino using Full Text Search
+     *
+     * @param query the query to be used
+     * @param orderBy the columns (and optional directions) to order the result by
+     * @return the elements from the query
+     */
+    List<DocumentEntity> search(String query, Collection<String> orderBy);
 
     /**
      * Executes the JSQL query with params and then returns the result

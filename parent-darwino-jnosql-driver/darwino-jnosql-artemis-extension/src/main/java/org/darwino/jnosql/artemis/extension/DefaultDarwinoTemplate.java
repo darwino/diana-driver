@@ -42,6 +42,8 @@ import java.util.stream.Collectors;
 
 import static java.util.Objects.requireNonNull;
 
+import java.util.Collection;
+
 /**
  * The Default implementation of {@link DarwinoTemplate}
  */
@@ -127,7 +129,7 @@ class DefaultDarwinoTemplate extends AbstractDocumentTemplate
         requireNonNull(jsqlQuery, "jsqlQuery is required"); //$NON-NLS-1$
         requireNonNull(params, "params is required"); //$NON-NLS-1$
         return getManager().jsqlQuery(jsqlQuery, params).stream()
-                .map(converter::toEntity)
+                .map(getConverter()::toEntity)
                 .map(d -> (T) d)
                 .collect(Collectors.toList());
     }
@@ -137,7 +139,7 @@ class DefaultDarwinoTemplate extends AbstractDocumentTemplate
     public <T> List<T> jsqlQuery(String jsqlQuery) throws NullPointerException {
         requireNonNull(jsqlQuery, "jsqlQuery is required"); //$NON-NLS-1$
         return getManager().jsqlQuery(jsqlQuery).stream()
-                .map(converter::toEntity)
+                .map(getConverter()::toEntity)
                 .map(d -> (T) d)
                 .collect(Collectors.toList());
     }
@@ -147,7 +149,17 @@ class DefaultDarwinoTemplate extends AbstractDocumentTemplate
     public <T> List<T> search(String query) throws NullPointerException {
         requireNonNull(query, "query is required"); //$NON-NLS-1$
         return getManager().search(query).stream()
-                .map(converter::toEntity)
+                .map(getConverter()::toEntity)
+                .map(d -> (T) d)
+                .collect(Collectors.toList());
+    }
+    
+    @SuppressWarnings("unchecked")
+    @Override
+    public <T> List<T> search(String query, Collection<String> orderBy) throws NullPointerException {
+        requireNonNull(query, "query is required"); //$NON-NLS-1$
+        return getManager().search(query, orderBy).stream()
+                .map(getConverter()::toEntity)
                 .map(d -> (T) d)
                 .collect(Collectors.toList());
     }

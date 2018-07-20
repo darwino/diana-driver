@@ -21,6 +21,7 @@
  */
 package org.darwino.jnosql.artemis.extension;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.jnosql.artemis.document.DocumentTemplate;
@@ -67,4 +68,15 @@ public interface DarwinoTemplate extends DocumentTemplate {
      * @throws NullPointerException when either the query or index are null
      */
 	<T> List<T> search(String query) throws NullPointerException;
+	
+	/**
+     * Searches in Darwino using Full Text Search
+     *
+     * @param <T>   the type
+     * @param query the query to be used
+     * @param orderBy the columns (and optional directions) to order the result by
+     * @return the elements from the query
+     * @throws NullPointerException when either the query or index are null
+     */
+	<T> List<T> search(String query, Collection<String> orderBy) throws NullPointerException;
 }

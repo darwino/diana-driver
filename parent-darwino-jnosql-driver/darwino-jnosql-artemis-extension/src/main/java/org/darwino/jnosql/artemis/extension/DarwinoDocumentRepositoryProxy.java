@@ -23,6 +23,7 @@ package org.darwino.jnosql.artemis.extension;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -100,6 +101,7 @@ class DarwinoDocumentRepositoryProxy<T> extends AbstractDocumentRepositoryProxy<
     @Override
     public Object invoke(Object o, Method method, Object[] args) throws Throwable {
 
+    	// JSQL support
         JSQL jsql = method.getAnnotation(JSQL.class);
         if (Objects.nonNull(jsql)) {
             List<T> result = Collections.emptyList();
@@ -111,6 +113,26 @@ class DarwinoDocumentRepositoryProxy<T> extends AbstractDocumentRepositoryProxy<
             }
             return ReturnTypeConverterUtil.returnObject(result, typeClass, method);
         }
+        
+        // FT search support - assume the first parameter
+        Search search = method.getAnnotation(Search.class);
+        if(Objects.nonNull(search)) {
+        	if(args.length != 1 || !(args[0] instanceof String)) {
+        		throw new IllegalArgumentException("Methods annotated with @Search require a single String parameter");
+        	}
+        	String query = (String)args[0];
+        	String[] orderBy = search.orderBy();
+        	
+        	List<T> result;
+        	if(orderBy != null && orderBy.length > 0) {
+        		result = template.search(query, Arrays.asList(orderBy));
+        	} else {
+        		result = template.search(query);
+        	}
+        	
+            return ReturnTypeConverterUtil.returnObject(result, typeClass, method);
+        }
+        
         return super.invoke(o, method, args);
     }
 

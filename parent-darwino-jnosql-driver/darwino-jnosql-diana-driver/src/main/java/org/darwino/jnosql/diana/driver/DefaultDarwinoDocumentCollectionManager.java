@@ -38,6 +38,7 @@ import org.jnosql.diana.api.document.DocumentQuery;
 
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -167,6 +168,20 @@ class DefaultDarwinoDocumentCollectionManager implements DarwinoDocumentCollecti
 	public List<DocumentEntity> search(String query) {
 		try {
 			Cursor cursor = getStore().openCursor().ftSearch(query);
+			return convert(cursor);
+		} catch (JsonException e) {
+			throw new RuntimeException(e);
+		}
+	}
+	
+	@Override
+	public List<DocumentEntity> search(String query, Collection<String> orderBy) {
+		if(orderBy == null) {
+			return search(query);
+		}
+		
+		try {
+			Cursor cursor = getStore().openCursor().ftSearch(query).orderBy(orderBy.toArray(new String[orderBy.size()]));
 			return convert(cursor);
 		} catch (JsonException e) {
 			throw new RuntimeException(e);

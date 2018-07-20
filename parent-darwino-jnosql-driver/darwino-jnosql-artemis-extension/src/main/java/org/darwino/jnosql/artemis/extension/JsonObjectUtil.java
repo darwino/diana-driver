@@ -26,6 +26,8 @@ import java.lang.reflect.Method;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+import org.jnosql.artemis.Param;
+
 import com.darwino.commons.json.JsonObject;
 
 final class JsonObjectUtil {
@@ -41,6 +43,7 @@ final class JsonObjectUtil {
 		for (int index = 0; index < annotations.length; index++) {
 			final Object arg = args[index];
 
+			
 			Optional<Param> param = Stream.of(annotations[index])
 					.filter(Param.class::isInstance)
 					.map(Param.class::cast)

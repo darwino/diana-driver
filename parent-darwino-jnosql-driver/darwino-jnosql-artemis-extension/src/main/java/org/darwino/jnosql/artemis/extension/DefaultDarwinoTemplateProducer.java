@@ -1,24 +1,18 @@
 package org.darwino.jnosql.artemis.extension;
 
-import java.util.List;
 import java.util.Objects;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Vetoed;
+import javax.enterprise.inject.spi.CDI;
 import javax.inject.Inject;
 
 import org.darwino.jnosql.diana.driver.DarwinoDocumentCollectionManager;
 import org.jnosql.artemis.Converters;
-import org.jnosql.artemis.document.AbstractDocumentTemplate;
 import org.jnosql.artemis.document.DocumentEntityConverter;
 import org.jnosql.artemis.document.DocumentEventPersistManager;
-import org.jnosql.artemis.document.DocumentTemplate;
 import org.jnosql.artemis.document.DocumentWorkflow;
 import org.jnosql.artemis.reflection.ClassRepresentations;
-import org.jnosql.diana.api.document.DocumentCollectionManager;
-
-import com.darwino.commons.json.JsonObject;
-import com.darwino.jsonstore.JsqlCursor;
 
 @ApplicationScoped
 public class DefaultDarwinoTemplateProducer implements DarwinoTemplateProducer {
@@ -40,6 +34,7 @@ public class DefaultDarwinoTemplateProducer implements DarwinoTemplateProducer {
 	@Override
 	public DarwinoTemplate get(DarwinoDocumentCollectionManager collectionManager) {
 		Objects.requireNonNull(collectionManager, "collectionManager is required");
+		
         return new ProducerDocumentTemplate(converter, collectionManager, workflow,
                 persistManager, classRepresentations, converters);
 	}
@@ -49,7 +44,7 @@ public class DefaultDarwinoTemplateProducer implements DarwinoTemplateProducer {
 
         private DocumentEntityConverter converter;
 
-        private DocumentCollectionManager manager;
+        private DarwinoDocumentCollectionManager manager;
 
         private DocumentWorkflow workflow;
 
@@ -58,7 +53,7 @@ public class DefaultDarwinoTemplateProducer implements DarwinoTemplateProducer {
         private Converters converters;
 
         private ClassRepresentations classRepresentations;
-        ProducerDocumentTemplate(DocumentEntityConverter converter, DocumentCollectionManager manager,
+        ProducerDocumentTemplate(DocumentEntityConverter converter, DarwinoDocumentCollectionManager manager,
                                  DocumentWorkflow workflow,
                                  DocumentEventPersistManager persistManager,
                                  ClassRepresentations classRepresentations, Converters converters) {
@@ -79,7 +74,7 @@ public class DefaultDarwinoTemplateProducer implements DarwinoTemplateProducer {
         }
 
         @Override
-        protected DocumentCollectionManager getManager() {
+        protected DarwinoDocumentCollectionManager getManager() {
             return manager;
         }
 

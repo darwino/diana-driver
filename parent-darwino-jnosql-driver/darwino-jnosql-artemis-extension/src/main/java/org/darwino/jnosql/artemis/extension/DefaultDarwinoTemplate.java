@@ -28,15 +28,16 @@ import org.jnosql.artemis.document.DocumentEntityConverter;
 import org.jnosql.artemis.document.DocumentEventPersistManager;
 import org.jnosql.artemis.document.DocumentWorkflow;
 import org.jnosql.artemis.reflection.ClassRepresentations;
-import org.jnosql.diana.api.document.DocumentCollectionManager;
 
 import com.darwino.commons.json.JsonObject;
 import com.darwino.jsonstore.JsqlCursor;
 
 import javax.enterprise.inject.Instance;
 import javax.enterprise.inject.Typed;
+import javax.enterprise.inject.spi.CDI;
 import javax.inject.Inject;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static java.util.Objects.requireNonNull;
@@ -79,11 +80,13 @@ class DefaultDarwinoTemplate extends AbstractDocumentTemplate
 
     @Override
     protected DocumentEntityConverter getConverter() {
+		DocumentEntityConverter converter = this.converter == null ? CDI.current().select(DocumentEntityConverter.class).get() : this.converter;
+		Objects.requireNonNull(converter, "Unable to acquire DocumentEntityConverter");
         return converter;
     }
 
     @Override
-    protected DocumentCollectionManager getManager() {
+    protected DarwinoDocumentCollectionManager getManager() {
         return manager.get();
     }
 
@@ -112,8 +115,8 @@ class DefaultDarwinoTemplate extends AbstractDocumentTemplate
     public <T> List<T> jsqlQuery(String jsqlQuery, JsonObject params) throws NullPointerException {
         requireNonNull(jsqlQuery, "jsqlQuery is required"); //$NON-NLS-1$
         requireNonNull(params, "params is required"); //$NON-NLS-1$
-        return manager.get().jsqlQuery(jsqlQuery, params).stream()
-                .map(converter::toEntity)
+        return getManager().jsqlQuery(jsqlQuery, params).stream()
+                .map(getConverter()::toEntity)
                 .map(d -> (T) d)
                 .collect(Collectors.toList());
     }
@@ -123,7 +126,7 @@ class DefaultDarwinoTemplate extends AbstractDocumentTemplate
     public <T> List<T> jsqlQuery(JsqlCursor jsqlQuery, JsonObject params) throws NullPointerException {
         requireNonNull(jsqlQuery, "jsqlQuery is required"); //$NON-NLS-1$
         requireNonNull(params, "params is required"); //$NON-NLS-1$
-        return manager.get().jsqlQuery(jsqlQuery, params).stream()
+        return getManager().jsqlQuery(jsqlQuery, params).stream()
                 .map(converter::toEntity)
                 .map(d -> (T) d)
                 .collect(Collectors.toList());
@@ -133,7 +136,7 @@ class DefaultDarwinoTemplate extends AbstractDocumentTemplate
 	@Override
     public <T> List<T> jsqlQuery(String jsqlQuery) throws NullPointerException {
         requireNonNull(jsqlQuery, "jsqlQuery is required"); //$NON-NLS-1$
-        return manager.get().jsqlQuery(jsqlQuery).stream()
+        return getManager().jsqlQuery(jsqlQuery).stream()
                 .map(converter::toEntity)
                 .map(d -> (T) d)
                 .collect(Collectors.toList());
@@ -143,7 +146,7 @@ class DefaultDarwinoTemplate extends AbstractDocumentTemplate
     @Override
     public <T> List<T> search(String query) throws NullPointerException {
         requireNonNull(query, "query is required"); //$NON-NLS-1$
-        return manager.get().search(query).stream()
+        return getManager().search(query).stream()
                 .map(converter::toEntity)
                 .map(d -> (T) d)
                 .collect(Collectors.toList());

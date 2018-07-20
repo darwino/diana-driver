@@ -26,6 +26,7 @@ import org.darwino.jnosql.artemis.extension.DarwinoTemplateAsync;
 import org.darwino.jnosql.artemis.extension.runner.WeldJUnit4Runner;
 import org.jnosql.artemis.Converters;
 import org.jnosql.artemis.DynamicQueryException;
+import org.jnosql.artemis.Param;
 import org.jnosql.artemis.reflection.ClassRepresentations;
 import org.jnosql.artemis.reflection.Reflections;
 import org.junit.Before;

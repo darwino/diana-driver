@@ -117,5 +117,15 @@ public interface DarwinoDocumentCollectionManagerAsync extends DocumentCollectio
 	 * @throws ExecuteAsyncQueryException an async error
 	 */
 	void jsqlQuery(String jsqlQuery, Consumer<List<DocumentEntity>> callback) throws NullPointerException, ExecuteAsyncQueryException;
+    
+    /**
+     * Executes a stored cursor and then returns the result
+     *
+     * @param storedCursor the name of the stored cursor to use
+     * @param params the param object to pass to the cursor
+     * @return the query result
+     * @throws NullPointerException when either jsqlQuery or params are null
+     */
+    void storedCursor(String cursorName, JsonObject params, Consumer<List<DocumentEntity>> callback);
 
 }

@@ -216,6 +216,16 @@ class DefaultDarwinoDocumentCollectionManager implements DarwinoDocumentCollecti
 	public List<DocumentEntity> jsqlQuery(String jsqlQuery) throws NullPointerException {
 		return jsqlQuery(jsqlQuery, null);
 	}
+	
+	@Override
+	public List<DocumentEntity> storedCursor(String cursorName, JsonObject params) {
+		requireNonNull(cursorName, "query is required"); //$NON-NLS-1$
+		try {
+			return convert(getStore().openCursor().load(cursorName).params(params));
+		} catch (JsonException e) {
+			throw new RuntimeException(e);
+		}
+	}
 
 	@Override
 	public void close() {

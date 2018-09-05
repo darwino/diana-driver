@@ -152,4 +152,20 @@ class DefaultDarwinoTemplateAsync extends AbstractDocumentTemplateAsync implemen
 	                        .collect(toList()));
 	        manager.get().search(query, dianaCallBack);
 	}
+    
+
+    
+    @SuppressWarnings("unchecked")
+	@Override
+    public <T> void storedCursor(String cursorName, JsonObject params, Consumer<List<T>> callback) {
+    	Objects.requireNonNull(cursorName, "query is required"); //$NON-NLS-1$
+        Objects.requireNonNull(callback, "callback is required"); //$NON-NLS-1$
+
+        Consumer<List<DocumentEntity>> dianaCallBack = d -> callback.accept(
+                d.stream()
+                        .map(getConverter()::toEntity)
+                        .map(o -> (T) o)
+                        .collect(toList()));
+        manager.get().storedCursor(cursorName, params, dianaCallBack);
+    }
 }

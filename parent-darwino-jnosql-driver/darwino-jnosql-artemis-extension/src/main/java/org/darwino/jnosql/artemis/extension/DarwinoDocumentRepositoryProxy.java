@@ -133,6 +133,15 @@ class DarwinoDocumentRepositoryProxy<T> extends AbstractDocumentRepositoryProxy<
             return ReturnTypeConverterUtil.returnObject(result, typeClass, method);
         }
         
+        // Stored cursor support
+		StoredCursor storedCursor = method.getAnnotation(StoredCursor.class);
+		if (Objects.nonNull(storedCursor)) {
+			List<T> result = Collections.emptyList();
+			JsonObject params = JsonObjectUtil.getParams(args, method);
+			result = template.storedCursor(storedCursor.value(), params);
+			return ReturnTypeConverterUtil.returnObject(result, typeClass, method);
+		}
+        
         return super.invoke(o, method, args);
     }
 

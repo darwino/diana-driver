@@ -88,4 +88,19 @@ public interface DarwinoTemplateAsync extends DocumentTemplateAsync {
 	 * @throws ExecuteAsyncQueryException an async error
 	 */
 	<T> void search(String query, Consumer<List<T>> callback) throws NullPointerException, ExecuteAsyncQueryException;
+	
+	/**
+	 * Executes a stored cursor from the Darwino database
+	 *
+	 * @param <T>
+	 *            the type
+     * @param cursorName the name of the stored cursor
+     * @param params the param object to pass to the cursor execution
+	 * @param callback
+	 *            the callback
+	 * @throws NullPointerException
+	 *             when either the query or index are null
+	 * @throws ExecuteAsyncQueryException an async error
+	 */
+	<T> void storedCursor(String cursorName, JsonObject params, Consumer<List<T>> callback) throws NullPointerException, ExecuteAsyncQueryException;
 }

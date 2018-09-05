@@ -38,7 +38,7 @@ public interface DarwinoTemplate extends DocumentTemplate {
      * @return the query result
      * @throws NullPointerException when either jsqlQuery or params are null
      */
-    <T> List<T> jsqlQuery(String jsqlQuery, JsonObject params) throws NullPointerException;
+    <T> List<T> jsqlQuery(String jsqlQuery, JsonObject params);
 
     /**
      * Executes the JSQL query with params and then returns the result
@@ -48,7 +48,7 @@ public interface DarwinoTemplate extends DocumentTemplate {
      * @return the query result
      * @throws NullPointerException when either jsqlQuery or params are null
      */
-    <T> List<T> jsqlQuery(JsqlCursor jsqlQuery, JsonObject params) throws NullPointerException;
+    <T> List<T> jsqlQuery(JsqlCursor jsqlQuery, JsonObject params);
 
     /**
      * Executes the JSQL query and then returns the result
@@ -57,7 +57,7 @@ public interface DarwinoTemplate extends DocumentTemplate {
      * @return the query result
      * @throws NullPointerException when either jsqlQuery or params are null
      */
-    <T> List<T> jsqlQuery(String jsqlQuery) throws NullPointerException;
+    <T> List<T> jsqlQuery(String jsqlQuery);
 	
 	/**
      * Searches in Darwino using Full Text Search
@@ -67,7 +67,7 @@ public interface DarwinoTemplate extends DocumentTemplate {
      * @return the elements from the query
      * @throws NullPointerException when either the query or index are null
      */
-	<T> List<T> search(String query) throws NullPointerException;
+	<T> List<T> search(String query);
 	
 	/**
      * Searches in Darwino using Full Text Search
@@ -78,5 +78,15 @@ public interface DarwinoTemplate extends DocumentTemplate {
      * @return the elements from the query
      * @throws NullPointerException when either the query or index are null
      */
-	<T> List<T> search(String query, Collection<String> orderBy) throws NullPointerException;
+	<T> List<T> search(String query, Collection<String> orderBy);
+
+	/**
+     * Executes a stored cursor from the Darwino database
+     *
+     * @param <T>   the type
+     * @param cursorName the name of the stored cursor
+     * @param params the param object to pass to the cursor execution
+     * @return the elements from the query
+     */
+	<T> List<T> storedCursor(String cursorName, JsonObject params);
 }

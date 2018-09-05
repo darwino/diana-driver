@@ -163,4 +163,14 @@ class DefaultDarwinoTemplate extends AbstractDocumentTemplate
                 .map(d -> (T) d)
                 .collect(Collectors.toList());
     }
+    
+    @SuppressWarnings("unchecked")
+	@Override
+    public <T> List<T> storedCursor(String cursorName, JsonObject params) {
+    	requireNonNull(cursorName, "cursorName is required"); //$NON-NLS-1$
+        return getManager().storedCursor(cursorName, params).stream()
+                .map(getConverter()::toEntity)
+                .map(d -> (T) d)
+                .collect(Collectors.toList());
+    }
 }

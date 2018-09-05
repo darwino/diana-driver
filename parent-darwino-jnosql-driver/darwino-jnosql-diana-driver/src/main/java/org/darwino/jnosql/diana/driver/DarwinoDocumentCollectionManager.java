@@ -111,7 +111,7 @@ public interface DarwinoDocumentCollectionManager extends DocumentCollectionMana
     /**
      * Executes a stored cursor and then returns the result
      *
-     * @param storedCursor the name of the stored cursor to use
+     * @param cursorName the name of the stored cursor to use
      * @param params the param object to pass to the cursor
      * @return the query result
      * @throws NullPointerException when either jsqlQuery or params are null

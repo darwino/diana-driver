@@ -22,10 +22,8 @@
 package org.darwino.jnosql.artemis.extension;
 
 import org.darwino.jnosql.artemis.extension.runner.WeldJUnit4Runner;
-import org.jnosql.artemis.Converters;
 import org.jnosql.artemis.Param;
-import org.jnosql.artemis.reflection.ClassRepresentations;
-import org.jnosql.artemis.reflection.Reflections;
+import org.jnosql.artemis.document.DocumentRepositoryProducer;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -51,13 +49,7 @@ public class DarwinoDocumentRepositoryProxyTest {
 	private DarwinoTemplate template;
 
     @Inject
-    private ClassRepresentations classRepresentations;
-
-    @Inject
-    private Reflections reflections;
-
-    @Inject
-    private Converters converters;
+    private DocumentRepositoryProducer producer;
 
     private PersonRepository personRepository;
 
@@ -68,7 +60,7 @@ public class DarwinoDocumentRepositoryProxyTest {
         this.template = Mockito.mock(DarwinoTemplate.class);
 
         DarwinoDocumentRepositoryProxy handler = new DarwinoDocumentRepositoryProxy(template,
-                classRepresentations, PersonRepository.class, reflections, converters);
+                PersonRepository.class, producer.get(PersonRepository.class, template));
 
         when(template.insert(any(Person.class))).thenReturn(new Person());
         when(template.insert(any(Person.class), any(Duration.class))).thenReturn(new Person());

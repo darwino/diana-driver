@@ -24,11 +24,9 @@ package org.darwino.jnosql.artemis.extension;
 import org.darwino.jnosql.artemis.extension.DarwinoRepositoryAsyncProxy;
 import org.darwino.jnosql.artemis.extension.DarwinoTemplateAsync;
 import org.darwino.jnosql.artemis.extension.runner.WeldJUnit4Runner;
-import org.jnosql.artemis.Converters;
 import org.jnosql.artemis.DynamicQueryException;
 import org.jnosql.artemis.Param;
-import org.jnosql.artemis.reflection.ClassRepresentations;
-import org.jnosql.artemis.reflection.Reflections;
+import org.jnosql.artemis.document.DocumentRepositoryAsyncProducer;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -51,16 +49,8 @@ import static org.mockito.Mockito.verify;
 public class DarwinoRepositoryAsyncProxyTest {
 
 	private DarwinoTemplateAsync template;
-
-    @Inject
-    private ClassRepresentations classRepresentations;
-
-    @Inject
-    private Reflections reflections;
-
-    @Inject
-    private Converters converters;
-
+	@Inject
+	private DocumentRepositoryAsyncProducer producer;
     private PersonAsyncRepository personRepository;
 
 
@@ -68,9 +58,9 @@ public class DarwinoRepositoryAsyncProxyTest {
 	@Before
     public void setUp() {
         this.template = Mockito.mock(DarwinoTemplateAsync.class);
+        PersonAsyncRepository personAsyncRepository = producer.get(PersonAsyncRepository.class, template);
 
-        DarwinoRepositoryAsyncProxy handler = new DarwinoRepositoryAsyncProxy(template,
-                classRepresentations, PersonAsyncRepository.class, reflections, converters);
+        DarwinoRepositoryAsyncProxy handler = new DarwinoRepositoryAsyncProxy(template, personAsyncRepository);
 
 
         personRepository = (PersonAsyncRepository) Proxy.newProxyInstance(PersonAsyncRepository.class.getClassLoader(),

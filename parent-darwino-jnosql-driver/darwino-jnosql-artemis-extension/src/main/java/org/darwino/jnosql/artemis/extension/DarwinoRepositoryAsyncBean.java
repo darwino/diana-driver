@@ -21,10 +21,9 @@
  */
 package org.darwino.jnosql.artemis.extension;
 
-import org.jnosql.artemis.Converters;
 import org.jnosql.artemis.DatabaseQualifier;
-import org.jnosql.artemis.reflection.ClassRepresentations;
-import org.jnosql.artemis.reflection.Reflections;
+import org.jnosql.artemis.RepositoryAsync;
+import org.jnosql.artemis.document.DocumentRepositoryAsyncProducer;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.spi.CreationalContext;
@@ -77,12 +76,11 @@ public class DarwinoRepositoryAsyncBean implements Bean<DarwinoRepositoryAsync>,
 	@Override
 	@SuppressWarnings({ "unchecked" })
 	public DarwinoRepositoryAsync create(CreationalContext<DarwinoRepositoryAsync> creationalContext) {
-		ClassRepresentations classRepresentations = getInstance(ClassRepresentations.class);
-		DarwinoTemplateAsync repository = getInstance(DarwinoTemplateAsync.class);
-		Reflections reflections = getInstance(Reflections.class);
-		Converters converters = getInstance(Converters.class);
+		DarwinoTemplateAsync templateAsync = getInstance(DarwinoTemplateAsync.class);
+		DocumentRepositoryAsyncProducer producer = getInstance(DocumentRepositoryAsyncProducer.class);
+		RepositoryAsync<?, ?> repositoryAsync = producer.get((Class<RepositoryAsync<Object, Object>>) type, templateAsync);
 
-		DarwinoRepositoryAsyncProxy handler = new DarwinoRepositoryAsyncProxy(repository, classRepresentations, type, reflections, converters);
+		DarwinoRepositoryAsyncProxy handler = new DarwinoRepositoryAsyncProxy(templateAsync, repositoryAsync);
 		return (DarwinoRepositoryAsync) Proxy.newProxyInstance(type.getClassLoader(), new Class[] { type }, handler);
 	}
 

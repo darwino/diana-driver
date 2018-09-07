@@ -36,10 +36,10 @@ import javax.enterprise.inject.spi.InjectionPoint;
 import javax.enterprise.inject.spi.PassivationCapable;
 import javax.enterprise.util.AnnotationLiteral;
 
-import org.jnosql.artemis.Converters;
 import org.jnosql.artemis.DatabaseQualifier;
+import org.jnosql.artemis.Repository;
+import org.jnosql.artemis.document.DocumentRepositoryProducer;
 import org.jnosql.artemis.reflection.ClassRepresentations;
-import org.jnosql.artemis.reflection.Reflections;
 
 public class DarwinoRepositoryBean implements Bean<DarwinoRepository<?, ?>>, PassivationCapable {
 
@@ -75,19 +75,18 @@ public class DarwinoRepositoryBean implements Bean<DarwinoRepository<?, ?>>, Pas
 	public DarwinoRepository<?, ?> create(CreationalContext<DarwinoRepository<?, ?>> creationalContext) {
 		ClassRepresentations classRepresentations = getInstance(ClassRepresentations.class);
         
-		DarwinoTemplate repository;
+		DarwinoTemplate template;
 		RepositoryProvider producerAnnotation = type.getAnnotation(RepositoryProvider.class);
 		if(producerAnnotation != null) {
-			repository = getInstance(DarwinoTemplate.class, producerAnnotation.value());
+			template = getInstance(DarwinoTemplate.class, producerAnnotation.value());
 		} else {
-			repository = getInstance(DarwinoTemplate.class);
+			template = getInstance(DarwinoTemplate.class);
 		}
+		DocumentRepositoryProducer producer = getInstance(DocumentRepositoryProducer.class);
+		@SuppressWarnings("unchecked")
+		Repository<Object, Object> repository = producer.get((Class<Repository<Object, Object>>) type, template);
 
-        Reflections reflections = getInstance(Reflections.class);
-        Converters converters = getInstance(Converters.class);
-
-        DarwinoDocumentRepositoryProxy<DarwinoRepository<?, ?>> handler = new DarwinoDocumentRepositoryProxy<>(repository,
-                classRepresentations, type, reflections, converters);
+        DarwinoDocumentRepositoryProxy<DarwinoRepository<?, ?>> handler = new DarwinoDocumentRepositoryProxy<>(template, type, repository);
         return (DarwinoRepository<?, ?>) Proxy.newProxyInstance(type.getClassLoader(),
                 new Class[]{type},
                 handler);

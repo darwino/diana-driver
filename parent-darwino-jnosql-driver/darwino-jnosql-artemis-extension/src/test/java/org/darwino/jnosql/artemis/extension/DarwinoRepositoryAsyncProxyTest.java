@@ -81,12 +81,6 @@ public class DarwinoRepositoryAsyncProxyTest {
     }
 
 
-    @Test(expected = DynamicQueryException.class)
-    public void shouldReturnError() {
-        personRepository.findByName("Ada");
-    }
-
-
 
     @SuppressWarnings({ "unchecked", "unused" })
 	@Test

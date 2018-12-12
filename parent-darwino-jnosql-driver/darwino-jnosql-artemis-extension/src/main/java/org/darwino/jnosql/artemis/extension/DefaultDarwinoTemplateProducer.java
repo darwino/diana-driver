@@ -4,7 +4,6 @@ import java.util.Objects;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Vetoed;
-import javax.enterprise.inject.spi.CDI;
 import javax.inject.Inject;
 
 import org.darwino.jnosql.diana.driver.DarwinoDocumentCollectionManager;
@@ -12,7 +11,7 @@ import org.jnosql.artemis.Converters;
 import org.jnosql.artemis.document.DocumentEntityConverter;
 import org.jnosql.artemis.document.DocumentEventPersistManager;
 import org.jnosql.artemis.document.DocumentWorkflow;
-import org.jnosql.artemis.reflection.ClassRepresentations;
+import org.jnosql.artemis.reflection.ClassMappings;
 
 @ApplicationScoped
 public class DefaultDarwinoTemplateProducer implements DarwinoTemplateProducer {
@@ -26,7 +25,7 @@ public class DefaultDarwinoTemplateProducer implements DarwinoTemplateProducer {
     private DocumentEventPersistManager persistManager;
 
     @Inject
-    private ClassRepresentations classRepresentations;
+    private ClassMappings mappings;
 
     @Inject
     private Converters converters;
@@ -36,7 +35,7 @@ public class DefaultDarwinoTemplateProducer implements DarwinoTemplateProducer {
 		Objects.requireNonNull(collectionManager, "collectionManager is required");
 		
         return new ProducerDocumentTemplate(converter, collectionManager, workflow,
-                persistManager, classRepresentations, converters);
+                persistManager, mappings, converters);
 	}
 
     @Vetoed
@@ -52,16 +51,16 @@ public class DefaultDarwinoTemplateProducer implements DarwinoTemplateProducer {
 
         private Converters converters;
 
-        private ClassRepresentations classRepresentations;
+        private ClassMappings mappings;
         ProducerDocumentTemplate(DocumentEntityConverter converter, DarwinoDocumentCollectionManager manager,
                                  DocumentWorkflow workflow,
                                  DocumentEventPersistManager persistManager,
-                                 ClassRepresentations classRepresentations, Converters converters) {
+                                 ClassMappings mappings, Converters converters) {
             this.converter = converter;
             this.manager = manager;
             this.workflow = workflow;
             this.persistManager = persistManager;
-            this.classRepresentations = classRepresentations;
+            this.mappings = mappings;
             this.converters = converters;
         }
 
@@ -88,10 +87,10 @@ public class DefaultDarwinoTemplateProducer implements DarwinoTemplateProducer {
             return persistManager;
         }
 
-        @Override
-        protected ClassRepresentations getClassRepresentations() {
-            return classRepresentations;
-        }
+		@Override
+		protected ClassMappings getClassMappings() {
+			return mappings;
+		}
 
         @Override
         protected Converters getConverters() {

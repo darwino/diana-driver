@@ -39,7 +39,6 @@ import javax.enterprise.util.AnnotationLiteral;
 import org.jnosql.artemis.DatabaseQualifier;
 import org.jnosql.artemis.Repository;
 import org.jnosql.artemis.document.DocumentRepositoryProducer;
-import org.jnosql.artemis.reflection.ClassRepresentations;
 
 public class DarwinoRepositoryBean implements Bean<DarwinoRepository<?, ?>>, PassivationCapable {
 
@@ -73,8 +72,6 @@ public class DarwinoRepositoryBean implements Bean<DarwinoRepository<?, ?>>, Pas
 
 	@Override
 	public DarwinoRepository<?, ?> create(CreationalContext<DarwinoRepository<?, ?>> creationalContext) {
-		ClassRepresentations classRepresentations = getInstance(ClassRepresentations.class);
-        
 		DarwinoTemplate template;
 		RepositoryProvider producerAnnotation = type.getAnnotation(RepositoryProvider.class);
 		if(producerAnnotation != null) {

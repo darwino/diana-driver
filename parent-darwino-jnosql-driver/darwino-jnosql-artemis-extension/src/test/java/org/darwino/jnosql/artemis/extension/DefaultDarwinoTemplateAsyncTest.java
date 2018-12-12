@@ -25,7 +25,7 @@ import org.darwino.jnosql.artemis.extension.runner.WeldJUnit4Runner;
 import org.darwino.jnosql.diana.driver.DarwinoDocumentCollectionManagerAsync;
 import org.jnosql.artemis.Converters;
 import org.jnosql.artemis.document.DocumentEntityConverter;
-import org.jnosql.artemis.reflection.ClassRepresentations;
+import org.jnosql.artemis.reflection.ClassMappings;
 import org.jnosql.diana.api.document.Document;
 import org.jnosql.diana.api.document.DocumentEntity;
 import org.junit.Before;
@@ -55,7 +55,7 @@ public class DefaultDarwinoTemplateAsyncTest {
     private DarwinoTemplateAsync templateAsync;
 
     @Inject
-    private ClassRepresentations classRepresentations;
+    private ClassMappings mappings;
 
     @Inject
     private Converters converters;
@@ -68,7 +68,7 @@ public class DefaultDarwinoTemplateAsyncTest {
         Instance instance = Mockito.mock(Instance.class);
         when(instance.get()).thenReturn(managerAsync);
 
-        templateAsync = new DefaultDarwinoTemplateAsync(converter, instance, classRepresentations, converters);
+        templateAsync = new DefaultDarwinoTemplateAsync(converter, instance, mappings, converters);
 
         DocumentEntity entity = DocumentEntity.of("Person");
         entity.add(Document.of("name", "Ada"));

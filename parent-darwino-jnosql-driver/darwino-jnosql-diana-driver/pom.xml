@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.darwino</groupId>
 		<artifactId>parent-darwino-jnosql-driver</artifactId>
-		<version>0.0.7-SNAPSHOT</version>
+		<version>0.0.7</version>
 	</parent>
 	<artifactId>darwino-jnosql-diana-driver</artifactId>
 	

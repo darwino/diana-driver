@@ -205,6 +205,12 @@ class DefaultDarwinoDocumentCollectionManager implements DarwinoDocumentCollecti
 		try {
 			if(Objects.nonNull(params)) {
 				jsqlQuery.params(params);
+				// Special support for skip and limit params
+				int skip = params.getAsInt("skip"); //$NON-NLS-1$
+				int limit = params.getAsInt("limit"); //$NON-NLS-1$
+				if(skip != 0 || limit != 0) {
+					jsqlQuery.range(skip, limit);
+				}
 			}
 			return convert(getStore(), jsqlQuery);
 		} catch(JsonException e) {
@@ -221,7 +227,22 @@ class DefaultDarwinoDocumentCollectionManager implements DarwinoDocumentCollecti
 	public List<DocumentEntity> storedCursor(String cursorName, JsonObject params) {
 		requireNonNull(cursorName, "query is required"); //$NON-NLS-1$
 		try {
-			return convert(getStore().openCursor().load(cursorName).params(params));
+			
+			Cursor cursor = getStore().openCursor()
+					.load(cursorName);
+			
+			if(Objects.nonNull(params)) {
+				// Special support for skip and limit params
+				int skip = params.getAsInt("skip"); //$NON-NLS-1$
+				int limit = params.getAsInt("limit"); //$NON-NLS-1$
+				if(skip != 0 || limit != 0) {
+					cursor.range(skip, limit);
+				}
+
+				cursor.params(params);
+			}
+			
+			return convert(cursor);
 		} catch (JsonException e) {
 			throw new RuntimeException(e);
 		}

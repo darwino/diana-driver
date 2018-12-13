@@ -21,6 +21,11 @@
  */
 package org.darwino.jnosql.diana.driver;
 
+import com.darwino.commons.Platform;
+import com.darwino.commons.tasks.Task;
+import com.darwino.commons.tasks.TaskExecutor;
+import com.darwino.commons.tasks.TaskExecutorService;
+import com.darwino.commons.util.Callback;
 import org.jnosql.diana.api.ExecuteAsyncQueryException;
 import org.jnosql.diana.api.document.DocumentDeleteQuery;
 import org.jnosql.diana.api.document.DocumentEntity;
@@ -30,23 +35,17 @@ import com.darwino.commons.json.JsonObject;
 import com.darwino.jsonstore.Cursor;
 import com.darwino.jsonstore.JsqlCursor;
 
-import rx.functions.Action1;
-
 import java.time.Duration;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 import static java.util.Objects.requireNonNull;
-import static rx.Observable.just;
 
 class DefaultDarwinoDocumentCollectionManagerAsync implements DarwinoDocumentCollectionManagerAsync {
 
 	private static final Consumer<DocumentEntity> NOOP = d -> {
 	};
-	private static final Action1<Throwable> ERROR_SAVE = a -> new ExecuteAsyncQueryException("On error when try to execute Darwino save method"); //$NON-NLS-1$
-	private static final Action1<Throwable> ERROR_FIND = a -> new ExecuteAsyncQueryException("On error when try to execute Darwino find method"); //$NON-NLS-1$
-	private static final Action1<Throwable> ERROR_DELETE = a -> new ExecuteAsyncQueryException("On error when try to execute Darwino delete method"); //$NON-NLS-1$
-	private static final Action1<Throwable> ERROR_QUERY = a -> new ExecuteAsyncQueryException("On error when try to execute Darwino query method"); //$NON-NLS-1$
 
 	private final DarwinoDocumentCollectionManager manager;
 
@@ -65,26 +64,65 @@ class DefaultDarwinoDocumentCollectionManagerAsync implements DarwinoDocumentCol
 	}
 
 	@Override
-	public void insert(DocumentEntity entity, Consumer<DocumentEntity> callBack) throws ExecuteAsyncQueryException, UnsupportedOperationException {
-		requireNonNull(callBack, "callBack is required"); //$NON-NLS-1$
-		just(entity).map(manager::insert).subscribe(callBack::accept, ERROR_SAVE);
+	public void insert(DocumentEntity entity, Consumer<DocumentEntity> callback) throws ExecuteAsyncQueryException, UnsupportedOperationException {
+		requireNonNull(callback, "callback is required"); //$NON-NLS-1$
+
+		Task t = Task.from(context -> manager.insert(entity));
+		TaskExecutor<DocumentEntity> exec = Platform.getService(TaskExecutorService.class).createExecutor(false);
+		exec.exec(t, new Callback<DocumentEntity>() {
+			@Override
+			public Void success(DocumentEntity value) {
+				callback.accept(value);
+				return null;
+			}
+			@Override
+			public void failure(Throwable t) {
+				throw new ExecuteAsyncQueryException("On error when try to execute Darwino save method", t);
+			}
+		});
 	}
 
 	@Override
-	public void insert(DocumentEntity entity, Duration ttl, Consumer<DocumentEntity> callBack)
+	public void insert(DocumentEntity entity, Duration ttl, Consumer<DocumentEntity> callback)
 			throws ExecuteAsyncQueryException, UnsupportedOperationException {
-		requireNonNull(callBack, "callBack is required"); //$NON-NLS-1$
-		just(entity).map(e -> manager.insert(e, ttl)).subscribe(callBack::accept, ERROR_SAVE);
+		requireNonNull(callback, "callback is required"); //$NON-NLS-1$
+
+		Task t = Task.from(context -> manager.insert(entity, ttl));
+		TaskExecutor<DocumentEntity> exec = Platform.getService(TaskExecutorService.class).createExecutor(false);
+		exec.exec(t, new Callback<DocumentEntity>() {
+			@Override
+			public Void success(DocumentEntity value) {
+				callback.accept(value);
+				return null;
+			}
+			@Override
+			public void failure(Throwable t) {
+				throw new ExecuteAsyncQueryException("On error when try to execute Darwino save method", t);
+			}
+		});
 	}
 
 	@Override
 	public void update(DocumentEntity entity) throws ExecuteAsyncQueryException, UnsupportedOperationException {
-		insert(entity);
+		update(entity, NOOP);
 	}
 
 	@Override
-	public void update(DocumentEntity entity, Consumer<DocumentEntity> callBack) throws ExecuteAsyncQueryException, UnsupportedOperationException {
-		insert(entity, callBack);
+	public void update(DocumentEntity entity, Consumer<DocumentEntity> callback) throws ExecuteAsyncQueryException, UnsupportedOperationException {
+
+		Task t = Task.from(context -> manager.update(entity));
+		TaskExecutor<DocumentEntity> exec = Platform.getService(TaskExecutorService.class).createExecutor(false);
+		exec.exec(t, new Callback<DocumentEntity>() {
+			@Override
+			public Void success(DocumentEntity value) {
+				callback.accept(entity);
+				return null;
+			}
+			@Override
+			public void failure(Throwable t) {
+				throw new ExecuteAsyncQueryException("On error when try to execute Darwino save method", t);
+			}
+		});
 	}
 
 	@Override
@@ -94,37 +132,101 @@ class DefaultDarwinoDocumentCollectionManagerAsync implements DarwinoDocumentCol
 	}
 
 	@Override
-	public void delete(DocumentDeleteQuery query, Consumer<Void> callBack) throws ExecuteAsyncQueryException, UnsupportedOperationException {
+	public void delete(DocumentDeleteQuery query, Consumer<Void> callback) throws ExecuteAsyncQueryException, UnsupportedOperationException {
 		requireNonNull(query, "query is required"); //$NON-NLS-1$
-		requireNonNull(callBack, "callBack is required"); //$NON-NLS-1$
-		just(query).map(q -> {
-			manager.delete(q);
-			return true;
-		}).subscribe(a -> callBack.accept(null), ERROR_DELETE);
+		requireNonNull(callback, "callback is required"); //$NON-NLS-1$
+
+		Task t = Task.from(context -> { manager.delete(query); return null; });
+		TaskExecutor<Void> exec = Platform.getService(TaskExecutorService.class).createExecutor(false);
+		exec.exec(t, new Callback<Void>() {
+			@Override
+			public Void success(Void value) {
+				callback.accept(null);
+				return null;
+			}
+			@Override
+			public void failure(Throwable t) {
+				throw new ExecuteAsyncQueryException("On error when try to execute Darwino delete method", t);
+			}
+		});
 	}
 
 	@Override
-	public void select(DocumentQuery query, Consumer<List<DocumentEntity>> callBack) throws ExecuteAsyncQueryException, UnsupportedOperationException {
-		just(query).map(manager::select).subscribe(callBack::accept, ERROR_FIND);
+	public void select(DocumentQuery query, Consumer<List<DocumentEntity>> callback) throws ExecuteAsyncQueryException, UnsupportedOperationException {
+		requireNonNull(query, "query is required"); //$NON-NLS-1$
+		requireNonNull(callback, "callback is required"); //$NON-NLS-1$
+
+		Task t = Task.from(context -> manager.select(query));
+		TaskExecutor<List<DocumentEntity>> exec = Platform.getService(TaskExecutorService.class).createExecutor(false);
+		exec.exec(t, new Callback<List<DocumentEntity>>() {
+			@Override
+			public Void success(List<DocumentEntity> value) {
+				callback.accept(value);
+				return null;
+			}
+			@Override
+			public void failure(Throwable t) {
+				throw new ExecuteAsyncQueryException("On error when try to execute Darwino find method", t);
+			}
+		});
 	}
 
 	@Override
 	public void query(String query, JsonObject params, Consumer<List<DocumentEntity>> callback)
 			throws NullPointerException, ExecuteAsyncQueryException {
 		requireNonNull(callback, "callback is required"); //$NON-NLS-1$
-		just(query).map(n -> manager.query(n, params)).subscribe(callback::accept, ERROR_QUERY);
+
+		Task t = Task.from(context -> manager.query(query, params));
+		TaskExecutor<List<DocumentEntity>> exec = Platform.getService(TaskExecutorService.class).createExecutor(false);
+		exec.exec(t, new Callback<List<DocumentEntity>>() {
+			@Override
+			public Void success(List<DocumentEntity> value) {
+				callback.accept(value);
+				return null;
+			}
+			@Override
+			public void failure(Throwable t) {
+				throw new ExecuteAsyncQueryException("On error when try to execute Darwino query method", t);
+			}
+		});
 	}
 
 	@Override
 	public void query(String query, Consumer<List<DocumentEntity>> callback) throws NullPointerException, ExecuteAsyncQueryException {
 		requireNonNull(callback, "callback is required"); //$NON-NLS-1$
-		just(query).map(manager::query).subscribe(callback::accept, ERROR_QUERY);
+
+		Task t = Task.from(context -> manager.query(query));
+		TaskExecutor<List<DocumentEntity>> exec = Platform.getService(TaskExecutorService.class).createExecutor(false);
+		exec.exec(t, new Callback<List<DocumentEntity>>() {
+			@Override
+			public Void success(List<DocumentEntity> value) {
+				callback.accept(value);
+				return null;
+			}
+			@Override
+			public void failure(Throwable t) {
+				throw new ExecuteAsyncQueryException("On error when try to execute Darwino query method", t);
+			}
+		});
 	}
 
 	@Override
 	public void query(Cursor cursor, Consumer<List<DocumentEntity>> callback) throws NullPointerException, ExecuteAsyncQueryException {
 		requireNonNull(callback, "callback is required"); //$NON-NLS-1$
-		just(cursor).map(manager::query).subscribe(callback::accept, ERROR_QUERY);
+
+		Task t = Task.from(context -> manager.query(cursor));
+		TaskExecutor<List<DocumentEntity>> exec = Platform.getService(TaskExecutorService.class).createExecutor(false);
+		exec.exec(t, new Callback<List<DocumentEntity>>() {
+			@Override
+			public Void success(List<DocumentEntity> value) {
+				callback.accept(value);
+				return null;
+			}
+			@Override
+			public void failure(Throwable t) {
+				throw new ExecuteAsyncQueryException("On error when try to execute Darwino query method", t);
+			}
+		});
 	}
 
 	@Override
@@ -135,37 +237,103 @@ class DefaultDarwinoDocumentCollectionManagerAsync implements DarwinoDocumentCol
 	@Override
 	public void search(String query, Consumer<List<DocumentEntity>> callback) throws ExecuteAsyncQueryException {
 		requireNonNull(callback, "callback is required"); //$NON-NLS-1$
-		just(query).map(manager::search).subscribe(callback::accept, ERROR_QUERY);
+
+		Task t = Task.from(context -> manager.search(query));
+		TaskExecutor<List<DocumentEntity>> exec = Platform.getService(TaskExecutorService.class).createExecutor(false);
+		exec.exec(t, new Callback<List<DocumentEntity>>() {
+			@Override
+			public Void success(List<DocumentEntity> value) {
+				callback.accept(value);
+				return null;
+			}
+			@Override
+			public void failure(Throwable t) {
+				throw new ExecuteAsyncQueryException("On error when try to execute Darwino query method", t);
+			}
+		});
 	}
 
 	@Override
 	public void jsqlQuery(String jsqlQuery, JsonObject params, Consumer<List<DocumentEntity>> callback)
 			throws NullPointerException, ExecuteAsyncQueryException {
 		requireNonNull(callback, "callback is required"); //$NON-NLS-1$
-		just(jsqlQuery).map(n -> manager.jsqlQuery(n, params)).subscribe(callback::accept, ERROR_QUERY);
+
+		Task t = Task.from(context -> manager.jsqlQuery(jsqlQuery, params));
+		TaskExecutor<List<DocumentEntity>> exec = Platform.getService(TaskExecutorService.class).createExecutor(false);
+		exec.exec(t, new Callback<List<DocumentEntity>>() {
+			@Override
+			public Void success(List<DocumentEntity> value) {
+				callback.accept(value);
+				return null;
+			}
+			@Override
+			public void failure(Throwable t) {
+				throw new ExecuteAsyncQueryException("On error when try to execute Darwino query method", t);
+			}
+		});
 	}
 
 	@Override
 	public void jsqlQuery(JsqlCursor jsqlQuery, JsonObject params, Consumer<List<DocumentEntity>> callback)
 			throws NullPointerException, ExecuteAsyncQueryException {
 		requireNonNull(callback, "callback is required"); //$NON-NLS-1$
-		just(jsqlQuery).map(n -> manager.jsqlQuery(n, params)).subscribe(callback::accept, ERROR_QUERY);
+
+		Task t = Task.from(context -> manager.jsqlQuery(jsqlQuery, params));
+		TaskExecutor<List<DocumentEntity>> exec = Platform.getService(TaskExecutorService.class).createExecutor(false);
+		exec.exec(t, new Callback<List<DocumentEntity>>() {
+			@Override
+			public Void success(List<DocumentEntity> value) {
+				callback.accept(value);
+				return null;
+			}
+			@Override
+			public void failure(Throwable t) {
+				throw new ExecuteAsyncQueryException("On error when try to execute Darwino query method", t);
+			}
+		});
 	}
 
 	@Override
 	public void jsqlQuery(String jsqlQuery, Consumer<List<DocumentEntity>> callback) throws NullPointerException, ExecuteAsyncQueryException {
-		just(jsqlQuery).map(manager::jsqlQuery).subscribe(callback::accept, ERROR_QUERY);
+		jsqlQuery(jsqlQuery, new JsonObject(), callback);
 	}
 	
 	@Override
 	public void storedCursor(String cursorName, JsonObject params, Consumer<List<DocumentEntity>> callback) {
 		requireNonNull(callback, "callback is required"); //$NON-NLS-1$
-		just(cursorName).map(n -> manager.storedCursor(n, params)).subscribe(callback::accept, ERROR_QUERY);
+
+		Task t = Task.from(context -> manager.storedCursor(cursorName, params));
+		TaskExecutor<List<DocumentEntity>> exec = Platform.getService(TaskExecutorService.class).createExecutor(false);
+		exec.exec(t, new Callback<List<DocumentEntity>>() {
+			@Override
+			public Void success(List<DocumentEntity> value) {
+				callback.accept(value);
+				return null;
+			}
+			@Override
+			public void failure(Throwable t) {
+				throw new ExecuteAsyncQueryException("On error when try to execute Darwino query method", t);
+			}
+		});
 	}
 
 	@Override
 	public void count(String documentCollection, Consumer<Long> callback) {
-		just(documentCollection).map(manager::count).subscribe(callback::accept, ERROR_QUERY);
+		requireNonNull(callback, "callback is required"); //$NON-NLS-1$
+
+		Task t = Task.from(context -> manager.count(documentCollection));
+		TaskExecutor<Long> exec = Platform.getService(TaskExecutorService.class).createExecutor(false);
+		exec.exec(t, new Callback<Long>() {
+			@Override
+			public Void success(Long value) {
+				callback.accept(value);
+				return null;
+			}
+			@Override
+			public void failure(Throwable t) {
+				throw new ExecuteAsyncQueryException("On error when try to execute Darwino query method", t);
+			}
+		});
 	}
 	
 	

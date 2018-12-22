@@ -1,4 +1,4 @@
-package org.darwino.jnosql.artemis.extension;
+package org.darwino.jnosql.artemis.extension.converter;
 
 import java.text.ParseException;
 import java.util.Date;

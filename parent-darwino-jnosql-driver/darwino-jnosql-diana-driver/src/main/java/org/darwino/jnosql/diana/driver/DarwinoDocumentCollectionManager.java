@@ -21,7 +21,6 @@
  */
 package org.darwino.jnosql.diana.driver;
 
-import com.darwino.commons.json.JsonObject;
 import com.darwino.jsonstore.Cursor;
 import com.darwino.jsonstore.JsqlCursor;
 
@@ -41,10 +40,11 @@ public interface DarwinoDocumentCollectionManager extends DocumentCollectionMana
      * Executes the query with params and then returns the result
      *
      * @param query the query
-     * @param params    the params
+     * @param params    the params. The object type should match the configured JSON factory
+     *                  in the Darwino session
      * @return the query result
      */
-    List<DocumentEntity> query(String query, JsonObject params);
+    List<DocumentEntity> query(String query, Object params);
 
     /**
      * Executes the query and then returns the result
@@ -83,21 +83,23 @@ public interface DarwinoDocumentCollectionManager extends DocumentCollectionMana
      * Executes the JSQL query with params and then returns the result
      *
      * @param jsqlQuery the query
-     * @param params    the params
+     * @param params    the params. The object type should match the configured JSON factory
+     *                  in the Darwino session
      * @return the query result
      * @throws NullPointerException when either jsqlQuery or params are null
      */
-    List<DocumentEntity> jsqlQuery(String jsqlQuery, JsonObject params) throws NullPointerException;
+    List<DocumentEntity> jsqlQuery(String jsqlQuery, Object params) throws NullPointerException;
 
     /**
      * Executes the JSQL query with params and then returns the result
      *
      * @param jsqlQuery the query
-     * @param params    the params
+     * @param params    the params. The object type should match the configured JSON factory
+     *                  in the Darwino session
      * @return the query result
      * @throws NullPointerException when either jsqlQuery or params are null
      */
-    List<DocumentEntity> jsqlQuery(JsqlCursor jsqlQuery, JsonObject params) throws NullPointerException;
+    List<DocumentEntity> jsqlQuery(JsqlCursor jsqlQuery, Object params) throws NullPointerException;
 
     /**
      * Executes the JSQL query and then returns the result
@@ -112,9 +114,10 @@ public interface DarwinoDocumentCollectionManager extends DocumentCollectionMana
      * Executes a stored cursor and then returns the result
      *
      * @param cursorName the name of the stored cursor to use
-     * @param params the param object to pass to the cursor
+     * @param params the param object to pass to the cursor. The object type should match
+     *                  the configured JSON factory in the Darwino session
      * @return the query result
      * @throws NullPointerException when either jsqlQuery or params are null
      */
-    List<DocumentEntity> storedCursor(String cursorName, JsonObject params);
+    List<DocumentEntity> storedCursor(String cursorName, Object params);
 }

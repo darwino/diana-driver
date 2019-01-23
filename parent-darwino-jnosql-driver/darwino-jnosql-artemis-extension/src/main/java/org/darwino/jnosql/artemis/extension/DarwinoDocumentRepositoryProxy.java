@@ -25,13 +25,12 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
+import com.darwino.commons.json.JsonFactory;
+import com.darwino.platform.DarwinoContext;
 import org.jnosql.artemis.Repository;
-
-import com.darwino.commons.json.JsonObject;
 
 class DarwinoDocumentRepositoryProxy<T> implements InvocationHandler {
 
@@ -43,8 +42,8 @@ class DarwinoDocumentRepositoryProxy<T> implements InvocationHandler {
     @SuppressWarnings("unchecked")
 	DarwinoDocumentRepositoryProxy(DarwinoTemplate template, Class<?> repositoryType, Repository<?, ?> repository) {
         this.template = template;
-        this.typeClass = Class.class.cast(ParameterizedType.class.cast(repositoryType.getGenericInterfaces()[0])
-                .getActualTypeArguments()[0]);
+        this.typeClass = (Class) ((ParameterizedType) repositoryType.getGenericInterfaces()[0])
+                .getActualTypeArguments()[0];
         this.repository = repository;
     }
 
@@ -54,9 +53,10 @@ class DarwinoDocumentRepositoryProxy<T> implements InvocationHandler {
     	// JSQL support
         JSQL jsql = method.getAnnotation(JSQL.class);
         if (Objects.nonNull(jsql)) {
-            List<T> result = Collections.emptyList();
-            JsonObject params = JsonObjectUtil.getParams(args, method);
-            if (params.isEmpty()) {
+            List<T> result;
+            JsonFactory fac = DarwinoContext.get().getSession().getJsonFactory();
+            Object params = JsonObjectUtil.getParams(args, method, fac);
+            if (fac.getPropertyCount(params) == 0) {
                 result = template.jsqlQuery(jsql.value());
             } else {
                 result = template.jsqlQuery(jsql.value(), params);
@@ -74,7 +74,7 @@ class DarwinoDocumentRepositoryProxy<T> implements InvocationHandler {
         	String[] orderBy = search.orderBy();
         	
         	List<T> result;
-        	if(orderBy != null && orderBy.length > 0) {
+        	if(orderBy.length > 0) {
         		result = template.search(query, Arrays.asList(orderBy));
         	} else {
         		result = template.search(query);
@@ -86,8 +86,9 @@ class DarwinoDocumentRepositoryProxy<T> implements InvocationHandler {
         // Stored cursor support
 		StoredCursor storedCursor = method.getAnnotation(StoredCursor.class);
 		if (Objects.nonNull(storedCursor)) {
-			List<T> result = Collections.emptyList();
-			JsonObject params = JsonObjectUtil.getParams(args, method);
+			List<T> result;
+            JsonFactory fac = DarwinoContext.get().getSession().getJsonFactory();
+			Object params = JsonObjectUtil.getParams(args, method, fac);
 			result = template.storedCursor(storedCursor.value(), params);
 			return ReturnTypeConverterUtil.returnObject(result, typeClass, method);
 		}

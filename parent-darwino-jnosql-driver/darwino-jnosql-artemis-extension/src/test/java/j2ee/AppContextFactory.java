@@ -19,27 +19,28 @@
  * https://github.com/eclipse/jnosql-diana-driver/tree/master/couchbase-driver
  * https://github.com/eclipse/jnosql-artemis-extension/tree/master/couchbase-extension
  */
-package org.darwino.jnosql.artemis.extension;
+package j2ee;
 
-import javax.inject.Inject;
+import com.darwino.commons.json.JsonException;
+import com.darwino.commons.security.acl.UserContextFactory;
+import com.darwino.commons.security.acl.impl.UserImpl;
+import com.darwino.j2ee.application.DarwinoJ2EEContext;
+import com.darwino.jre.application.DarwinoJreApplication;
+import com.darwino.platform.DarwinoContext;
+import com.darwino.platform.DarwinoContextFactory;
 
-import org.darwino.jnosql.artemis.extension.runner.WeldJUnit4Runner;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+public class AppContextFactory implements DarwinoContextFactory {
 
-@SuppressWarnings("nls")
-@RunWith(WeldJUnit4Runner.class)
-public class DarwinoExtensionTest extends AbstractDarwinoAppTest {
-	@Inject
-    private PersonRepositoryAsync personRepositoryAsync;
+	public AppContextFactory() {
+	}
 
-    @Inject
-    private PersonRepository personRepository;
+	@Override
+	public DarwinoContext find() {
+		try {
+			return new DarwinoJ2EEContext(DarwinoJreApplication.get(), null, null, new UserImpl(), new UserContextFactory(), null, DarwinoJreApplication.get().getLocalJsonDBServer().createSystemSession(null));
+		} catch (JsonException e) {
+			throw new RuntimeException(e);
+		}
+	}
 
-	@Test
-    public void shouldSaveOrientDB() {
-        Person person = new Person("Ada", 10);
-        personRepository.deleteById(person.getName());
-        personRepositoryAsync.deleteById(person.getName());
-    }
 }

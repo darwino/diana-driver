@@ -1,7 +1,6 @@
 package org.darwino.jnosql.artemis.extension;
 
 import org.darwino.jnosql.diana.driver.DarwinoDocumentCollectionManager;
-import org.jnosql.artemis.document.DocumentTemplateProducer;
 
 public interface DarwinoTemplateProducer {
 	/**

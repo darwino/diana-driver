@@ -24,8 +24,6 @@ package org.darwino.jnosql.diana.driver;
 import org.jnosql.diana.api.document.DocumentCollectionManagerAsyncFactory;
 import org.jnosql.diana.api.document.DocumentCollectionManagerFactory;
 
-import com.darwino.commons.json.JsonException;
-
 import java.util.Objects;
 
 public class DarwinoDocumentCollectionManagerFactory implements DocumentCollectionManagerFactory<DarwinoDocumentCollectionManager>,
@@ -33,7 +31,7 @@ public class DarwinoDocumentCollectionManagerFactory implements DocumentCollecti
 
 	private final String databaseName;
 	
-	DarwinoDocumentCollectionManagerFactory(String databaseName) throws JsonException {
+	DarwinoDocumentCollectionManagerFactory(String databaseName) {
 		this.databaseName = databaseName;
 	}
 

@@ -19,27 +19,33 @@
  * https://github.com/eclipse/jnosql-diana-driver/tree/master/couchbase-driver
  * https://github.com/eclipse/jnosql-artemis-extension/tree/master/couchbase-extension
  */
-package org.darwino.jnosql.artemis.extension;
+package j2ee;
 
-import javax.inject.Inject;
+import com.darwino.jsonstore.sql.impl.full.JdbcDatabaseCustomizer;
+import com.darwino.sql.drivers.DBDriver;
 
-import org.darwino.jnosql.artemis.extension.runner.WeldJUnit4Runner;
-import org.junit.Test;
-import org.junit.runner.RunWith;
 
-@SuppressWarnings("nls")
-@RunWith(WeldJUnit4Runner.class)
-public class DarwinoExtensionTest extends AbstractDarwinoAppTest {
-	@Inject
-    private PersonRepositoryAsync personRepositoryAsync;
+/**
+ * Database customizer.
+ */
+public class AppDatabaseCustomizer extends JdbcDatabaseCustomizer {
+	
+	public static final int VERSION = 0;
+	
+	public AppDatabaseCustomizer(DBDriver driver) {
+		super(driver,null);
+	}
+	
+	@Override
+	public int getVersion(String databaseName) {
+		return VERSION ;
+	}
 
-    @Inject
-    private PersonRepository personRepository;
-
-	@Test
-    public void shouldSaveOrientDB() {
-        Person person = new Person("Ada", 10);
-        personRepository.deleteById(person.getName());
-        personRepositoryAsync.deleteById(person.getName());
-    }
+//	@Override
+//	public void getAlterStatements(List<String> statements, String schema, String databaseName, int existingVersion) throws JsonException {
+//		if(existingVersion==VERSION) {
+//			// Ok, we are good!
+//			return;
+//		}
+//	}
 }

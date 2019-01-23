@@ -19,27 +19,23 @@
  * https://github.com/eclipse/jnosql-diana-driver/tree/master/couchbase-driver
  * https://github.com/eclipse/jnosql-artemis-extension/tree/master/couchbase-extension
  */
-package org.darwino.jnosql.artemis.extension;
+package j2ee;
 
-import javax.inject.Inject;
-
-import org.darwino.jnosql.artemis.extension.runner.WeldJUnit4Runner;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import com.darwino.j2ee.application.DarwinoJ2EEManifest;
 
 @SuppressWarnings("nls")
-@RunWith(WeldJUnit4Runner.class)
-public class DarwinoExtensionTest extends AbstractDarwinoAppTest {
-	@Inject
-    private PersonRepositoryAsync personRepositoryAsync;
-
-    @Inject
-    private PersonRepository personRepository;
-
-	@Test
-    public void shouldSaveOrientDB() {
-        Person person = new Person("Ada", 10);
-        personRepository.deleteById(person.getName());
-        personRepositoryAsync.deleteById(person.getName());
-    }
+public class AppJ2EEManifest extends DarwinoJ2EEManifest {
+	
+	public AppJ2EEManifest() {
+	}
+	
+	/**
+	 * Properties to push down to the device
+	 */
+	@Override
+	protected String[] getMobilePushedPropertyKeys() {
+		return new String[] {
+			"swnhelper.instances"
+		};
+	}
 }

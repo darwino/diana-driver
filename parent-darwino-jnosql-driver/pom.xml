@@ -57,7 +57,7 @@
 	<modules>
 		<module>darwino-jnosql-diana-driver</module>
 		<module>darwino-jnosql-artemis-extension</module>
-	</modules>
+    </modules>
 	
 	<dependencyManagement>
 		<dependencies>

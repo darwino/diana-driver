@@ -22,7 +22,6 @@
 package org.darwino.jnosql.diana.driver;
 
 import com.darwino.commons.json.JsonException;
-import com.darwino.commons.json.JsonObject;
 import com.darwino.jsonstore.Cursor;
 import com.darwino.platform.DarwinoContext;
 
@@ -39,7 +38,7 @@ final class StatementFactory {
 		}
 	}
 
-	static Cursor create(String database, String store, String[] documents, int skip, int limit, String[] sorts, JsonObject condition) throws JsonException {
+	static Cursor create(String database, String store, String[] documents, int skip, int limit, String[] sorts, Object condition) throws JsonException {
 
 		if (sorts.length == 0) {
 			return get(database, store, documents, skip, limit, condition);
@@ -48,7 +47,7 @@ final class StatementFactory {
 		}
 	}
 
-	private static Cursor get(String database, String store, String[] documents, int skip, int limit, JsonObject condition) throws JsonException {
+	private static Cursor get(String database, String store, String[] documents, int skip, int limit, Object condition) throws JsonException {
 
 		boolean hasFistResult = skip > 0;
 		boolean hasMaxResult = limit > 0;
@@ -69,7 +68,7 @@ final class StatementFactory {
 		}
 	}
 
-	private static Cursor get(String database, String store, String[] documents, int firstResult, int maxResult, String[] sorts, JsonObject condition) throws JsonException {
+	private static Cursor get(String database, String store, String[] documents, int firstResult, int maxResult, String[] sorts, Object condition) throws JsonException {
 
 		boolean hasFistResult = firstResult > 0;
 		boolean hasMaxResult = maxResult > 0;

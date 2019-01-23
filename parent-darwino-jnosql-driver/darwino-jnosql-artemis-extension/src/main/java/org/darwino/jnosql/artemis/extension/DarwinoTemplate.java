@@ -21,13 +21,11 @@
  */
 package org.darwino.jnosql.artemis.extension;
 
-import java.util.Collection;
-import java.util.List;
-
+import com.darwino.jsonstore.JsqlCursor;
 import org.jnosql.artemis.document.DocumentTemplate;
 
-import com.darwino.commons.json.JsonObject;
-import com.darwino.jsonstore.JsqlCursor;
+import java.util.Collection;
+import java.util.List;
 
 public interface DarwinoTemplate extends DocumentTemplate {
 	/**
@@ -38,7 +36,7 @@ public interface DarwinoTemplate extends DocumentTemplate {
      * @return the query result
      * @throws NullPointerException when either jsqlQuery or params are null
      */
-    <T> List<T> jsqlQuery(String jsqlQuery, JsonObject params);
+    <T> List<T> jsqlQuery(String jsqlQuery, Object params);
 
     /**
      * Executes the JSQL query with params and then returns the result
@@ -48,7 +46,7 @@ public interface DarwinoTemplate extends DocumentTemplate {
      * @return the query result
      * @throws NullPointerException when either jsqlQuery or params are null
      */
-    <T> List<T> jsqlQuery(JsqlCursor jsqlQuery, JsonObject params);
+    <T> List<T> jsqlQuery(JsqlCursor jsqlQuery, Object params);
 
     /**
      * Executes the JSQL query and then returns the result
@@ -88,5 +86,5 @@ public interface DarwinoTemplate extends DocumentTemplate {
      * @param params the param object to pass to the cursor execution
      * @return the elements from the query
      */
-	<T> List<T> storedCursor(String cursorName, JsonObject params);
+	<T> List<T> storedCursor(String cursorName, Object params);
 }

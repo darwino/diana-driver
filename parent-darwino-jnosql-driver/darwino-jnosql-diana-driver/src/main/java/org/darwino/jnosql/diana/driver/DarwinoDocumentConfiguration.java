@@ -21,12 +21,10 @@
  */
 package org.darwino.jnosql.diana.driver;
 
-import org.jnosql.diana.api.Settings;
-import org.jnosql.diana.api.document.UnaryDocumentConfiguration;
-
-import com.darwino.commons.json.JsonException;
 import com.darwino.commons.util.StringUtil;
 import com.darwino.platform.DarwinoApplication;
+import org.jnosql.diana.api.Settings;
+import org.jnosql.diana.api.document.UnaryDocumentConfiguration;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -39,11 +37,7 @@ public class DarwinoDocumentConfiguration implements UnaryDocumentConfiguration<
 
 	@Override
 	public DarwinoDocumentCollectionManagerFactory get() throws UnsupportedOperationException {
-		try {
-			return new DarwinoDocumentCollectionManagerFactory(DarwinoApplication.get().getManifest().getDatabases()[0]);
-		} catch (JsonException e) {
-			throw new UnsupportedOperationException(e);
-		}
+		return new DarwinoDocumentCollectionManagerFactory(DarwinoApplication.get().getManifest().getDatabases()[0]);
 	}
 
 	@Override
@@ -51,26 +45,18 @@ public class DarwinoDocumentConfiguration implements UnaryDocumentConfiguration<
 		requireNonNull(settings, "settings is required"); //$NON-NLS-1$
 
 		Map<String, String> configurations = new HashMap<>();
-		settings.entrySet().forEach(e -> configurations.put(e.getKey(), e.getValue().toString()));
+		settings.forEach((key, value) -> configurations.put(key, value.toString()));
 
 		String databaseId = configurations.get(DATABASE_ID);
 		if(StringUtil.isEmpty(databaseId)) {
 			databaseId = DarwinoApplication.get().getManifest().getDatabases()[0];
 		}
-		try {
-			return new DarwinoDocumentCollectionManagerFactory(databaseId);
-		} catch (JsonException e) {
-			throw new UnsupportedOperationException(e);
-		}
+		return new DarwinoDocumentCollectionManagerFactory(databaseId);
 	}
 
 	@Override
 	public DarwinoDocumentCollectionManagerFactory getAsync() throws UnsupportedOperationException {
-		try {
-			return new DarwinoDocumentCollectionManagerFactory(DarwinoApplication.get().getManifest().getDatabases()[0]);
-		} catch (JsonException e) {
-			throw new UnsupportedOperationException(e);
-		}
+		return new DarwinoDocumentCollectionManagerFactory(DarwinoApplication.get().getManifest().getDatabases()[0]);
 	}
 
 	@Override

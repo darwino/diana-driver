@@ -30,7 +30,6 @@ import org.jnosql.diana.api.ExecuteAsyncQueryException;
 import org.jnosql.diana.api.document.DocumentCollectionManagerAsync;
 import org.jnosql.diana.api.document.DocumentEntity;
 
-import com.darwino.commons.json.JsonObject;
 import com.darwino.jsonstore.JsqlCursor;
 
 import javax.enterprise.inject.Instance;
@@ -92,7 +91,7 @@ class DefaultDarwinoTemplateAsync extends AbstractDocumentTemplateAsync implemen
 
     @SuppressWarnings("unchecked")
     @Override
-    public <T> void jsqlQuery(String jsqlQuery, JsonObject params, Consumer<List<T>> callback)
+    public <T> void jsqlQuery(String jsqlQuery, Object params, Consumer<List<T>> callback)
             throws NullPointerException, ExecuteAsyncQueryException {
 
         Objects.requireNonNull(jsqlQuery, "jsqlQuery is required"); //$NON-NLS-1$
@@ -109,7 +108,7 @@ class DefaultDarwinoTemplateAsync extends AbstractDocumentTemplateAsync implemen
 
     @SuppressWarnings("unchecked")
 	@Override
-    public <T> void jsqlQuery(JsqlCursor jsqlQuery, JsonObject params, Consumer<List<T>> callback)
+    public <T> void jsqlQuery(JsqlCursor jsqlQuery, Object params, Consumer<List<T>> callback)
             throws NullPointerException, ExecuteAsyncQueryException {
         Objects.requireNonNull(jsqlQuery, "jsqlQuery is required"); //$NON-NLS-1$
         Objects.requireNonNull(params, "params is required"); //$NON-NLS-1$
@@ -157,7 +156,7 @@ class DefaultDarwinoTemplateAsync extends AbstractDocumentTemplateAsync implemen
     
     @SuppressWarnings("unchecked")
 	@Override
-    public <T> void storedCursor(String cursorName, JsonObject params, Consumer<List<T>> callback) {
+    public <T> void storedCursor(String cursorName, Object params, Consumer<List<T>> callback) {
     	Objects.requireNonNull(cursorName, "query is required"); //$NON-NLS-1$
         Objects.requireNonNull(callback, "callback is required"); //$NON-NLS-1$
 

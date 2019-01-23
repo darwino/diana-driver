@@ -22,7 +22,7 @@
 package org.darwino.jnosql.diana.driver;
 
 import com.darwino.commons.json.JsonException;
-import com.darwino.commons.json.JsonObject;
+import com.darwino.commons.json.JsonFactory;
 import com.darwino.commons.util.StringUtil;
 import com.darwino.jsonstore.Cursor;
 import com.darwino.jsonstore.Database;
@@ -37,12 +37,7 @@ import org.jnosql.diana.api.document.DocumentEntity;
 import org.jnosql.diana.api.document.DocumentQuery;
 
 import java.time.Duration;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 import static java.util.Objects.nonNull;
 import static java.util.Objects.requireNonNull;
@@ -63,19 +58,19 @@ class DefaultDarwinoDocumentCollectionManager implements DarwinoDocumentCollecti
 	@Override
 	public DocumentEntity insert(DocumentEntity entity) {
 		requireNonNull(entity, "entity is required"); //$NON-NLS-1$
-		JsonObject jsonObject = convert(entity);
-		Optional<Document> maybeId = entity.find(EntityConverter.ID_FIELD);
-		Document id;
-		if(maybeId.isPresent()) {
-			id = maybeId.get();
-		} else {
-			// Auto-insert a UNID
-			id = Document.of(EntityConverter.ID_FIELD, UUID.randomUUID().toString());
-			entity.add(id);
-		}
-
-		String unid = StringUtil.toString(id.get());
 		try {
+			Object jsonObject = convert(entity, getStore().getSession().getJsonFactory());
+			Optional<Document> maybeId = entity.find(EntityConverter.ID_FIELD);
+			Document id;
+			if(maybeId.isPresent()) {
+				id = maybeId.get();
+			} else {
+				// Auto-insert a UNID
+				id = Document.of(EntityConverter.ID_FIELD, UUID.randomUUID().toString());
+				entity.add(id);
+			}
+
+			String unid = StringUtil.toString(id.get());
 			com.darwino.jsonstore.Document doc = getStore().newDocument(unid);
 			doc.setJson(jsonObject);
 			doc.save();
@@ -94,11 +89,11 @@ class DefaultDarwinoDocumentCollectionManager implements DarwinoDocumentCollecti
 
 	@Override
 	public DocumentEntity update(DocumentEntity entity) {
-		JsonObject jsonObject = convert(entity);
-		Document id = entity.find(EntityConverter.ID_FIELD).orElseThrow(() -> new DarwinoNoKeyFoundException(entity.toString()));
-
-		String unid = StringUtil.toString(id.get());
 		try {
+			Object jsonObject = convert(entity, getStore().getSession().getJsonFactory());
+			Document id = entity.find(EntityConverter.ID_FIELD).orElseThrow(() -> new DarwinoNoKeyFoundException(entity.toString()));
+
+			String unid = StringUtil.toString(id.get());
 			com.darwino.jsonstore.Document doc = getStore().loadDocument(unid);
 			doc.setJson(jsonObject);
 			doc.save();
@@ -111,7 +106,7 @@ class DefaultDarwinoDocumentCollectionManager implements DarwinoDocumentCollecti
 	@Override
 	public void delete(DocumentDeleteQuery query) {
 		try {
-			QueryConverter.QueryConverterResult delete = QueryConverter.delete(query, getStore().getDatabase().getId(), getStore().getId());
+			QueryConverter.QueryConverterResult delete = QueryConverter.delete(query, getStore().getDatabase().getId(), getStore().getId(), getStore().getSession().getJsonFactory());
 			delete.getStatement().deleteAllDocuments(0);
 		} catch (JsonException e) {
 			throw new RuntimeException(e);
@@ -121,10 +116,10 @@ class DefaultDarwinoDocumentCollectionManager implements DarwinoDocumentCollecti
 	@Override
 	public List<DocumentEntity> select(DocumentQuery query) throws NullPointerException {
 		try {
-			QueryConverter.QueryConverterResult select = QueryConverter.select(query, getStore().getDatabase().getId(), getStore().getId());
+			QueryConverter.QueryConverterResult select = QueryConverter.select(query, getStore().getDatabase().getId(), getStore().getId(), getStore().getSession().getJsonFactory());
 			List<DocumentEntity> entities = new ArrayList<>();
 			if (nonNull(select.getStatement())) {
-				entities.addAll(convert(select.getStatement().params(select.getParams())));
+				entities.addAll(convert(select.getStatement().params(EntityConverter.toMap(getStore().getSession().getJsonFactory(), select.getParams()))));
 			}
 
 			return entities;
@@ -134,11 +129,12 @@ class DefaultDarwinoDocumentCollectionManager implements DarwinoDocumentCollecti
 	}
 
 	@Override
-	public List<DocumentEntity> query(String query, JsonObject params) throws NullPointerException {
+	public List<DocumentEntity> query(String query, Object params) throws NullPointerException {
 		requireNonNull(query, "query is required"); //$NON-NLS-1$
 		requireNonNull(params, "params is required"); //$NON-NLS-1$
 		try {
-			return convert(getStore().openCursor().query(query).params(params));
+			JsonFactory fac = getStore().getSession().getJsonFactory();
+			return convert(getStore().openCursor().query(query).params(EntityConverter.toMap(fac, params)));
 		} catch (JsonException e) {
 			throw new RuntimeException(e);
 		}
@@ -181,7 +177,7 @@ class DefaultDarwinoDocumentCollectionManager implements DarwinoDocumentCollecti
 		}
 		
 		try {
-			Cursor cursor = getStore().openCursor().ftSearch(query).orderBy(orderBy.toArray(new String[orderBy.size()]));
+			Cursor cursor = getStore().openCursor().ftSearch(query).orderBy(orderBy.toArray(new String[0]));
 			return convert(cursor);
 		} catch (JsonException e) {
 			throw new RuntimeException(e);
@@ -189,7 +185,7 @@ class DefaultDarwinoDocumentCollectionManager implements DarwinoDocumentCollecti
 	}
 
 	@Override
-	public List<DocumentEntity> jsqlQuery(String jsqlQuery, JsonObject params) throws NullPointerException {
+	public List<DocumentEntity> jsqlQuery(String jsqlQuery, Object params) throws NullPointerException {
 		try {
 			JsqlCursor cursor = getStore().getDatabase().getSession().openJsqlCursor()
 				.database(getStore().getDatabase().getId())
@@ -201,14 +197,16 @@ class DefaultDarwinoDocumentCollectionManager implements DarwinoDocumentCollecti
 	}
 
 	@Override
-	public List<DocumentEntity> jsqlQuery(JsqlCursor jsqlQuery, JsonObject params) throws NullPointerException {
+	public List<DocumentEntity> jsqlQuery(JsqlCursor jsqlQuery, Object params) throws NullPointerException {
 		try {
 			if(Objects.nonNull(params)) {
-				jsqlQuery.params(params);
+				JsonFactory fac = getStore().getSession().getJsonFactory();
+				jsqlQuery.params(EntityConverter.toMap(fac, params));
+
 				// Special support for skip and limit params
-				int skip = params.getAsInt("skip"); //$NON-NLS-1$
-				int limit = params.getAsInt("limit"); //$NON-NLS-1$
-				if(skip != 0 || limit != 0) {
+				int skip = getSkip(fac, params);
+				int limit = getLimit(fac, params);
+				if(skip != 0 || limit != Integer.MAX_VALUE) {
 					jsqlQuery.range(skip, limit);
 				}
 			}
@@ -224,7 +222,7 @@ class DefaultDarwinoDocumentCollectionManager implements DarwinoDocumentCollecti
 	}
 	
 	@Override
-	public List<DocumentEntity> storedCursor(String cursorName, JsonObject params) {
+	public List<DocumentEntity> storedCursor(String cursorName, Object params) {
 		requireNonNull(cursorName, "query is required"); //$NON-NLS-1$
 		try {
 			
@@ -232,14 +230,15 @@ class DefaultDarwinoDocumentCollectionManager implements DarwinoDocumentCollecti
 					.load(cursorName);
 			
 			if(Objects.nonNull(params)) {
+				JsonFactory fac = getStore().getSession().getJsonFactory();
 				// Special support for skip and limit params
-				int skip = params.getAsInt("skip"); //$NON-NLS-1$
-				int limit = params.getAsInt("limit"); //$NON-NLS-1$
-				if(skip != 0 || limit != 0) {
+				int skip = getSkip(fac, params);
+				int limit = getLimit(fac, params);
+				if(skip != 0 || limit != Integer.MAX_VALUE) {
 					cursor.range(skip, limit);
 				}
 
-				cursor.params(params);
+				cursor.params(EntityConverter.toMap(fac, params));
 			}
 			
 			return convert(cursor);
@@ -267,6 +266,27 @@ class DefaultDarwinoDocumentCollectionManager implements DarwinoDocumentCollecti
 		Session session = DarwinoContext.get().getSession();
 		Database database = session.getDatabase(databaseName);
 		return database.getStore(storeId);
+	}
+
+	private static int getSkip(JsonFactory fac, Object params) throws JsonException {
+		Object skipObj = fac.getProperty(params, "skip");
+		int skip;
+		if(skipObj instanceof Number) {
+			skip = ((Number)skipObj).intValue();
+		} else {
+			skip = 0;
+		}
+		return skip;
+	}
+	private static int getLimit(JsonFactory fac, Object params) throws JsonException {
+		Object limitObj = fac.getProperty(params, "limit");
+		int limit;
+		if(limitObj instanceof Number) {
+			limit = ((Number)limitObj).intValue();
+		} else {
+			limit = Integer.MAX_VALUE;
+		}
+		return limit;
 	}
 
 }

@@ -19,27 +19,25 @@
  * https://github.com/eclipse/jnosql-diana-driver/tree/master/couchbase-driver
  * https://github.com/eclipse/jnosql-artemis-extension/tree/master/couchbase-extension
  */
-package org.darwino.jnosql.artemis.extension;
+package app;
 
-import javax.inject.Inject;
+import com.darwino.platform.DarwinoContextFactory;
+import j2ee.AppContextFactory;
 
-import org.darwino.jnosql.artemis.extension.runner.WeldJUnit4Runner;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import java.util.List;
 
-@SuppressWarnings("nls")
-@RunWith(WeldJUnit4Runner.class)
-public class DarwinoExtensionTest extends AbstractDarwinoAppTest {
-	@Inject
-    private PersonRepositoryAsync personRepositoryAsync;
 
-    @Inject
-    private PersonRepository personRepository;
-
-	@Test
-    public void shouldSaveOrientDB() {
-        Person person = new Person("Ada", 10);
-        personRepository.deleteById(person.getName());
-        personRepositoryAsync.deleteById(person.getName());
-    }
+/**
+ * Main plugin class.
+ * 
+ * This class is used to register the common plugin services and is meant to be overloaded
+ * by an actual implementation (J2EE, Mobile...).
+ */
+public class AppBasePlugin {
+	
+	public static void findExtensions(Class<?> serviceClass, List<Object> extensions) {
+		if(serviceClass.equals(DarwinoContextFactory.class)) {
+			extensions.add(new AppContextFactory());
+		}
+	}
 }

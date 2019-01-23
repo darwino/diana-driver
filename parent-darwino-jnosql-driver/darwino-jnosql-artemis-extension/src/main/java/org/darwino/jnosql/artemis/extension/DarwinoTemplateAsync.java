@@ -44,7 +44,7 @@ public interface DarwinoTemplateAsync extends DocumentTemplateAsync {
 	 *             when either jsqlQuery or params are null
 	 * @throws ExecuteAsyncQueryException an async error
 	 */
-	<T> void jsqlQuery(String jsqlQuery, JsonObject params, Consumer<List<T>> callback) throws NullPointerException, ExecuteAsyncQueryException;
+	<T> void jsqlQuery(String jsqlQuery, Object params, Consumer<List<T>> callback) throws NullPointerException, ExecuteAsyncQueryException;
 
 	/**
 	 * Executes the JSQL query with params and then returns the result
@@ -59,7 +59,7 @@ public interface DarwinoTemplateAsync extends DocumentTemplateAsync {
 	 *             when either jsqlQuery or params are null
 	 * @throws ExecuteAsyncQueryException an async error
 	 */
-	<T> void jsqlQuery(JsqlCursor jsqlQuery, JsonObject params, Consumer<List<T>> callback) throws NullPointerException, ExecuteAsyncQueryException;
+	<T> void jsqlQuery(JsqlCursor jsqlQuery, Object params, Consumer<List<T>> callback) throws NullPointerException, ExecuteAsyncQueryException;
 
 	/**
 	 * Executes the JSQL query and then returns the result
@@ -102,5 +102,5 @@ public interface DarwinoTemplateAsync extends DocumentTemplateAsync {
 	 *             when either the query or index are null
 	 * @throws ExecuteAsyncQueryException an async error
 	 */
-	<T> void storedCursor(String cursorName, JsonObject params, Consumer<List<T>> callback) throws NullPointerException, ExecuteAsyncQueryException;
+	<T> void storedCursor(String cursorName, Object params, Consumer<List<T>> callback) throws NullPointerException, ExecuteAsyncQueryException;
 }

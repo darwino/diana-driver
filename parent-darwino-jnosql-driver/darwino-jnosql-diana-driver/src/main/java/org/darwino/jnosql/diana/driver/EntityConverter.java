@@ -21,24 +21,18 @@
  */
 package org.darwino.jnosql.diana.driver;
 
+import com.darwino.commons.json.JsonFactory;
 import org.jnosql.diana.api.document.Document;
 import org.jnosql.diana.api.document.DocumentEntity;
 import org.jnosql.diana.driver.ValueUtil;
 
-import com.darwino.commons.json.JsonArray;
 import com.darwino.commons.json.JsonException;
-import com.darwino.commons.json.JsonObject;
 import com.darwino.commons.util.StringUtil;
 import com.darwino.jsonstore.Cursor;
 import com.darwino.jsonstore.JsqlCursor;
 import com.darwino.jsonstore.Store;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -107,7 +101,7 @@ public final class EntityConverter {
 			if(id == null) {
 				id = e.getColumn("unid"); //$NON-NLS-1$
 			}
-			if(id == null || !(id instanceof CharSequence)) {
+			if(!(id instanceof CharSequence)) {
 				throw new RuntimeException("query must contain a unid column"); //$NON-NLS-1$
 			}
 
@@ -123,9 +117,10 @@ public final class EntityConverter {
 	public static List<Document> toDocuments(com.darwino.jsonstore.Document doc) throws JsonException {
 		List<Document> result = new ArrayList<>();
 		result.add(Document.of(ID_FIELD, doc.getUnid()));
-		JsonObject json = (JsonObject)doc.getJson();
-		json.remove(NAME_FIELD);
-		result.addAll(toDocuments(json));
+		Object json = doc.getJson();
+		JsonFactory fac = doc.getSession().getJsonFactory();
+		fac.removeProperty(json, NAME_FIELD);
+		result.addAll(toDocuments(toMap(fac, json)));
 		return result;
 	}
 
@@ -138,12 +133,12 @@ public final class EntityConverter {
 			}
 			
 			Object value = map.get(key);
-			if (Map.class.isInstance(value)) {
-				documents.add(Document.of(key, toDocuments(Map.class.cast(value))));
+			if (value instanceof Map) {
+				documents.add(Document.of(key, toDocuments((Map) value)));
 			} else if (isADocumentIterable(value)) {
 				List<List<Document>> subDocuments = new ArrayList<>();
-				stream(Iterable.class.cast(value).spliterator(), false)
-					.map(m -> toDocuments(Map.class.cast(m)))
+				stream(((Iterable) value).spliterator(), false)
+					.map(m -> toDocuments((Map) m))
 					.forEach(e -> subDocuments.add((List<Document>)e));
 				documents.add(Document.of(key, subDocuments));
 			} else if(value != null) {
@@ -155,95 +150,117 @@ public final class EntityConverter {
 
 	@SuppressWarnings("unchecked")
 	private static boolean isADocumentIterable(Object value) {
-		return Iterable.class.isInstance(value) && stream(Iterable.class.cast(value).spliterator(), false).allMatch(d -> Map.class.isInstance(d));
+		return value instanceof Iterable && stream(((Iterable) value).spliterator(), false).allMatch(Map.class::isInstance);
 	}
 
 	/**
 	 * Converts the provided {@link DocumentEntity} instance into a Darwino
-	 * {@link JsonObject}.
+	 * JSON object.
 	 * 
-	 * <p>This is equivalent to calling {@link #convert(DocumentEntity, boolean)} with
+	 * <p>This is equivalent to calling {@link #convert(DocumentEntity, JsonFactory, boolean)} with
 	 * <code>false</code> as the second parameter.</p>
 	 * 
 	 * @param entity the entity instance to convert
 	 * @return the converted JSON object
 	 */
-	public static JsonObject convert(DocumentEntity entity) {
-		return convert(entity, false);
+	public static Object convert(DocumentEntity entity, JsonFactory fac) throws JsonException {
+		return convert(entity, fac, false);
 	}
 	
 	/**
 	 * Converts the provided {@link DocumentEntity} instance into a Darwino
-	 * {@link JsonObject}.
+	 * JSON object.
 	 * 
 	 * @param entity the entity instance to convert
 	 * @param retainId whether or not to remove the {@link #ID_FIELD} field during conversion
 	 * @return the converted JSON object
 	 */
-	public static JsonObject convert(DocumentEntity entity, boolean retainId) {
+	public static Object convert(DocumentEntity entity, JsonFactory fac, boolean retainId) throws JsonException {
 		requireNonNull(entity, "entity is required"); //$NON-NLS-1$
 
-		JsonObject jsonObject = new JsonObject.LinkedMap();
-		entity.getDocuments().stream().forEach(toJsonObject(jsonObject));
-		jsonObject.put(NAME_FIELD, entity.getName());
+		Object jsonObject = fac.createObject();
+		entity.getDocuments().forEach(toJsonObject(jsonObject, fac));
+		fac.setProperty(jsonObject, NAME_FIELD, entity.getName());
 		if(!retainId) {
-			jsonObject.remove(ID_FIELD);
+			fac.removeProperty(jsonObject, ID_FIELD);
 		}
 		return jsonObject;
 	}
 
-	private static Consumer<Document> toJsonObject(JsonObject jsonObject) {
+	private static Consumer<Document> toJsonObject(Object jsonObject, JsonFactory fac) {
         return d -> {
         		// Swap out sensitive names
             Object value = ValueUtil.convert(d.getValue());
-            
-            if (Document.class.isInstance(value)) {
-                convertDocument(jsonObject, d, value);
-            } else if (Iterable.class.isInstance(value)) {
-                convertIterable(jsonObject, d, value);
-            } else {
-                jsonObject.put(d.getName(), value);
-            }
+
+			try {
+				if (value instanceof Document) {
+					convertDocument(jsonObject, fac, d, value);
+				} else if (value instanceof Iterable) {
+					convertIterable(jsonObject, fac, d, value);
+				} else {
+					fac.setProperty(jsonObject, d.getName(), value);
+				}
+			} catch (JsonException e) {
+				throw new RuntimeException(e);
+			}
         };
     }
 
-	private static void convertDocument(JsonObject jsonObject, Document d, Object value) {
-		Document document = Document.class.cast(value);
-		jsonObject.put(d.getName(), Collections.singletonMap(document.getName(), document.get()));
+	private static void convertDocument(Object jsonObject, JsonFactory fac, Document d, Object value) throws JsonException {
+		Document document = (Document) value;
+		fac.setProperty(jsonObject, d.getName(), Collections.singletonMap(document.getName(), document.get()));
 	}
 
 	@SuppressWarnings("unchecked")
-	private static void convertIterable(JsonObject jsonObject, Document document, Object value) {
-		JsonObject map = new JsonObject.LinkedMap();
-		JsonArray array = new JsonArray();
-		Iterable.class.cast(value).forEach(element -> {
-			if(Document.class.isInstance(element)) {
-				Document subDocument = Document.class.cast(element);
-				map.put(subDocument.getName(), subDocument.get());
-			} else if(isSubDocument(element)) {
-				JsonObject subJson = new JsonObject.LinkedMap();
-				stream(Iterable.class.cast(element).spliterator(), false)
-					.forEach(getSubDocument(subJson));
-				array.add(subJson);
-			} else {
-				array.add(element);
+	private static void convertIterable(Object jsonObject, JsonFactory fac, Document document, Object value) throws JsonException {
+		Object map = fac.createObject();
+		Object array = fac.createArray();
+		((Iterable) value).forEach(element -> {
+			try {
+				if (element instanceof Document) {
+					Document subDocument = (Document) element;
+					fac.setProperty(map, subDocument.getName(), subDocument.get());
+				} else if (isSubDocument(element)) {
+					Object subJson = fac.createObject();
+					stream(((Iterable) element).spliterator(), false)
+							.forEach(getSubDocument(subJson, fac));
+					fac.addArrayItem(array, subJson);
+				} else {
+					fac.addArrayItem(array, element);
+				}
+			} catch(JsonException e) {
+				throw new RuntimeException(e);
 			}
 		});
-		if(array.isEmpty()) {
-			jsonObject.put(document.getName(), map);
+		if(fac.getArrayCount(array) == 0) {
+			fac.setProperty(jsonObject, document.getName(), map);
 		} else {
-			jsonObject.put(document.getName(), array);
+			fac.setProperty(jsonObject, document.getName(), array);
 		}
 	}
 	
 	@SuppressWarnings("rawtypes")
-	private static Consumer getSubDocument(JsonObject subJson) {
-		return e -> toJsonObject(subJson).accept((Document)e);
+	private static Consumer getSubDocument(Object subJson, JsonFactory fac) {
+		return e -> toJsonObject(subJson, fac).accept((Document)e);
 	}
 	
 	@SuppressWarnings("unchecked")
 	private static boolean isSubDocument(Object value) {
-		return value instanceof Iterable && stream(Iterable.class.cast(value).spliterator(), false)
-				.allMatch(d -> org.jnosql.diana.api.document.Document.class.isInstance(d));
+		return value instanceof Iterable && stream(((Iterable) value).spliterator(), false)
+				.allMatch(Document.class::isInstance);
+	}
+
+	static Map<String, Object> toMap(JsonFactory fac, Object params) throws JsonException {
+		if(params instanceof Map) {
+			return (Map<String, Object>)params;
+		} else {
+			Map<String, Object> result = new LinkedHashMap<>();
+			Iterator<String> props = fac.iterateObjectProperties(params);
+			while(props.hasNext()) {
+				String prop = props.next();
+				result.put(prop, fac.getProperty(params, prop));
+			}
+			return result;
+		}
 	}
 }

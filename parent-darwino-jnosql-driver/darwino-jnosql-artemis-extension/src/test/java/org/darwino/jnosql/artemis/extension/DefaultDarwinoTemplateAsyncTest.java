@@ -45,7 +45,7 @@ import static org.mockito.Mockito.when;
 
 @SuppressWarnings("nls")
 @RunWith(WeldJUnit4Runner.class)
-public class DefaultDarwinoTemplateAsyncTest {
+public class DefaultDarwinoTemplateAsyncTest extends AbstractDarwinoAppTest {
 
 	@Inject
     private DocumentEntityConverter converter;

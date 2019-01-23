@@ -21,6 +21,7 @@
  */
 package org.darwino.jnosql.artemis.extension;
 
+import com.darwino.jsonstore.JsqlCursor;
 import org.darwino.jnosql.diana.driver.DarwinoDocumentCollectionManager;
 import org.jnosql.artemis.Converters;
 import org.jnosql.artemis.document.AbstractDocumentTemplate;
@@ -29,20 +30,16 @@ import org.jnosql.artemis.document.DocumentEventPersistManager;
 import org.jnosql.artemis.document.DocumentWorkflow;
 import org.jnosql.artemis.reflection.ClassMappings;
 
-import com.darwino.commons.json.JsonObject;
-import com.darwino.jsonstore.JsqlCursor;
-
 import javax.enterprise.inject.Instance;
 import javax.enterprise.inject.Typed;
 import javax.enterprise.inject.spi.CDI;
 import javax.inject.Inject;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static java.util.Objects.requireNonNull;
-
-import java.util.Collection;
 
 /**
  * The Default implementation of {@link DarwinoTemplate}
@@ -114,7 +111,7 @@ class DefaultDarwinoTemplate extends AbstractDocumentTemplate
 
     @SuppressWarnings("unchecked")
     @Override
-    public <T> List<T> jsqlQuery(String jsqlQuery, JsonObject params) throws NullPointerException {
+    public <T> List<T> jsqlQuery(String jsqlQuery, Object params) throws NullPointerException {
         requireNonNull(jsqlQuery, "jsqlQuery is required"); //$NON-NLS-1$
         requireNonNull(params, "params is required"); //$NON-NLS-1$
         return getManager().jsqlQuery(jsqlQuery, params).stream()
@@ -125,7 +122,7 @@ class DefaultDarwinoTemplate extends AbstractDocumentTemplate
 
     @SuppressWarnings("unchecked")
     @Override
-    public <T> List<T> jsqlQuery(JsqlCursor jsqlQuery, JsonObject params) throws NullPointerException {
+    public <T> List<T> jsqlQuery(JsqlCursor jsqlQuery, Object params) throws NullPointerException {
         requireNonNull(jsqlQuery, "jsqlQuery is required"); //$NON-NLS-1$
         requireNonNull(params, "params is required"); //$NON-NLS-1$
         return getManager().jsqlQuery(jsqlQuery, params).stream()
@@ -166,7 +163,7 @@ class DefaultDarwinoTemplate extends AbstractDocumentTemplate
     
     @SuppressWarnings("unchecked")
 	@Override
-    public <T> List<T> storedCursor(String cursorName, JsonObject params) {
+    public <T> List<T> storedCursor(String cursorName, Object params) {
     	requireNonNull(cursorName, "cursorName is required"); //$NON-NLS-1$
         return getManager().storedCursor(cursorName, params).stream()
                 .map(getConverter()::toEntity)

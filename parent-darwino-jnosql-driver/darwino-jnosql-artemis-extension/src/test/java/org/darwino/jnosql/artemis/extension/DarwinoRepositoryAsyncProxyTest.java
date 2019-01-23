@@ -21,10 +21,7 @@
  */
 package org.darwino.jnosql.artemis.extension;
 
-import org.darwino.jnosql.artemis.extension.DarwinoRepositoryAsyncProxy;
-import org.darwino.jnosql.artemis.extension.DarwinoTemplateAsync;
 import org.darwino.jnosql.artemis.extension.runner.WeldJUnit4Runner;
-import org.jnosql.artemis.DynamicQueryException;
 import org.jnosql.artemis.Param;
 import org.jnosql.artemis.document.DocumentRepositoryAsyncProducer;
 import org.junit.Before;
@@ -46,7 +43,7 @@ import static org.mockito.Mockito.verify;
 
 @SuppressWarnings("nls")
 @RunWith(WeldJUnit4Runner.class)
-public class DarwinoRepositoryAsyncProxyTest {
+public class DarwinoRepositoryAsyncProxyTest extends AbstractDarwinoAppTest {
 
 	private DarwinoTemplateAsync template;
 	@Inject

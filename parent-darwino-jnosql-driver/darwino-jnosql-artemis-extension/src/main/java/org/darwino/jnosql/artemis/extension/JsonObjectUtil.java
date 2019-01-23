@@ -26,18 +26,16 @@ import java.lang.reflect.Method;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+import com.darwino.commons.json.JsonException;
+import com.darwino.commons.json.JsonFactory;
 import org.jnosql.artemis.Param;
 
-import com.darwino.commons.json.JsonObject;
+enum JsonObjectUtil {
+	;
 
-final class JsonObjectUtil {
+	static Object getParams(Object[] args, Method method, JsonFactory fac) throws JsonException {
 
-	private JsonObjectUtil() {
-	}
-
-	static JsonObject getParams(Object[] args, Method method) {
-
-		JsonObject jsonObject = new JsonObject.LinkedMap();
+		Object jsonObject = fac.createObject();
 		Annotation[][] annotations = method.getParameterAnnotations();
 
 		for (int index = 0; index < annotations.length; index++) {
@@ -48,7 +46,13 @@ final class JsonObjectUtil {
 					.filter(Param.class::isInstance)
 					.map(Param.class::cast)
 					.findFirst();
-			param.ifPresent(p -> jsonObject.put(p.value(), arg));
+			param.ifPresent(p -> {
+				try {
+					fac.setProperty(jsonObject, p.value(), arg);
+				} catch (JsonException e) {
+					throw new RuntimeException(e);
+				}
+			});
 		}
 
 		return jsonObject;

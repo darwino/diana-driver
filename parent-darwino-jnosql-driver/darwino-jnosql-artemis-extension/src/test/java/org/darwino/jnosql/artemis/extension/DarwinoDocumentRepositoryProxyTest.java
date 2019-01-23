@@ -44,7 +44,7 @@ import static org.mockito.Mockito.when;
 
 @SuppressWarnings("nls")
 @RunWith(WeldJUnit4Runner.class)
-public class DarwinoDocumentRepositoryProxyTest {
+public class DarwinoDocumentRepositoryProxyTest extends AbstractDarwinoAppTest {
 
 	private DarwinoTemplate template;
 

@@ -21,16 +21,16 @@
  */
 package org.darwino.jnosql.artemis.extension;
 
+import com.darwino.commons.json.JsonFactory;
+import com.darwino.platform.DarwinoContext;
 import org.jnosql.artemis.RepositoryAsync;
-
-import com.darwino.commons.json.JsonObject;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.util.Objects;
 import java.util.function.Consumer;
 
-public class DarwinoRepositoryAsyncProxy<T> implements InvocationHandler {
+public class DarwinoRepositoryAsyncProxy implements InvocationHandler {
 
 	@SuppressWarnings("rawtypes")
 	private static final Consumer NOOP = t -> {
@@ -52,12 +52,13 @@ public class DarwinoRepositoryAsyncProxy<T> implements InvocationHandler {
         JSQL jsql = method.getAnnotation(JSQL.class);
         if (Objects.nonNull(jsql)) {
             Consumer callBack = NOOP;
-            if (Consumer.class.isInstance(args[args.length - 1])) {
-                callBack = Consumer.class.cast(args[args.length - 1]);
+            if (args.length > 0 && args[args.length - 1] instanceof Consumer) {
+                callBack = (Consumer) args[args.length - 1];
             }
 
-            JsonObject params = JsonObjectUtil.getParams(args, method);
-            if (params.isEmpty()) {
+            JsonFactory fac = DarwinoContext.get().getSession().getJsonFactory();
+            Object params = JsonObjectUtil.getParams(args, method, fac);
+            if (fac.getPropertyCount(params) == 0) {
                 template.jsqlQuery(jsql.value(), callBack);
                 return Void.class;
             } else {

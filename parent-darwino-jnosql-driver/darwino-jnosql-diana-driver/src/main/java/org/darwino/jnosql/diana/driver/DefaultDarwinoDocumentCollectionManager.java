@@ -23,14 +23,10 @@ package org.darwino.jnosql.diana.driver;
 
 import com.darwino.commons.json.JsonException;
 import com.darwino.commons.json.JsonFactory;
+import com.darwino.commons.json.JsonUtil;
 import com.darwino.commons.util.StringUtil;
-import com.darwino.jsonstore.Cursor;
-import com.darwino.jsonstore.Database;
-import com.darwino.jsonstore.JsqlCursor;
-import com.darwino.jsonstore.Session;
-import com.darwino.jsonstore.Store;
+import com.darwino.jsonstore.*;
 import com.darwino.platform.DarwinoContext;
-
 import org.jnosql.diana.api.document.Document;
 import org.jnosql.diana.api.document.DocumentDeleteQuery;
 import org.jnosql.diana.api.document.DocumentEntity;
@@ -119,7 +115,7 @@ class DefaultDarwinoDocumentCollectionManager implements DarwinoDocumentCollecti
 			QueryConverter.QueryConverterResult select = QueryConverter.select(query, getStore().getDatabase().getId(), getStore().getId(), getStore().getSession().getJsonFactory());
 			List<DocumentEntity> entities = new ArrayList<>();
 			if (nonNull(select.getStatement())) {
-				entities.addAll(convert(select.getStatement().params(EntityConverter.toMap(getStore().getSession().getJsonFactory(), select.getParams()))));
+				entities.addAll(convert(select.getStatement().params(JsonUtil.toJsonObject(select.getParams(), getStore().getSession().getJsonFactory()))));
 			}
 
 			return entities;
@@ -134,7 +130,7 @@ class DefaultDarwinoDocumentCollectionManager implements DarwinoDocumentCollecti
 		requireNonNull(params, "params is required"); //$NON-NLS-1$
 		try {
 			JsonFactory fac = getStore().getSession().getJsonFactory();
-			return convert(getStore().openCursor().query(query).params(EntityConverter.toMap(fac, params)));
+			return convert(getStore().openCursor().query(query).params(JsonUtil.toJsonObject(params, fac)));
 		} catch (JsonException e) {
 			throw new RuntimeException(e);
 		}
@@ -201,7 +197,7 @@ class DefaultDarwinoDocumentCollectionManager implements DarwinoDocumentCollecti
 		try {
 			if(Objects.nonNull(params)) {
 				JsonFactory fac = getStore().getSession().getJsonFactory();
-				jsqlQuery.params(EntityConverter.toMap(fac, params));
+				jsqlQuery.params(JsonUtil.toJsonObject(params, fac));
 
 				// Special support for skip and limit params
 				int skip = getSkip(fac, params);
@@ -238,7 +234,7 @@ class DefaultDarwinoDocumentCollectionManager implements DarwinoDocumentCollecti
 					cursor.range(skip, limit);
 				}
 
-				cursor.params(EntityConverter.toMap(fac, params));
+				cursor.params(JsonUtil.toJsonObject(params, fac));
 			}
 			
 			return convert(cursor);
@@ -271,8 +267,8 @@ class DefaultDarwinoDocumentCollectionManager implements DarwinoDocumentCollecti
 	private static int getSkip(JsonFactory fac, Object params) throws JsonException {
 		Object skipObj = fac.getProperty(params, "skip");
 		int skip;
-		if(skipObj instanceof Number) {
-			skip = ((Number)skipObj).intValue();
+		if(fac.isNumber(skipObj)) {
+			skip = (int)fac.getNumber(skipObj);
 		} else {
 			skip = 0;
 		}
@@ -281,8 +277,8 @@ class DefaultDarwinoDocumentCollectionManager implements DarwinoDocumentCollecti
 	private static int getLimit(JsonFactory fac, Object params) throws JsonException {
 		Object limitObj = fac.getProperty(params, "limit");
 		int limit;
-		if(limitObj instanceof Number) {
-			limit = ((Number)limitObj).intValue();
+		if(fac.isNumber(limitObj)) {
+			limit = (int)fac.getNumber(limitObj);
 		} else {
 			limit = Integer.MAX_VALUE;
 		}

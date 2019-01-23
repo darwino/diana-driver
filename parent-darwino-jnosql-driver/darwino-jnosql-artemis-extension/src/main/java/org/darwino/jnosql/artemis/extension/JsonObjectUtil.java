@@ -46,13 +46,9 @@ enum JsonObjectUtil {
 					.filter(Param.class::isInstance)
 					.map(Param.class::cast)
 					.findFirst();
-			param.ifPresent(p -> {
-				try {
-					fac.setProperty(jsonObject, p.value(), arg);
-				} catch (JsonException e) {
-					throw new RuntimeException(e);
-				}
-			});
+			if(param.isPresent()) {
+				jsonObject = fac.setProperty(jsonObject, param.get().value(), arg);
+			}
 		}
 
 		return jsonObject;

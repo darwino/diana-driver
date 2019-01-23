@@ -115,7 +115,7 @@ final class QueryConverter {
 			Document document = condition.getDocument();
 
 			if (!NOT_APPENDABLE.contains(condition.getCondition())) {
-				fac.setProperty(params, document.getName(), document.get());
+				params = fac.setProperty(params, document.getName(), document.get());
 			}
 
 			// Convert special names
@@ -125,6 +125,7 @@ final class QueryConverter {
 			}
 
 			Object placeholder = document.get();
+			Object p = params;
 			switch (condition.getCondition()) {
 				case EQUALS:
 
@@ -143,10 +144,10 @@ final class QueryConverter {
 					return objOf(fac, name, objOf(fac, BaseParser.Op.IN.getValue(), placeholder));
 				case AND:
 					return objOf(fac, BaseParser.Op.AND.getValue(), arrOf(fac, document.get(new TypeReference<List<DocumentCondition>>() {
-					}).stream().map(d -> getCondition(d, params, fac)).filter(Objects::nonNull).toArray()));
+					}).stream().map(d -> getCondition(d, p, fac)).filter(Objects::nonNull).toArray()));
 				case OR:
 					return objOf(fac, BaseParser.Op.OR.getValue(), arrOf(fac, document.get(new TypeReference<List<DocumentCondition>>() {
-					}).stream().map(d -> getCondition(d, params, fac)).filter(Objects::nonNull).toArray()));
+					}).stream().map(d -> getCondition(d, p, fac)).filter(Objects::nonNull).toArray()));
 				case NOT:
 					DocumentCondition dc = document.get(DocumentCondition.class);
 					return objOf(fac, BaseParser.Op.NOT.getValue(), getCondition(dc, params, fac));
@@ -196,14 +197,14 @@ final class QueryConverter {
 
 	private static Object objOf(JsonFactory fac, String prop, Object value) throws JsonException {
 		Object json = fac.createObject();
-		fac.setProperty(json, prop, value);
+		json = fac.setProperty(json, prop, value);
 		return json;
 	}
 
 	private static Object arrOf(JsonFactory fac, Object... elements) throws JsonException {
 		Object arr = fac.createArray();
 		for(Object e : elements) {
-			fac.addArrayItem(arr, e);
+			arr = fac.addArrayItem(arr, e);
 		}
 		return arr;
 	}

@@ -42,4 +42,5 @@ public class AppBasePlugin {
 			extensions.add(new AppContextFactory());
 		}
 	}
+
 }

@@ -21,19 +21,18 @@
  */
 package org.darwino.jnosql.diana.driver;
 
-import com.darwino.commons.json.JsonFactory;
-import org.jnosql.diana.api.document.Document;
-import org.jnosql.diana.api.document.DocumentEntity;
-import org.jnosql.diana.driver.ValueUtil;
-
 import com.darwino.commons.json.JsonException;
+import com.darwino.commons.json.JsonFactory;
+import com.darwino.commons.json.JsonUtil;
 import com.darwino.commons.util.StringUtil;
 import com.darwino.jsonstore.Cursor;
 import com.darwino.jsonstore.JsqlCursor;
 import com.darwino.jsonstore.Store;
+import org.jnosql.diana.api.document.Document;
+import org.jnosql.diana.api.document.DocumentEntity;
+import org.jnosql.diana.driver.ValueUtil;
 
 import java.util.*;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import static java.util.Objects.requireNonNull;
@@ -72,7 +71,7 @@ public final class EntityConverter {
 		}).filter(Objects::nonNull).map(doc -> {
 			try {
 				List<Document> documents = toDocuments(doc);
-				String name = StringUtil.toString(doc.get(NAME_FIELD));
+				String name = StringUtil.toString(doc.getString(NAME_FIELD));
 				return DocumentEntity.of(name, documents);
 			} catch (NullPointerException | JsonException e) {
 				throw new RuntimeException(e);
@@ -85,7 +84,7 @@ public final class EntityConverter {
 		List<DocumentEntity> result = new ArrayList<>();
 		cursor.find((entry) -> {
 			com.darwino.jsonstore.Document doc = entry.loadDocument();
-			String name = StringUtil.toString(doc.get(NAME_FIELD));
+			String name = StringUtil.toString(doc.getString(NAME_FIELD));
 			List<Document> documents = toDocuments(doc);
 			result.add(DocumentEntity.of(name, documents));
 			return true;
@@ -106,7 +105,7 @@ public final class EntityConverter {
 			}
 
 			com.darwino.jsonstore.Document doc = store.loadDocument((String)id);
-			String name = StringUtil.toString(doc.get(NAME_FIELD));
+			String name = StringUtil.toString(doc.getString(NAME_FIELD));
 			List<Document> documents = toDocuments(doc);
 			result.add(DocumentEntity.of(name, documents));
 			return true;
@@ -119,8 +118,8 @@ public final class EntityConverter {
 		result.add(Document.of(ID_FIELD, doc.getUnid()));
 		Object json = doc.getJson();
 		JsonFactory fac = doc.getSession().getJsonFactory();
-		fac.removeProperty(json, NAME_FIELD);
-		result.addAll(toDocuments(toMap(fac, json)));
+		json = fac.removeProperty(json, NAME_FIELD);
+		result.addAll(toDocuments(JsonUtil.toJsonObject(json, fac)));
 		return result;
 	}
 
@@ -179,88 +178,76 @@ public final class EntityConverter {
 		requireNonNull(entity, "entity is required"); //$NON-NLS-1$
 
 		Object jsonObject = fac.createObject();
-		entity.getDocuments().forEach(toJsonObject(jsonObject, fac));
-		fac.setProperty(jsonObject, NAME_FIELD, entity.getName());
+		for(Document doc : entity.getDocuments()) {
+			jsonObject = toJsonObject(doc, jsonObject, fac);
+		}
+		jsonObject = fac.setProperty(jsonObject, NAME_FIELD, entity.getName());
 		if(!retainId) {
-			fac.removeProperty(jsonObject, ID_FIELD);
+			jsonObject = fac.removeProperty(jsonObject, ID_FIELD);
 		}
 		return jsonObject;
 	}
 
-	private static Consumer<Document> toJsonObject(Object jsonObject, JsonFactory fac) {
-        return d -> {
-        		// Swap out sensitive names
-            Object value = ValueUtil.convert(d.getValue());
+	private static Object toJsonObject(Document d, Object json, JsonFactory fac) {
+		// Swap out sensitive names
+		Object value = ValueUtil.convert(d.getValue());
+		Object jsonObject = json;
 
-			try {
-				if (value instanceof Document) {
-					convertDocument(jsonObject, fac, d, value);
-				} else if (value instanceof Iterable) {
-					convertIterable(jsonObject, fac, d, value);
-				} else {
-					fac.setProperty(jsonObject, d.getName(), value);
-				}
-			} catch (JsonException e) {
-				throw new RuntimeException(e);
+		try {
+			if (value instanceof Document) {
+				jsonObject = convertDocument(jsonObject, fac, d, value);
+			} else if (value instanceof Iterable) {
+				jsonObject = convertIterable(jsonObject, fac, d, value);
+			} else {
+				jsonObject = fac.setProperty(jsonObject, d.getName(), value);
 			}
-        };
+		} catch (JsonException e) {
+			throw new RuntimeException(e);
+		}
+		return jsonObject;
     }
 
-	private static void convertDocument(Object jsonObject, JsonFactory fac, Document d, Object value) throws JsonException {
+	private static Object convertDocument(Object jsonObject, JsonFactory fac, Document d, Object value) throws JsonException {
 		Document document = (Document) value;
-		fac.setProperty(jsonObject, d.getName(), Collections.singletonMap(document.getName(), document.get()));
+		return fac.setProperty(jsonObject, d.getName(), Collections.singletonMap(document.getName(), document.get()));
 	}
 
-	@SuppressWarnings("unchecked")
-	private static void convertIterable(Object jsonObject, JsonFactory fac, Document document, Object value) throws JsonException {
+	private static Object convertIterable(Object jsonObject, JsonFactory fac, Document document, Object value) throws JsonException {
 		Object map = fac.createObject();
 		Object array = fac.createArray();
-		((Iterable) value).forEach(element -> {
+		for(Object element : (Iterable<?>)value) {
 			try {
 				if (element instanceof Document) {
 					Document subDocument = (Document) element;
-					fac.setProperty(map, subDocument.getName(), subDocument.get());
+					map = fac.setProperty(map, subDocument.getName(), subDocument.get());
 				} else if (isSubDocument(element)) {
 					Object subJson = fac.createObject();
-					stream(((Iterable) element).spliterator(), false)
-							.forEach(getSubDocument(subJson, fac));
-					fac.addArrayItem(array, subJson);
+					for(Object e : (Iterable<?>)element) {
+						subJson = getSubDocument((Document)e, subJson, fac);
+					}
+					array = fac.addArrayItem(array, subJson);
 				} else {
-					fac.addArrayItem(array, element);
+					array = fac.addArrayItem(array, element);
 				}
 			} catch(JsonException e) {
 				throw new RuntimeException(e);
 			}
-		});
+		}
 		if(fac.getArrayCount(array) == 0) {
-			fac.setProperty(jsonObject, document.getName(), map);
+			return fac.setProperty(jsonObject, document.getName(), map);
 		} else {
-			fac.setProperty(jsonObject, document.getName(), array);
+			return fac.setProperty(jsonObject, document.getName(), array);
 		}
 	}
 	
 	@SuppressWarnings("rawtypes")
-	private static Consumer getSubDocument(Object subJson, JsonFactory fac) {
-		return e -> toJsonObject(subJson, fac).accept((Document)e);
+	private static Object getSubDocument(Document d, Object subJson, JsonFactory fac) {
+		return toJsonObject(d, subJson, fac);
 	}
 	
 	@SuppressWarnings("unchecked")
 	private static boolean isSubDocument(Object value) {
 		return value instanceof Iterable && stream(((Iterable) value).spliterator(), false)
 				.allMatch(Document.class::isInstance);
-	}
-
-	static Map<String, Object> toMap(JsonFactory fac, Object params) throws JsonException {
-		if(params instanceof Map) {
-			return (Map<String, Object>)params;
-		} else {
-			Map<String, Object> result = new LinkedHashMap<>();
-			Iterator<String> props = fac.iterateObjectProperties(params);
-			while(props.hasNext()) {
-				String prop = props.next();
-				result.put(prop, fac.getProperty(params, prop));
-			}
-			return result;
-		}
 	}
 }

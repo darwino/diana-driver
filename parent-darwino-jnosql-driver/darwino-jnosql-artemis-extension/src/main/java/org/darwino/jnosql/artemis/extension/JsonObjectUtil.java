@@ -47,7 +47,7 @@ enum JsonObjectUtil {
 					.map(Param.class::cast)
 					.findFirst();
 			if(param.isPresent()) {
-				jsonObject = fac.setProperty(jsonObject, param.get().value(), arg);
+				fac.setProperty(jsonObject, param.get().value(), arg);
 			}
 		}
 

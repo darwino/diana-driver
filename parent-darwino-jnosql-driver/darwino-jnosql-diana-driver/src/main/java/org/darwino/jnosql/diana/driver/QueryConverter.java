@@ -115,7 +115,7 @@ final class QueryConverter {
 			Document document = condition.getDocument();
 
 			if (!NOT_APPENDABLE.contains(condition.getCondition())) {
-				params = fac.setProperty(params, document.getName(), document.get());
+				fac.setProperty(params, document.getName(), document.get());
 			}
 
 			// Convert special names
@@ -197,14 +197,14 @@ final class QueryConverter {
 
 	private static Object objOf(JsonFactory fac, String prop, Object value) throws JsonException {
 		Object json = fac.createObject();
-		json = fac.setProperty(json, prop, value);
+		fac.setProperty(json, prop, value);
 		return json;
 	}
 
 	private static Object arrOf(JsonFactory fac, Object... elements) throws JsonException {
 		Object arr = fac.createArray();
 		for(Object e : elements) {
-			arr = fac.addArrayItem(arr, e);
+			fac.addArrayItem(arr, e);
 		}
 		return arr;
 	}

@@ -28,12 +28,15 @@ import com.darwino.commons.util.StringUtil;
 import com.darwino.jsonstore.Cursor;
 import com.darwino.jsonstore.JsqlCursor;
 import com.darwino.jsonstore.Store;
+
+import org.darwino.jnosql.diana.attachment.DarwinoDocumentAttachment;
 import org.jnosql.diana.api.document.Document;
 import org.jnosql.diana.api.document.DocumentEntity;
 import org.jnosql.diana.driver.ValueUtil;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static java.util.Objects.requireNonNull;
 import static java.util.stream.StreamSupport.stream;
@@ -56,6 +59,8 @@ public final class EntityConverter {
 	 */
 	// TODO consider making this the store ID
 	public static final String NAME_FIELD = "form"; //$NON-NLS-1$
+	
+	public static final String ATTACHMENT_FIELD = com.darwino.jsonstore.Document.SYSTEM_PREFIX + "attachments"; //$NON-NLS-1$
 
 	private EntityConverter() {
 	}
@@ -118,12 +123,30 @@ public final class EntityConverter {
 		result.add(Document.of(ID_FIELD, doc.getUnid()));
 		Object json = doc.getJson();
 		JsonFactory fac = doc.getSession().getJsonFactory();
-		json = fac.removeProperty(json, NAME_FIELD);
+		fac.removeProperty(json, NAME_FIELD);
 		result.addAll(toDocuments(JsonUtil.toJsonObject(json, fac)));
+
+		result.add(Document.of(com.darwino.jsonstore.Document.SYSTEM_META_CDATE, doc.getCreationDate()));
+		result.add(Document.of(com.darwino.jsonstore.Document.SYSTEM_META_CUSER, doc.getCreationUser()));
+		result.add(Document.of(com.darwino.jsonstore.Document.SYSTEM_META_MDATE, doc.getLastModificationDate()));
+		result.add(Document.of(com.darwino.jsonstore.Document.SYSTEM_META_MUSER, doc.getLastModificationUser()));
+		
+		result.add(Document.of(ATTACHMENT_FIELD,
+			Stream.of(doc.getAttachments())
+				.map(t -> {
+					try {
+						return new DarwinoDocumentAttachment(t);
+					} catch (JsonException e) {
+						throw new RuntimeException(e);
+					}
+				})
+				.collect(Collectors.toList())
+		));
+		
 		return result;
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static List<Document> toDocuments(Map<String, Object> map) {
 		List<Document> documents = new ArrayList<>();
 		for (String key : map.keySet()) {
@@ -147,7 +170,7 @@ public final class EntityConverter {
 		return documents;
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private static boolean isADocumentIterable(Object value) {
 		return value instanceof Iterable && stream(((Iterable) value).spliterator(), false).allMatch(Map.class::isInstance);
 	}
@@ -179,11 +202,13 @@ public final class EntityConverter {
 
 		Object jsonObject = fac.createObject();
 		for(Document doc : entity.getDocuments()) {
-			jsonObject = toJsonObject(doc, jsonObject, fac);
+			if(!ATTACHMENT_FIELD.equals(doc.getName())) {
+				jsonObject = toJsonObject(doc, jsonObject, fac);
+			}
 		}
-		jsonObject = fac.setProperty(jsonObject, NAME_FIELD, entity.getName());
+		fac.setProperty(jsonObject, NAME_FIELD, entity.getName());
 		if(!retainId) {
-			jsonObject = fac.removeProperty(jsonObject, ID_FIELD);
+			fac.removeProperty(jsonObject, ID_FIELD);
 		}
 		return jsonObject;
 	}
@@ -199,7 +224,7 @@ public final class EntityConverter {
 			} else if (value instanceof Iterable) {
 				jsonObject = convertIterable(jsonObject, fac, d, value);
 			} else {
-				jsonObject = fac.setProperty(jsonObject, d.getName(), value);
+				fac.setProperty(jsonObject, d.getName(), value);
 			}
 		} catch (JsonException e) {
 			throw new RuntimeException(e);
@@ -209,7 +234,8 @@ public final class EntityConverter {
 
 	private static Object convertDocument(Object jsonObject, JsonFactory fac, Document d, Object value) throws JsonException {
 		Document document = (Document) value;
-		return fac.setProperty(jsonObject, d.getName(), Collections.singletonMap(document.getName(), document.get()));
+		fac.setProperty(jsonObject, d.getName(), Collections.singletonMap(document.getName(), document.get()));
+		return jsonObject;
 	}
 
 	private static Object convertIterable(Object jsonObject, JsonFactory fac, Document document, Object value) throws JsonException {
@@ -219,33 +245,33 @@ public final class EntityConverter {
 			try {
 				if (element instanceof Document) {
 					Document subDocument = (Document) element;
-					map = fac.setProperty(map, subDocument.getName(), subDocument.get());
+					fac.setProperty(map, subDocument.getName(), subDocument.get());
 				} else if (isSubDocument(element)) {
 					Object subJson = fac.createObject();
 					for(Object e : (Iterable<?>)element) {
 						subJson = getSubDocument((Document)e, subJson, fac);
 					}
-					array = fac.addArrayItem(array, subJson);
+					fac.addArrayItem(array, subJson);
 				} else {
-					array = fac.addArrayItem(array, element);
+					fac.addArrayItem(array, element);
 				}
 			} catch(JsonException e) {
 				throw new RuntimeException(e);
 			}
 		}
 		if(fac.getArrayCount(array) == 0) {
-			return fac.setProperty(jsonObject, document.getName(), map);
+			fac.setProperty(jsonObject, document.getName(), map);
 		} else {
-			return fac.setProperty(jsonObject, document.getName(), array);
+			fac.setProperty(jsonObject, document.getName(), array);
 		}
+		return jsonObject;
 	}
 	
-	@SuppressWarnings("rawtypes")
 	private static Object getSubDocument(Document d, Object subJson, JsonFactory fac) {
 		return toJsonObject(d, subJson, fac);
 	}
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private static boolean isSubDocument(Object value) {
 		return value instanceof Iterable && stream(((Iterable) value).spliterator(), false)
 				.allMatch(Document.class::isInstance);

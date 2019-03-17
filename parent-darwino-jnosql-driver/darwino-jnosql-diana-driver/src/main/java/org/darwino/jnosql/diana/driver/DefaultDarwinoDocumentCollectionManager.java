@@ -25,15 +25,21 @@ import com.darwino.commons.json.JsonException;
 import com.darwino.commons.json.JsonFactory;
 import com.darwino.commons.json.JsonUtil;
 import com.darwino.commons.util.StringUtil;
+import com.darwino.commons.util.io.content.InputStreamContent;
 import com.darwino.jsonstore.*;
 import com.darwino.platform.DarwinoContext;
+
+import org.darwino.jnosql.diana.attachment.EntityAttachment;
+import org.jnosql.diana.api.Value;
 import org.jnosql.diana.api.document.Document;
 import org.jnosql.diana.api.document.DocumentDeleteQuery;
 import org.jnosql.diana.api.document.DocumentEntity;
 import org.jnosql.diana.api.document.DocumentQuery;
 
+import java.io.IOException;
 import java.time.Duration;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static java.util.Objects.nonNull;
 import static java.util.Objects.requireNonNull;
@@ -51,6 +57,7 @@ class DefaultDarwinoDocumentCollectionManager implements DarwinoDocumentCollecti
 		this.storeId = storeId;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public DocumentEntity insert(DocumentEntity entity) {
 		requireNonNull(entity, "entity is required"); //$NON-NLS-1$
@@ -69,9 +76,39 @@ class DefaultDarwinoDocumentCollectionManager implements DarwinoDocumentCollecti
 			String unid = StringUtil.toString(id.get());
 			com.darwino.jsonstore.Document doc = getStore().newDocument(unid);
 			doc.setJson(jsonObject);
+			
+			Optional<List<EntityAttachment>> attachments = entity.getDocuments().stream()
+				.filter(e -> EntityConverter.ATTACHMENT_FIELD.equals(e.getName()))
+				.findFirst()
+				.map(Document::getValue)
+				.map(Value::get)
+				.filter(Collection.class::isInstance)
+				.map(Collection.class::cast)
+				.map(Collection::stream)
+				.map(s -> (List<EntityAttachment>)s.filter(EntityAttachment.class::isInstance)
+					.map(EntityAttachment.class::cast)
+					.collect(Collectors.toList())
+				);
+			if(attachments.isPresent()) {
+				for(EntityAttachment att : attachments.get()) {
+					String name = att.getName();
+					if(doc.attachmentExists(name)) {
+						// Check if it needs updating
+						Attachment docAtt = doc.getAttachment(name);
+						if(docAtt.getLastModificationDate().before(new Date(att.getLastModified()))) {
+							docAtt.update(new InputStreamContent(att.getData(), att.getLength(), att.getContentType()));
+						} else {
+							// No need to update
+						}
+					} else {
+						doc.createAttachment(name, new InputStreamContent(att.getData(), att.getLength(), att.getContentType()));
+					}
+				}
+			}
+			
 			doc.save();
 			return entity;
-		} catch (JsonException e) {
+		} catch (JsonException | IOException e) {
 			throw new RuntimeException(e);
 		}
 	}

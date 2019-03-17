@@ -34,6 +34,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.contains;
@@ -164,7 +165,15 @@ public class DocumentQueryTest extends AbstractDarwinoAppTest  {
         		.build();
         List<DocumentEntity> entities = entityManager.select(query);
         assertFalse(entities.isEmpty());
-        assertThat(entities, contains(entity));
+        DocumentEntity foundEntity = entities.get(0);
+        Stream.of(
+        	EntityConverter.ATTACHMENT_FIELD,
+        	com.darwino.jsonstore.Document.SYSTEM_META_CUSER,
+        	com.darwino.jsonstore.Document.SYSTEM_META_CDATE,
+        	com.darwino.jsonstore.Document.SYSTEM_META_MUSER,
+        	com.darwino.jsonstore.Document.SYSTEM_META_MDATE
+        ).forEach(foundEntity::remove);
+        assertEquals(entity, foundEntity);
     }
 
     @SuppressWarnings("unused")
@@ -224,6 +233,14 @@ public class DocumentQueryTest extends AbstractDarwinoAppTest  {
 
         List<DocumentEntity> entities = entityManager.select(query);
         assertFalse(entities.isEmpty());
-        assertThat(entities, contains(entity));
+        DocumentEntity foundEntity = entities.get(0);
+        Stream.of(
+        	EntityConverter.ATTACHMENT_FIELD,
+        	com.darwino.jsonstore.Document.SYSTEM_META_CUSER,
+        	com.darwino.jsonstore.Document.SYSTEM_META_CDATE,
+        	com.darwino.jsonstore.Document.SYSTEM_META_MUSER,
+        	com.darwino.jsonstore.Document.SYSTEM_META_MDATE
+        ).forEach(foundEntity::remove);
+        assertEquals(entity, foundEntity);
     }
 }

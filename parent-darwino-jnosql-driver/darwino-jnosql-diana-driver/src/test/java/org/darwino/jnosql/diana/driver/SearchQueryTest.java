@@ -21,8 +21,8 @@
  */
 package org.darwino.jnosql.diana.driver;
 
-import org.jnosql.diana.api.document.Document;
-import org.jnosql.diana.api.document.DocumentEntity;
+import jakarta.nosql.document.Document;
+import jakarta.nosql.document.DocumentEntity;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;

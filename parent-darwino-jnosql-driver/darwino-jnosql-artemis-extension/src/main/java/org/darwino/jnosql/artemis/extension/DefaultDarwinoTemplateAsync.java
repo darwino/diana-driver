@@ -22,13 +22,13 @@
 package org.darwino.jnosql.artemis.extension;
 
 import org.darwino.jnosql.diana.driver.DarwinoDocumentCollectionManagerAsync;
-import org.jnosql.artemis.Converters;
+import jakarta.nosql.mapping.Converters;
 import org.jnosql.artemis.document.AbstractDocumentTemplateAsync;
-import org.jnosql.artemis.document.DocumentEntityConverter;
-import org.jnosql.artemis.reflection.ClassMappings;
-import org.jnosql.diana.api.ExecuteAsyncQueryException;
-import org.jnosql.diana.api.document.DocumentCollectionManagerAsync;
-import org.jnosql.diana.api.document.DocumentEntity;
+import jakarta.nosql.mapping.document.DocumentEntityConverter;
+import jakarta.nosql.mapping.reflection.ClassMappings;
+import jakarta.nosql.ExecuteAsyncQueryException;
+import jakarta.nosql.document.DocumentCollectionManagerAsync;
+import jakarta.nosql.document.DocumentEntity;
 
 import com.darwino.jsonstore.JsqlCursor;
 

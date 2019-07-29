@@ -21,9 +21,9 @@
  */
 package org.darwino.jnosql.diana.driver;
 
-import org.jnosql.diana.api.document.Document;
-import org.jnosql.diana.api.document.DocumentEntity;
-import org.jnosql.diana.api.document.DocumentQuery;
+import jakarta.nosql.document.Document;
+import jakarta.nosql.document.DocumentEntity;
+import jakarta.nosql.document.DocumentQuery;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -38,7 +38,7 @@ import java.util.stream.Stream;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.contains;
-import static org.jnosql.diana.api.document.query.DocumentQueryBuilder.select;
+import static jakarta.nosql.document.DocumentQuery.select;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;

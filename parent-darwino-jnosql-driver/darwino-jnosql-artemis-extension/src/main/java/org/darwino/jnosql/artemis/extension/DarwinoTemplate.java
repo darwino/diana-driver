@@ -22,7 +22,7 @@
 package org.darwino.jnosql.artemis.extension;
 
 import com.darwino.jsonstore.JsqlCursor;
-import org.jnosql.artemis.document.DocumentTemplate;
+import jakarta.nosql.mapping.document.DocumentTemplate;
 
 import java.util.Collection;
 import java.util.List;

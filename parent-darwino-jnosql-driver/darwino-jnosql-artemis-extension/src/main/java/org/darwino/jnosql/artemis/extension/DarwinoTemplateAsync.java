@@ -24,10 +24,9 @@ package org.darwino.jnosql.artemis.extension;
 import java.util.List;
 import java.util.function.Consumer;
 
-import org.jnosql.artemis.document.DocumentTemplateAsync;
-import org.jnosql.diana.api.ExecuteAsyncQueryException;
+import jakarta.nosql.mapping.document.DocumentTemplateAsync;
+import jakarta.nosql.ExecuteAsyncQueryException;
 
-import com.darwino.commons.json.JsonObject;
 import com.darwino.jsonstore.JsqlCursor;
 
 public interface DarwinoTemplateAsync extends DocumentTemplateAsync {

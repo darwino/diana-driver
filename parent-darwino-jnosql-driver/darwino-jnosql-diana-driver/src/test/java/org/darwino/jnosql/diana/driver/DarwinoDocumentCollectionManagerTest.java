@@ -21,13 +21,12 @@
  */
 package org.darwino.jnosql.diana.driver;
 
-import org.jnosql.diana.api.TypeReference;
-import org.jnosql.diana.api.document.Document;
-import org.jnosql.diana.api.document.DocumentDeleteQuery;
-import org.jnosql.diana.api.document.DocumentEntity;
-import org.jnosql.diana.api.document.DocumentQuery;
-import org.jnosql.diana.api.document.Documents;
-import org.jnosql.diana.api.document.query.DocumentQueryBuilder;
+import jakarta.nosql.TypeReference;
+import jakarta.nosql.document.Document;
+import jakarta.nosql.document.DocumentDeleteQuery;
+import jakarta.nosql.document.DocumentEntity;
+import jakarta.nosql.document.DocumentQuery;
+import jakarta.nosql.document.Documents;
 import org.junit.AfterClass;
 import org.junit.Test;
 
@@ -42,7 +41,7 @@ import java.util.Set;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.contains;
-import static org.jnosql.diana.api.document.query.DocumentQueryBuilder.select;
+import static jakarta.nosql.document.DocumentQuery.select;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
@@ -110,7 +109,7 @@ public class DarwinoDocumentCollectionManagerTest extends AbstractDarwinoAppTest
 		DocumentQuery query = select().from(COLLECTION_NAME)
 				.where("name").eq(name.get().get())
 				.build();
-		DocumentDeleteQuery deleteQuery = DocumentQueryBuilder.delete().from(COLLECTION_NAME)
+		DocumentDeleteQuery deleteQuery = DocumentDeleteQuery.delete().from(COLLECTION_NAME)
 				.where("name").eq(name.get().get())
 				.build();
 		entityManager.delete(deleteQuery);

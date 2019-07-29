@@ -1,8 +1,8 @@
 package org.darwino.jnosql.diana.driver;
 
 import org.darwino.jnosql.diana.attachment.DarwinoDocumentAttachment;
-import org.darwino.jnosql.diana.attachment.EntityAttachment;
-import org.jnosql.diana.api.ValueReader;
+import jakarta.nosql.ValueReader;
+import org.jnosql.diana.driver.attachment.EntityAttachment;
 
 import com.darwino.commons.json.JsonException;
 import com.darwino.jsonstore.Attachment;

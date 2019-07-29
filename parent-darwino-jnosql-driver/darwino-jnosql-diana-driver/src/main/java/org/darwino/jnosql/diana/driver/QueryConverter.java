@@ -22,13 +22,13 @@
 package org.darwino.jnosql.diana.driver;
 
 import com.darwino.commons.json.JsonFactory;
-import org.jnosql.diana.api.Condition;
-import org.jnosql.diana.api.Sort.SortType;
-import org.jnosql.diana.api.TypeReference;
-import org.jnosql.diana.api.document.Document;
-import org.jnosql.diana.api.document.DocumentCondition;
-import org.jnosql.diana.api.document.DocumentDeleteQuery;
-import org.jnosql.diana.api.document.DocumentQuery;
+import jakarta.nosql.Condition;
+import jakarta.nosql.SortType;
+import jakarta.nosql.TypeReference;
+import jakarta.nosql.document.Document;
+import jakarta.nosql.document.DocumentCondition;
+import jakarta.nosql.document.DocumentDeleteQuery;
+import jakarta.nosql.document.DocumentQuery;
 
 import com.darwino.commons.json.JsonException;
 import com.darwino.commons.json.query.parser.BaseParser;
@@ -43,7 +43,7 @@ import java.util.Objects;
 import java.util.Set;
 
 import static java.util.Objects.nonNull;
-import static org.jnosql.diana.api.Condition.IN;
+import static jakarta.nosql.Condition.IN;
 import static org.darwino.jnosql.diana.driver.StatementFactory.create;
 
 /**

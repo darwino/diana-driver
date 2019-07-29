@@ -3,6 +3,8 @@ package org.darwino.jnosql.diana.attachment;
 import java.io.IOException;
 import java.io.InputStream;
 
+import org.jnosql.diana.driver.attachment.EntityAttachment;
+
 import com.darwino.commons.json.JsonException;
 import com.darwino.jsonstore.Attachment;
 import com.darwino.jsonstore.Database;

@@ -35,7 +35,7 @@ import javax.enterprise.inject.spi.PassivationCapable;
 
 import org.darwino.jnosql.diana.driver.DarwinoDocumentCollectionManager;
 import org.jnosql.artemis.DatabaseQualifier;
-import org.jnosql.artemis.DatabaseType;
+import jakarta.nosql.mapping.DatabaseType;
 
 public class DarwinoTemplateBean implements Bean<DarwinoTemplate>, PassivationCapable {
 

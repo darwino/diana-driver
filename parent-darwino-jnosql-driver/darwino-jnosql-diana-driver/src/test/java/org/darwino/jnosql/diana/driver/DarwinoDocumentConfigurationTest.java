@@ -21,7 +21,7 @@
  */
 package org.darwino.jnosql.diana.driver;
 
-import org.jnosql.diana.api.document.DocumentCollectionManagerFactory;
+import jakarta.nosql.document.DocumentCollectionManagerFactory;
 import org.junit.Test;
 
 import static org.junit.Assert.assertNotNull;
@@ -29,7 +29,7 @@ import static org.junit.Assert.assertNotNull;
 
 public class DarwinoDocumentConfigurationTest extends AbstractDarwinoAppTest  {
 
-    @SuppressWarnings({ "resource", "rawtypes" })
+    @SuppressWarnings({ "resource" })
 	@Test
     public void shouldCreateDocumentCollectionManagerFactoryByMap() {
 
@@ -38,7 +38,7 @@ public class DarwinoDocumentConfigurationTest extends AbstractDarwinoAppTest  {
         assertNotNull(managerFactory);
     }
 
-    @SuppressWarnings({ "rawtypes", "resource" })
+    @SuppressWarnings({ "resource" })
 	@Test
     public void shouldCreateDocumentCollectionManagerFactoryByFile() {
         DarwinoDocumentConfiguration configuration = new DarwinoDocumentConfiguration();

@@ -22,8 +22,8 @@
 package org.darwino.jnosql.artemis.extension;
 
 import org.darwino.jnosql.artemis.extension.runner.WeldJUnit4Runner;
-import org.jnosql.artemis.Param;
-import org.jnosql.artemis.document.DocumentRepositoryProducer;
+import jakarta.nosql.mapping.Param;
+import jakarta.nosql.mapping.document.DocumentRepositoryProducer;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.darwino</groupId>
 		<artifactId>parent-darwino-jnosql-driver</artifactId>
-		<version>0.0.9-SNAPSHOT</version>
+		<version>0.1.0-SNAPSHOT</version>
 	</parent>
 	<artifactId>darwino-jnosql-artemis-extension</artifactId>
 
@@ -39,18 +39,23 @@
 			<artifactId>artemis-document</artifactId>
 			<version>${jnosql-version}</version>
 		</dependency>
+		<dependency>
+			<groupId>org.jnosql.artemis</groupId>
+			<artifactId>artemis-core</artifactId>
+			<version>${jnosql-version}</version>
+		</dependency>
 
 
 		<dependency>
-			<groupId>javax.enterprise</groupId>
-			<artifactId>cdi-api</artifactId>
-			<version>2.0</version>
+			<groupId>jakarta..enterprise</groupId>
+			<artifactId>jakarta.enterprise.cdi-api</artifactId>
+			<version>2.0.1</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<groupId>javax.annotation</groupId>
-			<artifactId>javax.annotation-api</artifactId>
-			<version>1.3.1</version>
+			<groupId>jakarta.annotation</groupId>
+			<artifactId>jakarta.annotation-api</artifactId>
+			<version>1.3.4</version>
 			<scope>provided</scope>
 		</dependency>
 

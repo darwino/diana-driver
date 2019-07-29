@@ -30,7 +30,7 @@ import java.util.Objects;
 
 import com.darwino.commons.json.JsonFactory;
 import com.darwino.platform.DarwinoContext;
-import org.jnosql.artemis.Repository;
+import jakarta.nosql.mapping.Repository;
 
 class DarwinoDocumentRepositoryProxy<T> implements InvocationHandler {
 

@@ -24,8 +24,8 @@ package org.darwino.jnosql.diana.driver;
 import com.darwino.jsonstore.Cursor;
 import com.darwino.jsonstore.JsqlCursor;
 
-import org.jnosql.diana.api.document.DocumentCollectionManager;
-import org.jnosql.diana.api.document.DocumentEntity;
+import jakarta.nosql.document.DocumentCollectionManager;
+import jakarta.nosql.document.DocumentEntity;
 
 import java.util.Collection;
 import java.util.List;

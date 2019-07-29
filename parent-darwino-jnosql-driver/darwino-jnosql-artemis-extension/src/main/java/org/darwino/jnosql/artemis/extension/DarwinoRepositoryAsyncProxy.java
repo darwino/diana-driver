@@ -23,7 +23,7 @@ package org.darwino.jnosql.artemis.extension;
 
 import com.darwino.commons.json.JsonFactory;
 import com.darwino.platform.DarwinoContext;
-import org.jnosql.artemis.RepositoryAsync;
+import jakarta.nosql.mapping.RepositoryAsync;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;

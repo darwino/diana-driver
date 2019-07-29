@@ -21,7 +21,7 @@
  */
 package org.darwino.jnosql.artemis.extension;
 
-import org.jnosql.artemis.Repository;
+import jakarta.nosql.mapping.Repository;
 
 public interface DarwinoRepository<T, ID> extends Repository<T, ID> {
 

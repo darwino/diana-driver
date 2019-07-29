@@ -23,23 +23,26 @@ package org.darwino.jnosql.diana.driver;
 
 import com.darwino.commons.util.StringUtil;
 import com.darwino.platform.DarwinoApplication;
-import org.jnosql.diana.api.Settings;
-import org.jnosql.diana.api.document.UnaryDocumentConfiguration;
+import jakarta.nosql.Settings;
+import jakarta.nosql.document.DocumentConfiguration;
+import jakarta.nosql.document.DocumentConfigurationAsync;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import static java.util.Objects.requireNonNull;
 
-public class DarwinoDocumentConfiguration implements UnaryDocumentConfiguration<DarwinoDocumentCollectionManagerFactory> {
+public class DarwinoDocumentConfiguration implements DocumentConfiguration, DocumentConfigurationAsync {
 	
 	public static final String DATABASE_ID = "databaseId"; //$NON-NLS-1$
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public DarwinoDocumentCollectionManagerFactory get() throws UnsupportedOperationException {
 		return new DarwinoDocumentCollectionManagerFactory(DarwinoApplication.get().getManifest().getDatabases()[0]);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public DarwinoDocumentCollectionManagerFactory get(Settings settings) throws NullPointerException {
 		requireNonNull(settings, "settings is required"); //$NON-NLS-1$
@@ -52,15 +55,5 @@ public class DarwinoDocumentConfiguration implements UnaryDocumentConfiguration<
 			databaseId = DarwinoApplication.get().getManifest().getDatabases()[0];
 		}
 		return new DarwinoDocumentCollectionManagerFactory(databaseId);
-	}
-
-	@Override
-	public DarwinoDocumentCollectionManagerFactory getAsync() throws UnsupportedOperationException {
-		return new DarwinoDocumentCollectionManagerFactory(DarwinoApplication.get().getManifest().getDatabases()[0]);
-	}
-
-	@Override
-	public DarwinoDocumentCollectionManagerFactory getAsync(Settings settings) throws NullPointerException {
-		return get(settings);
 	}
 }

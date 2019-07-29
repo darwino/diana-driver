@@ -22,8 +22,8 @@
 package org.darwino.jnosql.artemis.extension;
 
 import org.jnosql.artemis.DatabaseQualifier;
-import org.jnosql.artemis.RepositoryAsync;
-import org.jnosql.artemis.document.DocumentRepositoryAsyncProducer;
+import jakarta.nosql.mapping.RepositoryAsync;
+import jakarta.nosql.mapping.document.DocumentRepositoryAsyncProducer;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.spi.CreationalContext;

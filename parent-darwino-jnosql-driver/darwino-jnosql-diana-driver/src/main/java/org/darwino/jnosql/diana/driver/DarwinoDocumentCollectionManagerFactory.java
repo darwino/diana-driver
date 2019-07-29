@@ -21,13 +21,12 @@
  */
 package org.darwino.jnosql.diana.driver;
 
-import org.jnosql.diana.api.document.DocumentCollectionManagerAsyncFactory;
-import org.jnosql.diana.api.document.DocumentCollectionManagerFactory;
+import jakarta.nosql.document.DocumentCollectionManagerAsyncFactory;
+import jakarta.nosql.document.DocumentCollectionManagerFactory;
 
 import java.util.Objects;
 
-public class DarwinoDocumentCollectionManagerFactory implements DocumentCollectionManagerFactory<DarwinoDocumentCollectionManager>,
-		DocumentCollectionManagerAsyncFactory<DarwinoDocumentCollectionManagerAsync> {
+public class DarwinoDocumentCollectionManagerFactory implements DocumentCollectionManagerFactory, DocumentCollectionManagerAsyncFactory {
 
 	private final String databaseName;
 	
@@ -35,11 +34,13 @@ public class DarwinoDocumentCollectionManagerFactory implements DocumentCollecti
 		this.databaseName = databaseName;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public DarwinoDocumentCollectionManagerAsync getAsync(String storeId) throws UnsupportedOperationException, NullPointerException {
 		return new DefaultDarwinoDocumentCollectionManagerAsync(get(storeId));
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public DarwinoDocumentCollectionManager get(String storeId) throws UnsupportedOperationException, NullPointerException {
 		Objects.requireNonNull(storeId, "storeId is required"); //$NON-NLS-1$

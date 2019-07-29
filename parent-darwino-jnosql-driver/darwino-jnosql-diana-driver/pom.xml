@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.darwino</groupId>
 		<artifactId>parent-darwino-jnosql-driver</artifactId>
-		<version>0.0.9-SNAPSHOT</version>
+		<version>0.1.0-SNAPSHOT</version>
 	</parent>
 	<artifactId>darwino-jnosql-diana-driver</artifactId>
 	
@@ -30,8 +30,13 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>org.jnosql.diana</groupId>
-			<artifactId>diana-driver-commons</artifactId>
+			<groupId>jakarta.nosql.communication</groupId>
+			<artifactId>communication-core</artifactId>
+			<version>${jnosql-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>jakarta.nosql.communication</groupId>
+			<artifactId>communication-document</artifactId>
 			<version>${jnosql-version}</version>
 		</dependency>
 		<dependency>
@@ -45,9 +50,21 @@
 			<version>${jnosql-version}</version>
 		</dependency>
 		<dependency>
-			<groupId>javax.validation</groupId>
-			<artifactId>validation-api</artifactId>
-			<version>2.0.1.Final</version>
+			<groupId>org.jnosql.diana</groupId>
+			<artifactId>diana-driver-commons</artifactId>
+			<version>${jnosql-version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>jakarta.validation</groupId>
+			<artifactId>jakarta.validation-api</artifactId>
+			<version>2.0.1</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>jakarta.annotation</groupId>
+			<artifactId>jakarta.annotation-api</artifactId>
+			<version>1.3.4</version>
 			<scope>provided</scope>
 		</dependency>
 

@@ -37,8 +37,8 @@ import javax.enterprise.inject.spi.PassivationCapable;
 import javax.enterprise.util.AnnotationLiteral;
 
 import org.jnosql.artemis.DatabaseQualifier;
-import org.jnosql.artemis.Repository;
-import org.jnosql.artemis.document.DocumentRepositoryProducer;
+import jakarta.nosql.mapping.Repository;
+import jakarta.nosql.mapping.document.DocumentRepositoryProducer;
 
 public class DarwinoRepositoryBean implements Bean<DarwinoRepository<?, ?>>, PassivationCapable {
 

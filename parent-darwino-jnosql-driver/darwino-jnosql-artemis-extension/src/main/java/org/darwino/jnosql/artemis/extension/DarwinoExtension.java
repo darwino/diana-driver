@@ -33,7 +33,7 @@ import org.darwino.jnosql.diana.driver.DarwinoDocumentCollectionManagerAsync;
 import org.jnosql.artemis.DatabaseMetadata;
 import org.jnosql.artemis.Databases;
 
-import static org.jnosql.artemis.DatabaseType.DOCUMENT;
+import static jakarta.nosql.mapping.DatabaseType.DOCUMENT;
 
 import java.lang.reflect.Modifier;
 import java.util.Collection;

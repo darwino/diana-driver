@@ -21,7 +21,7 @@
  */
 package org.darwino.jnosql.artemis.extension;
 
-import org.jnosql.artemis.RepositoryAsync;
+import jakarta.nosql.mapping.RepositoryAsync;
 
 public interface DarwinoRepositoryAsync<T, ID> extends RepositoryAsync<T, ID> {
 

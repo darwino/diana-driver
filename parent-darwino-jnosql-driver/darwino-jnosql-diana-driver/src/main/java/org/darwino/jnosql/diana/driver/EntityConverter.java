@@ -30,9 +30,8 @@ import com.darwino.jsonstore.JsqlCursor;
 import com.darwino.jsonstore.Store;
 
 import org.darwino.jnosql.diana.attachment.DarwinoDocumentAttachment;
-import org.jnosql.diana.api.document.Document;
-import org.jnosql.diana.api.document.DocumentEntity;
-import org.jnosql.diana.driver.ValueUtil;
+import jakarta.nosql.document.Document;
+import jakarta.nosql.document.DocumentEntity;
 
 import java.util.*;
 import java.util.stream.Collectors;

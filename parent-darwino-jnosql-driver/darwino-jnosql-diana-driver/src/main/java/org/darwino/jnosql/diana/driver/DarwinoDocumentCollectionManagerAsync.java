@@ -21,9 +21,9 @@
  */
 package org.darwino.jnosql.diana.driver;
 
-import org.jnosql.diana.api.ExecuteAsyncQueryException;
-import org.jnosql.diana.api.document.DocumentCollectionManagerAsync;
-import org.jnosql.diana.api.document.DocumentEntity;
+import jakarta.nosql.ExecuteAsyncQueryException;
+import jakarta.nosql.document.DocumentCollectionManagerAsync;
+import jakarta.nosql.document.DocumentEntity;
 
 import com.darwino.jsonstore.Cursor;
 import com.darwino.jsonstore.JsqlCursor;

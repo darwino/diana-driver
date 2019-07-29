@@ -28,11 +28,11 @@ import javax.enterprise.inject.Vetoed;
 import javax.inject.Inject;
 
 import org.darwino.jnosql.diana.driver.DarwinoDocumentCollectionManager;
-import org.jnosql.artemis.Converters;
-import org.jnosql.artemis.document.DocumentEntityConverter;
-import org.jnosql.artemis.document.DocumentEventPersistManager;
-import org.jnosql.artemis.document.DocumentWorkflow;
-import org.jnosql.artemis.reflection.ClassMappings;
+import jakarta.nosql.mapping.Converters;
+import jakarta.nosql.mapping.document.DocumentEntityConverter;
+import jakarta.nosql.mapping.document.DocumentEventPersistManager;
+import jakarta.nosql.mapping.document.DocumentWorkflow;
+import jakarta.nosql.mapping.reflection.ClassMappings;
 
 @ApplicationScoped
 public class DefaultDarwinoTemplateProducer implements DarwinoTemplateProducer {

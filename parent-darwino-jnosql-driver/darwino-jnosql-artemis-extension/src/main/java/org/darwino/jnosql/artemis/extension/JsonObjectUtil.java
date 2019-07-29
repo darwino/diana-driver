@@ -28,7 +28,7 @@ import java.util.stream.Stream;
 
 import com.darwino.commons.json.JsonException;
 import com.darwino.commons.json.JsonFactory;
-import org.jnosql.artemis.Param;
+import jakarta.nosql.mapping.Param;
 
 enum JsonObjectUtil {
 	;

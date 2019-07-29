@@ -21,13 +21,13 @@
  */
 package org.darwino.jnosql.diana.driver;
 
-import org.jnosql.diana.api.document.Document;
-import org.jnosql.diana.api.document.DocumentCollectionManager;
-import org.jnosql.diana.api.document.DocumentCollectionManagerAsync;
-import org.jnosql.diana.api.document.DocumentDeleteQuery;
-import org.jnosql.diana.api.document.DocumentEntity;
-import org.jnosql.diana.api.document.DocumentQuery;
-import org.jnosql.diana.api.document.Documents;
+import jakarta.nosql.document.Document;
+import jakarta.nosql.document.DocumentCollectionManager;
+import jakarta.nosql.document.DocumentCollectionManagerAsync;
+import jakarta.nosql.document.DocumentDeleteQuery;
+import jakarta.nosql.document.DocumentEntity;
+import jakarta.nosql.document.DocumentQuery;
+import jakarta.nosql.document.Documents;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
@@ -39,8 +39,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import static org.jnosql.diana.api.document.query.DocumentQueryBuilder.delete;
-import static org.jnosql.diana.api.document.query.DocumentQueryBuilder.select;
+import static jakarta.nosql.document.DocumentDeleteQuery.delete;
+import static jakarta.nosql.document.DocumentQuery.select;
 import static org.junit.Assert.assertFalse;
 
 @SuppressWarnings("nls")

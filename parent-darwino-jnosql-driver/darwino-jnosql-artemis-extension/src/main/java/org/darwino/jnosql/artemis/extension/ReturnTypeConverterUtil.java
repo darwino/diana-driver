@@ -21,8 +21,8 @@
  */
 package org.darwino.jnosql.artemis.extension;
 
-import org.jnosql.artemis.document.DocumentTemplate;
-import org.jnosql.diana.api.document.DocumentQuery;
+import jakarta.nosql.mapping.document.DocumentTemplate;
+import jakarta.nosql.document.DocumentQuery;
 
 import java.lang.reflect.Method;
 import java.util.Collection;

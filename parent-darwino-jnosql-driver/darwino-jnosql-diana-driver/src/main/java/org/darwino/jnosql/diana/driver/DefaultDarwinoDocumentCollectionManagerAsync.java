@@ -26,10 +26,10 @@ import com.darwino.commons.tasks.Task;
 import com.darwino.commons.tasks.TaskExecutor;
 import com.darwino.commons.tasks.TaskExecutorService;
 import com.darwino.commons.util.Callback;
-import org.jnosql.diana.api.ExecuteAsyncQueryException;
-import org.jnosql.diana.api.document.DocumentDeleteQuery;
-import org.jnosql.diana.api.document.DocumentEntity;
-import org.jnosql.diana.api.document.DocumentQuery;
+import jakarta.nosql.ExecuteAsyncQueryException;
+import jakarta.nosql.document.DocumentDeleteQuery;
+import jakarta.nosql.document.DocumentEntity;
+import jakarta.nosql.document.DocumentQuery;
 
 import com.darwino.commons.json.JsonObject;
 import com.darwino.jsonstore.Cursor;
@@ -101,6 +101,20 @@ class DefaultDarwinoDocumentCollectionManagerAsync implements DarwinoDocumentCol
 	}
 
 	@Override
+	public void insert(Iterable<DocumentEntity> entities) {
+		if(entities != null) {
+			entities.forEach(this::insert);
+		}
+	}
+
+	@Override
+	public void insert(Iterable<DocumentEntity> entities, Duration ttl) {
+		if(entities != null) {
+			entities.forEach(e -> insert(e, ttl));
+		}
+	}
+
+	@Override
 	public void update(DocumentEntity entity) throws ExecuteAsyncQueryException, UnsupportedOperationException {
 		update(entity, NOOP);
 	}
@@ -122,6 +136,14 @@ class DefaultDarwinoDocumentCollectionManagerAsync implements DarwinoDocumentCol
 			}
 		});
 	}
+
+	@Override
+	public void update(Iterable<DocumentEntity> entities) {
+		if(entities != null) {
+			entities.forEach(this::update);
+		}
+	}
+	
 
 	@Override
 	public void delete(DocumentDeleteQuery query) throws ExecuteAsyncQueryException, UnsupportedOperationException {
@@ -333,6 +355,5 @@ class DefaultDarwinoDocumentCollectionManagerAsync implements DarwinoDocumentCol
 			}
 		});
 	}
-	
 	
 }

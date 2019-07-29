@@ -22,7 +22,7 @@
 package org.darwino.jnosql.artemis.extension.converter;
 
 import com.darwino.commons.util.StringUtil;
-import org.jnosql.artemis.AttributeConverter;
+import jakarta.nosql.mapping.AttributeConverter;
 
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeParseException;

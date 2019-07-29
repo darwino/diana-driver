@@ -29,17 +29,18 @@ import com.darwino.commons.util.io.content.InputStreamContent;
 import com.darwino.jsonstore.*;
 import com.darwino.platform.DarwinoContext;
 
-import org.darwino.jnosql.diana.attachment.EntityAttachment;
-import org.jnosql.diana.api.Value;
-import org.jnosql.diana.api.document.Document;
-import org.jnosql.diana.api.document.DocumentDeleteQuery;
-import org.jnosql.diana.api.document.DocumentEntity;
-import org.jnosql.diana.api.document.DocumentQuery;
+import jakarta.nosql.Value;
+import jakarta.nosql.document.Document;
+import jakarta.nosql.document.DocumentDeleteQuery;
+import jakarta.nosql.document.DocumentEntity;
+import jakarta.nosql.document.DocumentQuery;
+import org.jnosql.diana.driver.attachment.EntityAttachment;
 
 import java.io.IOException;
 import java.time.Duration;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import static java.util.Objects.nonNull;
 import static java.util.Objects.requireNonNull;
@@ -119,6 +120,27 @@ class DefaultDarwinoDocumentCollectionManager implements DarwinoDocumentCollecti
 		requireNonNull(ttl, "ttl is required"); //$NON-NLS-1$
 		return insert(entity);
 	}
+	
+
+
+	@Override
+	public Iterable<DocumentEntity> insert(Iterable<DocumentEntity> entities) {
+		requireNonNull(entities, "entities is required");
+		return StreamSupport.stream(entities.spliterator(), false)
+			.map(this::insert)
+			.filter(Objects::nonNull)
+			.collect(Collectors.toList());
+	}
+
+	@Override
+	public Iterable<DocumentEntity> insert(Iterable<DocumentEntity> entities, Duration ttl) {
+		requireNonNull(entities, "entities is required");
+		requireNonNull(ttl, "ttl is required"); //$NON-NLS-1$
+		return StreamSupport.stream(entities.spliterator(), false)
+			.map(e -> insert(e, ttl))
+			.filter(Objects::nonNull)
+			.collect(Collectors.toList());
+	}
 
 	@Override
 	public DocumentEntity update(DocumentEntity entity) {
@@ -134,6 +156,15 @@ class DefaultDarwinoDocumentCollectionManager implements DarwinoDocumentCollecti
 		} catch (JsonException e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	@Override
+	public Iterable<DocumentEntity> update(Iterable<DocumentEntity> entities) {
+		requireNonNull(entities, "entities is required");
+		return StreamSupport.stream(entities.spliterator(), false)
+			.map(this::update)
+			.filter(Objects::nonNull)
+			.collect(Collectors.toList());
 	}
 
 	@Override

@@ -59,7 +59,7 @@ class DefaultDarwinoDocumentCollectionManager implements DarwinoDocumentCollecti
 		this.storeId = storeId;
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "resource" })
 	@Override
 	public DocumentEntity insert(DocumentEntity entity) {
 		requireNonNull(entity, "entity is required"); //$NON-NLS-1$
@@ -126,7 +126,7 @@ class DefaultDarwinoDocumentCollectionManager implements DarwinoDocumentCollecti
 
 	@Override
 	public Iterable<DocumentEntity> insert(Iterable<DocumentEntity> entities) {
-		requireNonNull(entities, "entities is required");
+		requireNonNull(entities, "entities is required"); //$NON-NLS-1$
 		return StreamSupport.stream(entities.spliterator(), false)
 			.map(this::insert)
 			.filter(Objects::nonNull)
@@ -135,7 +135,7 @@ class DefaultDarwinoDocumentCollectionManager implements DarwinoDocumentCollecti
 
 	@Override
 	public Iterable<DocumentEntity> insert(Iterable<DocumentEntity> entities, Duration ttl) {
-		requireNonNull(entities, "entities is required");
+		requireNonNull(entities, "entities is required"); //$NON-NLS-1$
 		requireNonNull(ttl, "ttl is required"); //$NON-NLS-1$
 		return StreamSupport.stream(entities.spliterator(), false)
 			.map(e -> insert(e, ttl))
@@ -161,7 +161,7 @@ class DefaultDarwinoDocumentCollectionManager implements DarwinoDocumentCollecti
 
 	@Override
 	public Iterable<DocumentEntity> update(Iterable<DocumentEntity> entities) {
-		requireNonNull(entities, "entities is required");
+		requireNonNull(entities, "entities is required"); //$NON-NLS-1$
 		return StreamSupport.stream(entities.spliterator(), false)
 			.map(this::update)
 			.filter(Objects::nonNull)
@@ -326,6 +326,7 @@ class DefaultDarwinoDocumentCollectionManager implements DarwinoDocumentCollecti
 		}
 	}
 	
+	@SuppressWarnings("resource")
 	private Store getStore() throws JsonException {
 		Session session = DarwinoContext.get().getSession();
 		Database database = session.getDatabase(databaseName);
@@ -333,7 +334,7 @@ class DefaultDarwinoDocumentCollectionManager implements DarwinoDocumentCollecti
 	}
 
 	private static int getSkip(JsonFactory fac, Object params) throws JsonException {
-		Object skipObj = fac.getProperty(params, "skip");
+		Object skipObj = fac.getProperty(params, "skip"); //$NON-NLS-1$
 		int skip;
 		if(fac.isNumber(skipObj)) {
 			skip = (int)fac.getNumber(skipObj);
@@ -343,7 +344,7 @@ class DefaultDarwinoDocumentCollectionManager implements DarwinoDocumentCollecti
 		return skip;
 	}
 	private static int getLimit(JsonFactory fac, Object params) throws JsonException {
-		Object limitObj = fac.getProperty(params, "limit");
+		Object limitObj = fac.getProperty(params, "limit"); //$NON-NLS-1$
 		int limit;
 		if(fac.isNumber(limitObj)) {
 			limit = (int)fac.getNumber(limitObj);

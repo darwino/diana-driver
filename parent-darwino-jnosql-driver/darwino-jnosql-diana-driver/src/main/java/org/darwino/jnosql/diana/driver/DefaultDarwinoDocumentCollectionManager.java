@@ -71,7 +71,7 @@ class DefaultDarwinoDocumentCollectionManager implements DarwinoDocumentCollecti
 				id = maybeId.get();
 			} else {
 				// Auto-insert a UNID
-				id = Document.of(EntityConverter.ID_FIELD, UUID.randomUUID().toString());
+				id = Document.of(EntityConverter.ID_FIELD, newUnid());
 				entity.add(id);
 			}
 
@@ -354,4 +354,15 @@ class DefaultDarwinoDocumentCollectionManager implements DarwinoDocumentCollecti
 		return limit;
 	}
 
+	/**
+	 * Constructs a new UNID suitable for use in Domino-replicating databases.
+	 * 
+	 * @return a new UNID as a {@link String}
+	 */
+	private static String newUnid() {
+		return UUID.randomUUID()
+			.toString()
+			.toUpperCase()
+			.replace("-", ""); //$NON-NLS-1$ //$NON-NLS-2$
+	}
 }

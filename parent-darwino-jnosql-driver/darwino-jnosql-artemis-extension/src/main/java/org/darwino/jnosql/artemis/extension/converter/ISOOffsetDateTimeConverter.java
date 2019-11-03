@@ -25,6 +25,8 @@ import com.darwino.commons.util.StringUtil;
 import jakarta.nosql.mapping.AttributeConverter;
 
 import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
 import java.time.format.DateTimeParseException;
 
 /**
@@ -35,13 +37,19 @@ import java.time.format.DateTimeParseException;
  * @since 0.0.8
  */
 public class ISOOffsetDateTimeConverter implements AttributeConverter<OffsetDateTime, String> {
+	
+	private static final DateTimeFormatter formatter = new DateTimeFormatterBuilder()
+            .parseCaseInsensitive()
+            .appendPattern("yyyy-MM-dd'T'HH:mm:ss.SSS") //$NON-NLS-1$
+            .appendOffsetId()
+            .toFormatter();
 
 	@Override
 	public String convertToDatabaseColumn(OffsetDateTime attribute) {
 		if(attribute == null) {
 			return null;
 		} else {
-			return attribute.toString();
+			return formatter.format(attribute);
 		}
 	}
 
@@ -54,9 +62,9 @@ public class ISOOffsetDateTimeConverter implements AttributeConverter<OffsetDate
 			return null;
 		} else {
 			try {
-				return OffsetDateTime.parse(dbData);
+				return OffsetDateTime.parse(dbData, formatter);
 			} catch (DateTimeParseException e) {
-				throw new IllegalArgumentException("Unable to parse provided date value \"" + dbData + "\"", e);
+				throw new IllegalArgumentException("Unable to parse provided date value \"" + dbData + "\"", e); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		}
 	}

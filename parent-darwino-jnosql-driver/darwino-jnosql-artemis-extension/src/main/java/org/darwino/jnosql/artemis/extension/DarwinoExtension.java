@@ -30,8 +30,8 @@ import javax.enterprise.inject.spi.ProcessProducer;
 
 import org.darwino.jnosql.diana.driver.DarwinoDocumentCollectionManager;
 import org.darwino.jnosql.diana.driver.DarwinoDocumentCollectionManagerAsync;
-import org.jnosql.artemis.DatabaseMetadata;
-import org.jnosql.artemis.Databases;
+import org.eclipse.jnosql.artemis.DatabaseMetadata;
+import org.eclipse.jnosql.artemis.Databases;
 
 import static jakarta.nosql.mapping.DatabaseType.DOCUMENT;
 

@@ -21,8 +21,8 @@
  */
 package org.darwino.jnosql.artemis.extension;
 
-import java.util.List;
 import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 import jakarta.nosql.mapping.document.DocumentTemplateAsync;
 import jakarta.nosql.ExecuteAsyncQueryException;
@@ -43,7 +43,7 @@ public interface DarwinoTemplateAsync extends DocumentTemplateAsync {
 	 *             when either jsqlQuery or params are null
 	 * @throws ExecuteAsyncQueryException an async error
 	 */
-	<T> void jsqlQuery(String jsqlQuery, Object params, Consumer<List<T>> callback) throws NullPointerException, ExecuteAsyncQueryException;
+	<T> void jsqlQuery(String jsqlQuery, Object params, Consumer<Stream<T>> callback) throws NullPointerException, ExecuteAsyncQueryException;
 
 	/**
 	 * Executes the JSQL query with params and then returns the result
@@ -58,7 +58,7 @@ public interface DarwinoTemplateAsync extends DocumentTemplateAsync {
 	 *             when either jsqlQuery or params are null
 	 * @throws ExecuteAsyncQueryException an async error
 	 */
-	<T> void jsqlQuery(JsqlCursor jsqlQuery, Object params, Consumer<List<T>> callback) throws NullPointerException, ExecuteAsyncQueryException;
+	<T> void jsqlQuery(JsqlCursor jsqlQuery, Object params, Consumer<Stream<T>> callback) throws NullPointerException, ExecuteAsyncQueryException;
 
 	/**
 	 * Executes the JSQL query and then returns the result
@@ -71,7 +71,7 @@ public interface DarwinoTemplateAsync extends DocumentTemplateAsync {
 	 *             when either jsqlQuery or params are null
 	 * @throws ExecuteAsyncQueryException an async error
 	 */
-	<T> void jsqlQuery(String jsqlQuery, Consumer<List<T>> callback) throws NullPointerException, ExecuteAsyncQueryException;
+	<T> void jsqlQuery(String jsqlQuery, Consumer<Stream<T>> callback) throws NullPointerException, ExecuteAsyncQueryException;
 
 	/**
 	 * Searches in Darwino using Full Text Search
@@ -86,7 +86,7 @@ public interface DarwinoTemplateAsync extends DocumentTemplateAsync {
 	 *             when either the query or index are null
 	 * @throws ExecuteAsyncQueryException an async error
 	 */
-	<T> void search(String query, Consumer<List<T>> callback) throws NullPointerException, ExecuteAsyncQueryException;
+	<T> void search(String query, Consumer<Stream<T>> callback) throws NullPointerException, ExecuteAsyncQueryException;
 	
 	/**
 	 * Executes a stored cursor from the Darwino database
@@ -101,5 +101,5 @@ public interface DarwinoTemplateAsync extends DocumentTemplateAsync {
 	 *             when either the query or index are null
 	 * @throws ExecuteAsyncQueryException an async error
 	 */
-	<T> void storedCursor(String cursorName, Object params, Consumer<List<T>> callback) throws NullPointerException, ExecuteAsyncQueryException;
+	<T> void storedCursor(String cursorName, Object params, Consumer<Stream<T>> callback) throws NullPointerException, ExecuteAsyncQueryException;
 }

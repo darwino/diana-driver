@@ -21,13 +21,16 @@
  */
 package org.darwino.jnosql.artemis.extension;
 
+import static org.mockito.Mockito.when;
+
+import java.util.function.Consumer;
+import java.util.stream.Stream;
+
+import javax.enterprise.inject.Instance;
+import javax.inject.Inject;
+
 import org.darwino.jnosql.artemis.extension.runner.WeldJUnit4Runner;
 import org.darwino.jnosql.diana.driver.DarwinoDocumentCollectionManagerAsync;
-import jakarta.nosql.mapping.Converters;
-import jakarta.nosql.mapping.document.DocumentEntityConverter;
-import jakarta.nosql.mapping.reflection.ClassMappings;
-import jakarta.nosql.document.Document;
-import jakarta.nosql.document.DocumentEntity;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -36,12 +39,11 @@ import org.mockito.Mockito;
 import com.darwino.commons.json.JsonObject;
 import com.darwino.jsonstore.JsqlCursor;
 
-import javax.enterprise.inject.Instance;
-import javax.inject.Inject;
-import java.util.List;
-import java.util.function.Consumer;
-
-import static org.mockito.Mockito.when;
+import jakarta.nosql.document.Document;
+import jakarta.nosql.document.DocumentEntity;
+import jakarta.nosql.mapping.Converters;
+import jakarta.nosql.mapping.document.DocumentEntityConverter;
+import jakarta.nosql.mapping.reflection.ClassMappings;
 
 @SuppressWarnings("nls")
 @RunWith(WeldJUnit4Runner.class)
@@ -80,7 +82,7 @@ public class DefaultDarwinoTemplateAsyncTest extends AbstractDarwinoAppTest {
 	@Test
     public void shouldFind() {
         String query = "select * from _default where $.name=:name";
-        Consumer<List<Person>> callBack = p -> {
+        Consumer<Stream<Person>> callBack = p -> {
         };
         JsonObject params = JsonObject.of("name", "Ada");
         templateAsync.jsqlQuery(query, params, callBack);
@@ -94,7 +96,7 @@ public class DefaultDarwinoTemplateAsyncTest extends AbstractDarwinoAppTest {
 //    		String db = DarwinoApplication.get().getManifest().getDatabases()[0];
 //    		JsqlCursor cursor = DarwinoContext.get().getSession().openJsqlCursor().database(db);
     		JsqlCursor query = Mockito.mock(JsqlCursor.class);
-        Consumer<List<Person>> callBack = p -> {
+        Consumer<Stream<Person>> callBack = p -> {
         };
         JsonObject params = JsonObject.of("name", "Ada");
         templateAsync.jsqlQuery(query, params, callBack);
@@ -105,7 +107,7 @@ public class DefaultDarwinoTemplateAsyncTest extends AbstractDarwinoAppTest {
 	@Test
     public void shouldFind1() {
         String query = "select _unid unid from _default where $.form='Person' and $.name=:name";
-        Consumer<List<Person>> callBack = p -> {
+        Consumer<Stream<Person>> callBack = p -> {
         };
         templateAsync.jsqlQuery(query, callBack);
         Mockito.verify(managerAsync).jsqlQuery(Mockito.eq(query), Mockito.any(Consumer.class));

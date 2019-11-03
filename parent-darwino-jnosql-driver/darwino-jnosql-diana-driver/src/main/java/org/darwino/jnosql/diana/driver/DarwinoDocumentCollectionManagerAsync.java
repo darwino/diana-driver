@@ -28,8 +28,8 @@ import jakarta.nosql.document.DocumentEntity;
 import com.darwino.jsonstore.Cursor;
 import com.darwino.jsonstore.JsqlCursor;
 
-import java.util.List;
 import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 /**
  * The Darwino interface of {@link DocumentCollectionManagerAsync}
@@ -45,7 +45,7 @@ public interface DarwinoDocumentCollectionManagerAsync extends DocumentCollectio
      * @param callback  the callback
      * @throws ExecuteAsyncQueryException an async error
      */
-    void query(String query, Object params, Consumer<List<DocumentEntity>> callback) throws ExecuteAsyncQueryException;
+    void query(String query, Object params, Consumer<Stream<DocumentEntity>> callback) throws ExecuteAsyncQueryException;
 
     /**
      * Executes the query and then processes the result
@@ -54,7 +54,7 @@ public interface DarwinoDocumentCollectionManagerAsync extends DocumentCollectio
      * @param callback  the callback
      * @throws ExecuteAsyncQueryException an async error
      */
-    void query(String query, Consumer<List<DocumentEntity>> callback) throws ExecuteAsyncQueryException;
+    void query(String query, Consumer<Stream<DocumentEntity>> callback) throws ExecuteAsyncQueryException;
 
     /**
      * Executes the query and then processes the result
@@ -63,7 +63,7 @@ public interface DarwinoDocumentCollectionManagerAsync extends DocumentCollectio
      * @param callback  the callback
      * @throws ExecuteAsyncQueryException an async error
      */
-    void query(Cursor cursor, Consumer<List<DocumentEntity>> callback) throws ExecuteAsyncQueryException;
+    void query(Cursor cursor, Consumer<Stream<DocumentEntity>> callback) throws ExecuteAsyncQueryException;
 
     /**
      * Searches in Darwino using Full Text Search
@@ -72,7 +72,7 @@ public interface DarwinoDocumentCollectionManagerAsync extends DocumentCollectio
      * @param callback  the callback
      * @throws ExecuteAsyncQueryException an async error
      */
-    void search(String query, Consumer<List<DocumentEntity>> callback) throws ExecuteAsyncQueryException;
+    void search(String query, Consumer<Stream<DocumentEntity>> callback) throws ExecuteAsyncQueryException;
     
     /**
 	 * Executes the JSQL query with params and then returns the result
@@ -87,7 +87,7 @@ public interface DarwinoDocumentCollectionManagerAsync extends DocumentCollectio
 	 *             when either jsqlQuery or params are null
 	 * @throws ExecuteAsyncQueryException an async error
 	 */
-	void jsqlQuery(String jsqlQuery, Object params, Consumer<List<DocumentEntity>> callback) throws NullPointerException, ExecuteAsyncQueryException;
+	void jsqlQuery(String jsqlQuery, Object params, Consumer<Stream<DocumentEntity>> callback) throws NullPointerException, ExecuteAsyncQueryException;
 
 	/**
 	 * Executes the JSQL query with params and then returns the result
@@ -102,7 +102,7 @@ public interface DarwinoDocumentCollectionManagerAsync extends DocumentCollectio
 	 *             when either jsqlQuery or params are null
 	 * @throws ExecuteAsyncQueryException an async error
 	 */
-	void jsqlQuery(JsqlCursor jsqlQuery, Object params, Consumer<List<DocumentEntity>> callback) throws NullPointerException, ExecuteAsyncQueryException;
+	void jsqlQuery(JsqlCursor jsqlQuery, Object params, Consumer<Stream<DocumentEntity>> callback) throws NullPointerException, ExecuteAsyncQueryException;
 
 	/**
 	 * Executes the JSQL query and then returns the result
@@ -115,7 +115,7 @@ public interface DarwinoDocumentCollectionManagerAsync extends DocumentCollectio
 	 *             when either jsqlQuery or params are null
 	 * @throws ExecuteAsyncQueryException an async error
 	 */
-	void jsqlQuery(String jsqlQuery, Consumer<List<DocumentEntity>> callback) throws NullPointerException, ExecuteAsyncQueryException;
+	void jsqlQuery(String jsqlQuery, Consumer<Stream<DocumentEntity>> callback) throws NullPointerException, ExecuteAsyncQueryException;
     
     /**
      * Executes a stored cursor and then returns the result
@@ -126,6 +126,6 @@ public interface DarwinoDocumentCollectionManagerAsync extends DocumentCollectio
 	 *            the callback
      * @throws NullPointerException when either jsqlQuery or params are null
      */
-    void storedCursor(String cursorName, Object params, Consumer<List<DocumentEntity>> callback);
+    void storedCursor(String cursorName, Object params, Consumer<Stream<DocumentEntity>> callback);
 
 }

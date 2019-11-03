@@ -24,7 +24,7 @@ package org.darwino.jnosql.artemis.extension;
 import com.darwino.jsonstore.JsqlCursor;
 import org.darwino.jnosql.diana.driver.DarwinoDocumentCollectionManager;
 import jakarta.nosql.mapping.Converters;
-import org.jnosql.artemis.document.AbstractDocumentTemplate;
+import org.eclipse.jnosql.artemis.document.AbstractDocumentTemplate;
 import jakarta.nosql.mapping.document.DocumentEntityConverter;
 import jakarta.nosql.mapping.document.DocumentEventPersistManager;
 import jakarta.nosql.mapping.document.DocumentWorkflow;
@@ -45,8 +45,7 @@ import static java.util.Objects.requireNonNull;
  * The Default implementation of {@link DarwinoTemplate}
  */
 @Typed(DarwinoTemplate.class)
-class DefaultDarwinoTemplate extends AbstractDocumentTemplate
-        implements DarwinoTemplate {
+class DefaultDarwinoTemplate extends AbstractDocumentTemplate implements DarwinoTemplate {
 
     private Instance<DarwinoDocumentCollectionManager> manager;
 
@@ -114,7 +113,7 @@ class DefaultDarwinoTemplate extends AbstractDocumentTemplate
     public <T> List<T> jsqlQuery(String jsqlQuery, Object params) throws NullPointerException {
         requireNonNull(jsqlQuery, "jsqlQuery is required"); //$NON-NLS-1$
         requireNonNull(params, "params is required"); //$NON-NLS-1$
-        return getManager().jsqlQuery(jsqlQuery, params).stream()
+        return Objects.requireNonNull(getManager().jsqlQuery(jsqlQuery, params), "JSQL query returned null")
                 .map(getConverter()::toEntity)
                 .map(d -> (T) d)
                 .collect(Collectors.toList());
@@ -125,7 +124,7 @@ class DefaultDarwinoTemplate extends AbstractDocumentTemplate
     public <T> List<T> jsqlQuery(JsqlCursor jsqlQuery, Object params) throws NullPointerException {
         requireNonNull(jsqlQuery, "jsqlQuery is required"); //$NON-NLS-1$
         requireNonNull(params, "params is required"); //$NON-NLS-1$
-        return getManager().jsqlQuery(jsqlQuery, params).stream()
+        return Objects.requireNonNull(getManager().jsqlQuery(jsqlQuery, params), "JSQL query returned null")
                 .map(getConverter()::toEntity)
                 .map(d -> (T) d)
                 .collect(Collectors.toList());
@@ -135,7 +134,7 @@ class DefaultDarwinoTemplate extends AbstractDocumentTemplate
 	@Override
     public <T> List<T> jsqlQuery(String jsqlQuery) throws NullPointerException {
         requireNonNull(jsqlQuery, "jsqlQuery is required"); //$NON-NLS-1$
-        return getManager().jsqlQuery(jsqlQuery).stream()
+        return getManager().jsqlQuery(jsqlQuery)
                 .map(getConverter()::toEntity)
                 .map(d -> (T) d)
                 .collect(Collectors.toList());
@@ -145,7 +144,7 @@ class DefaultDarwinoTemplate extends AbstractDocumentTemplate
     @Override
     public <T> List<T> search(String query) throws NullPointerException {
         requireNonNull(query, "query is required"); //$NON-NLS-1$
-        return getManager().search(query).stream()
+        return getManager().search(query)
                 .map(getConverter()::toEntity)
                 .map(d -> (T) d)
                 .collect(Collectors.toList());
@@ -155,7 +154,7 @@ class DefaultDarwinoTemplate extends AbstractDocumentTemplate
     @Override
     public <T> List<T> search(String query, Collection<String> orderBy) throws NullPointerException {
         requireNonNull(query, "query is required"); //$NON-NLS-1$
-        return getManager().search(query, orderBy).stream()
+        return getManager().search(query, orderBy)
                 .map(getConverter()::toEntity)
                 .map(d -> (T) d)
                 .collect(Collectors.toList());
@@ -165,7 +164,7 @@ class DefaultDarwinoTemplate extends AbstractDocumentTemplate
 	@Override
     public <T> List<T> storedCursor(String cursorName, Object params) {
     	requireNonNull(cursorName, "cursorName is required"); //$NON-NLS-1$
-        return getManager().storedCursor(cursorName, params).stream()
+        return getManager().storedCursor(cursorName, params)
                 .map(getConverter()::toEntity)
                 .map(d -> (T) d)
                 .collect(Collectors.toList());

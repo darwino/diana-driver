@@ -35,19 +35,19 @@
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.jnosql.artemis</groupId>
+			<groupId>org.eclipse.jnosql.artemis</groupId>
 			<artifactId>artemis-document</artifactId>
 			<version>${jnosql-version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.jnosql.artemis</groupId>
+			<groupId>org.eclipse.jnosql.artemis</groupId>
 			<artifactId>artemis-core</artifactId>
 			<version>${jnosql-version}</version>
 		</dependency>
 
 
 		<dependency>
-			<groupId>jakarta..enterprise</groupId>
+			<groupId>jakarta.enterprise</groupId>
 			<artifactId>jakarta.enterprise.cdi-api</artifactId>
 			<version>2.0.1</version>
 			<scope>provided</scope>

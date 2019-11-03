@@ -113,7 +113,7 @@ public class DarwinoDocumentCollectionManagerTest extends AbstractDarwinoAppTest
 				.where("name").eq(name.get().get())
 				.build();
 		entityManager.delete(deleteQuery);
-		assertTrue(entityManager.select(query).isEmpty());
+		assertTrue(entityManager.select(query).count() == 0);
 	}
 
 	@Test
@@ -127,7 +127,7 @@ public class DarwinoDocumentCollectionManagerTest extends AbstractDarwinoAppTest
 		DocumentQuery query = select().from(COLLECTION_NAME)
 				.where("_id").eq(id.get())
 				.build();
-		DocumentEntity entityFound = entityManager.select(query).get(0);
+		DocumentEntity entityFound = entityManager.select(query).findFirst().orElse(null);
 		Document subDocument = entityFound.find("phones").get();
 		List<Document> documents = subDocument.get(new TypeReference<List<Document>>() {
 		});
@@ -144,7 +144,7 @@ public class DarwinoDocumentCollectionManagerTest extends AbstractDarwinoAppTest
 		DocumentQuery query = select().from(COLLECTION_NAME)
 				.where("_id").eq(id.get())
 				.build();
-		DocumentEntity entityFound = entityManager.select(query).get(0);
+		DocumentEntity entityFound = entityManager.select(query).findFirst().orElse(null);
 		System.out.println("shouldSaveSubDocument2 entity found is " + entityFound);
 		Document subDocument = entityFound.find("phones").get();
 		List<Document> documents = subDocument.get(new TypeReference<List<Document>>() {

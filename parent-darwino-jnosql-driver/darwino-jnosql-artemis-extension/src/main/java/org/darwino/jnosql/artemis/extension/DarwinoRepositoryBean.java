@@ -36,7 +36,7 @@ import javax.enterprise.inject.spi.InjectionPoint;
 import javax.enterprise.inject.spi.PassivationCapable;
 import javax.enterprise.util.AnnotationLiteral;
 
-import org.jnosql.artemis.DatabaseQualifier;
+import org.eclipse.jnosql.artemis.DatabaseQualifier;
 import jakarta.nosql.mapping.Repository;
 import jakarta.nosql.mapping.document.DocumentRepositoryProducer;
 

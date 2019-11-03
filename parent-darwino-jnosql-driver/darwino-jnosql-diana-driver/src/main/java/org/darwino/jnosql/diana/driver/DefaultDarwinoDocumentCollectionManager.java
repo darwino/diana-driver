@@ -34,12 +34,13 @@ import jakarta.nosql.document.Document;
 import jakarta.nosql.document.DocumentDeleteQuery;
 import jakarta.nosql.document.DocumentEntity;
 import jakarta.nosql.document.DocumentQuery;
-import org.jnosql.diana.driver.attachment.EntityAttachment;
+import org.eclipse.jnosql.diana.driver.attachment.EntityAttachment;
 
 import java.io.IOException;
 import java.time.Duration;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 import static java.util.Objects.nonNull;
@@ -178,22 +179,21 @@ class DefaultDarwinoDocumentCollectionManager implements DarwinoDocumentCollecti
 	}
 
 	@Override
-	public List<DocumentEntity> select(DocumentQuery query) throws NullPointerException {
+	public Stream<DocumentEntity> select(DocumentQuery query) throws NullPointerException {
 		try {
 			QueryConverter.QueryConverterResult select = QueryConverter.select(query, getStore().getDatabase().getId(), getStore().getId(), getStore().getSession().getJsonFactory());
-			List<DocumentEntity> entities = new ArrayList<>();
 			if (nonNull(select.getStatement())) {
-				entities.addAll(convert(select.getStatement().params(JsonUtil.toJsonObject(select.getParams(), getStore().getSession().getJsonFactory()))));
+				return convert(select.getStatement().params(JsonUtil.toJsonObject(select.getParams(), getStore().getSession().getJsonFactory())));
+			} else {
+				return Stream.empty();
 			}
-
-			return entities;
 		} catch (JsonException e) {
 			throw new RuntimeException(e);
 		}
 	}
 
 	@Override
-	public List<DocumentEntity> query(String query, Object params) throws NullPointerException {
+	public Stream<DocumentEntity> query(String query, Object params) throws NullPointerException {
 		requireNonNull(query, "query is required"); //$NON-NLS-1$
 		requireNonNull(params, "params is required"); //$NON-NLS-1$
 		try {
@@ -205,7 +205,7 @@ class DefaultDarwinoDocumentCollectionManager implements DarwinoDocumentCollecti
 	}
 
 	@Override
-	public List<DocumentEntity> query(String query) throws NullPointerException {
+	public Stream<DocumentEntity> query(String query) throws NullPointerException {
 		requireNonNull(query, "query is required"); //$NON-NLS-1$
 		try {
 			return convert(getStore().openCursor().query(query));
@@ -215,7 +215,7 @@ class DefaultDarwinoDocumentCollectionManager implements DarwinoDocumentCollecti
 	}
 
 	@Override
-	public List<DocumentEntity> query(Cursor cursor) throws NullPointerException {
+	public Stream<DocumentEntity> query(Cursor cursor) throws NullPointerException {
 		requireNonNull(cursor, "cursor is required"); //$NON-NLS-1$
 		try {
 			return convert(cursor);
@@ -225,7 +225,7 @@ class DefaultDarwinoDocumentCollectionManager implements DarwinoDocumentCollecti
 	}
 
 	@Override
-	public List<DocumentEntity> search(String query) {
+	public Stream<DocumentEntity> search(String query) {
 		try {
 			Cursor cursor = getStore().openCursor().ftSearch(query);
 			return convert(cursor);
@@ -235,7 +235,7 @@ class DefaultDarwinoDocumentCollectionManager implements DarwinoDocumentCollecti
 	}
 	
 	@Override
-	public List<DocumentEntity> search(String query, Collection<String> orderBy) {
+	public Stream<DocumentEntity> search(String query, Collection<String> orderBy) {
 		if(orderBy == null) {
 			return search(query);
 		}
@@ -249,7 +249,7 @@ class DefaultDarwinoDocumentCollectionManager implements DarwinoDocumentCollecti
 	}
 
 	@Override
-	public List<DocumentEntity> jsqlQuery(String jsqlQuery, Object params) throws NullPointerException {
+	public Stream<DocumentEntity> jsqlQuery(String jsqlQuery, Object params) throws NullPointerException {
 		try {
 			JsqlCursor cursor = getStore().getDatabase().getSession().openJsqlCursor()
 				.database(getStore().getDatabase().getId())
@@ -261,7 +261,7 @@ class DefaultDarwinoDocumentCollectionManager implements DarwinoDocumentCollecti
 	}
 
 	@Override
-	public List<DocumentEntity> jsqlQuery(JsqlCursor jsqlQuery, Object params) throws NullPointerException {
+	public Stream<DocumentEntity> jsqlQuery(JsqlCursor jsqlQuery, Object params) throws NullPointerException {
 		try {
 			if(Objects.nonNull(params)) {
 				JsonFactory fac = getStore().getSession().getJsonFactory();
@@ -281,12 +281,12 @@ class DefaultDarwinoDocumentCollectionManager implements DarwinoDocumentCollecti
 	}
 
 	@Override
-	public List<DocumentEntity> jsqlQuery(String jsqlQuery) throws NullPointerException {
+	public Stream<DocumentEntity> jsqlQuery(String jsqlQuery) throws NullPointerException {
 		return jsqlQuery(jsqlQuery, null);
 	}
 	
 	@Override
-	public List<DocumentEntity> storedCursor(String cursorName, Object params) {
+	public Stream<DocumentEntity> storedCursor(String cursorName, Object params) {
 		requireNonNull(cursorName, "query is required"); //$NON-NLS-1$
 		try {
 			

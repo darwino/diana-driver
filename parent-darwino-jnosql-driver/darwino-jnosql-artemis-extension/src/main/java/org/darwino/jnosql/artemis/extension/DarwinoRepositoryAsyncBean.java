@@ -21,7 +21,7 @@
  */
 package org.darwino.jnosql.artemis.extension;
 
-import org.jnosql.artemis.DatabaseQualifier;
+import org.eclipse.jnosql.artemis.DatabaseQualifier;
 import jakarta.nosql.mapping.RepositoryAsync;
 import jakarta.nosql.mapping.document.DocumentRepositoryAsyncProducer;
 

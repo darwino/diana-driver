@@ -87,14 +87,14 @@ public class SearchQueryTest extends AbstractDarwinoAppTest {
 
     @Test
     public void shouldSearchElement() {
-        List<DocumentEntity> entities = entityManager.search("Financial");
+        List<DocumentEntity> entities = entityManager.search("Financial").collect(Collectors.toList());
         assertEquals(1, entities.size());
         assertEquals(Document.of("name", "São Paulo"), entities.get(0).find("name").get());
     }
 
     @Test
     public void shouldSearchElement2() {
-        List<DocumentEntity> entities = entityManager.search("Brazil");
+        List<DocumentEntity> entities = entityManager.search("Brazil").collect(Collectors.toList());
         assertEquals(3, entities.size());
         List<String> result = entities.stream()
                 .flatMap(e -> e.getDocuments().stream())
@@ -106,7 +106,7 @@ public class SearchQueryTest extends AbstractDarwinoAppTest {
 
     @Test
     public void shouldSearchElement3() {
-        List<DocumentEntity> entities = entityManager.search("Salvador");
+        List<DocumentEntity> entities = entityManager.search("Salvador").collect(Collectors.toList());
         assertEquals(1, entities.size());
         List<String> result = entities.stream()
                 .flatMap(e -> e.getDocuments().stream())

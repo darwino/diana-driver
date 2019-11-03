@@ -36,8 +36,9 @@ import com.darwino.jsonstore.Cursor;
 import com.darwino.jsonstore.JsqlCursor;
 
 import java.time.Duration;
-import java.util.List;
 import java.util.function.Consumer;
+import java.util.stream.Stream;
+
 import static java.util.Objects.requireNonNull;
 
 class DefaultDarwinoDocumentCollectionManagerAsync implements DarwinoDocumentCollectionManagerAsync {
@@ -172,15 +173,15 @@ class DefaultDarwinoDocumentCollectionManagerAsync implements DarwinoDocumentCol
 	}
 
 	@Override
-	public void select(DocumentQuery query, Consumer<List<DocumentEntity>> callback) throws ExecuteAsyncQueryException, UnsupportedOperationException {
+	public void select(DocumentQuery query, Consumer<Stream<DocumentEntity>> callback) throws ExecuteAsyncQueryException, UnsupportedOperationException {
 		requireNonNull(query, "query is required"); //$NON-NLS-1$
 		requireNonNull(callback, "callback is required"); //$NON-NLS-1$
 
-		Task<List<DocumentEntity>> t = Task.from(context -> manager.select(query));
-		TaskExecutor<List<DocumentEntity>> exec = Platform.getService(TaskExecutorService.class).createExecutor(false);
-		exec.exec(t, new Callback<List<DocumentEntity>>() {
+		Task<Stream<DocumentEntity>> t = Task.from(context -> manager.select(query));
+		TaskExecutor<Stream<DocumentEntity>> exec = Platform.getService(TaskExecutorService.class).createExecutor(false);
+		exec.exec(t, new Callback<Stream<DocumentEntity>>() {
 			@Override
-			public Void success(List<DocumentEntity> value) {
+			public Void success(Stream<DocumentEntity> value) {
 				callback.accept(value);
 				return null;
 			}
@@ -192,15 +193,15 @@ class DefaultDarwinoDocumentCollectionManagerAsync implements DarwinoDocumentCol
 	}
 
 	@Override
-	public void query(String query, Object params, Consumer<List<DocumentEntity>> callback)
+	public void query(String query, Object params, Consumer<Stream<DocumentEntity>> callback)
 			throws NullPointerException, ExecuteAsyncQueryException {
 		requireNonNull(callback, "callback is required"); //$NON-NLS-1$
 
-		Task<List<DocumentEntity>> t = Task.from(context -> manager.query(query, params));
-		TaskExecutor<List<DocumentEntity>> exec = Platform.getService(TaskExecutorService.class).createExecutor(false);
-		exec.exec(t, new Callback<List<DocumentEntity>>() {
+		Task<Stream<DocumentEntity>> t = Task.from(context -> manager.query(query, params));
+		TaskExecutor<Stream<DocumentEntity>> exec = Platform.getService(TaskExecutorService.class).createExecutor(false);
+		exec.exec(t, new Callback<Stream<DocumentEntity>>() {
 			@Override
-			public Void success(List<DocumentEntity> value) {
+			public Void success(Stream<DocumentEntity> value) {
 				callback.accept(value);
 				return null;
 			}
@@ -212,14 +213,14 @@ class DefaultDarwinoDocumentCollectionManagerAsync implements DarwinoDocumentCol
 	}
 
 	@Override
-	public void query(String query, Consumer<List<DocumentEntity>> callback) throws NullPointerException, ExecuteAsyncQueryException {
+	public void query(String query, Consumer<Stream<DocumentEntity>> callback) throws NullPointerException, ExecuteAsyncQueryException {
 		requireNonNull(callback, "callback is required"); //$NON-NLS-1$
 
-		Task<List<DocumentEntity>> t = Task.from(context -> manager.query(query));
-		TaskExecutor<List<DocumentEntity>> exec = Platform.getService(TaskExecutorService.class).createExecutor(false);
-		exec.exec(t, new Callback<List<DocumentEntity>>() {
+		Task<Stream<DocumentEntity>> t = Task.from(context -> manager.query(query));
+		TaskExecutor<Stream<DocumentEntity>> exec = Platform.getService(TaskExecutorService.class).createExecutor(false);
+		exec.exec(t, new Callback<Stream<DocumentEntity>>() {
 			@Override
-			public Void success(List<DocumentEntity> value) {
+			public Void success(Stream<DocumentEntity> value) {
 				callback.accept(value);
 				return null;
 			}
@@ -231,14 +232,14 @@ class DefaultDarwinoDocumentCollectionManagerAsync implements DarwinoDocumentCol
 	}
 
 	@Override
-	public void query(Cursor cursor, Consumer<List<DocumentEntity>> callback) throws NullPointerException, ExecuteAsyncQueryException {
+	public void query(Cursor cursor, Consumer<Stream<DocumentEntity>> callback) throws NullPointerException, ExecuteAsyncQueryException {
 		requireNonNull(callback, "callback is required"); //$NON-NLS-1$
 
-		Task<List<DocumentEntity>> t = Task.from(context -> manager.query(cursor));
-		TaskExecutor<List<DocumentEntity>> exec = Platform.getService(TaskExecutorService.class).createExecutor(false);
-		exec.exec(t, new Callback<List<DocumentEntity>>() {
+		Task<Stream<DocumentEntity>> t = Task.from(context -> manager.query(cursor));
+		TaskExecutor<Stream<DocumentEntity>> exec = Platform.getService(TaskExecutorService.class).createExecutor(false);
+		exec.exec(t, new Callback<Stream<DocumentEntity>>() {
 			@Override
-			public Void success(List<DocumentEntity> value) {
+			public Void success(Stream<DocumentEntity> value) {
 				callback.accept(value);
 				return null;
 			}
@@ -255,14 +256,14 @@ class DefaultDarwinoDocumentCollectionManagerAsync implements DarwinoDocumentCol
 	}
 
 	@Override
-	public void search(String query, Consumer<List<DocumentEntity>> callback) throws ExecuteAsyncQueryException {
+	public void search(String query, Consumer<Stream<DocumentEntity>> callback) throws ExecuteAsyncQueryException {
 		requireNonNull(callback, "callback is required"); //$NON-NLS-1$
 
-		Task<List<DocumentEntity>> t = Task.from(context -> manager.search(query));
-		TaskExecutor<List<DocumentEntity>> exec = Platform.getService(TaskExecutorService.class).createExecutor(false);
-		exec.exec(t, new Callback<List<DocumentEntity>>() {
+		Task<Stream<DocumentEntity>> t = Task.from(context -> manager.search(query));
+		TaskExecutor<Stream<DocumentEntity>> exec = Platform.getService(TaskExecutorService.class).createExecutor(false);
+		exec.exec(t, new Callback<Stream<DocumentEntity>>() {
 			@Override
-			public Void success(List<DocumentEntity> value) {
+			public Void success(Stream<DocumentEntity> value) {
 				callback.accept(value);
 				return null;
 			}
@@ -274,15 +275,15 @@ class DefaultDarwinoDocumentCollectionManagerAsync implements DarwinoDocumentCol
 	}
 
 	@Override
-	public void jsqlQuery(String jsqlQuery, Object params, Consumer<List<DocumentEntity>> callback)
+	public void jsqlQuery(String jsqlQuery, Object params, Consumer<Stream<DocumentEntity>> callback)
 			throws NullPointerException, ExecuteAsyncQueryException {
 		requireNonNull(callback, "callback is required"); //$NON-NLS-1$
 
-		Task<List<DocumentEntity>> t = Task.from(context -> manager.jsqlQuery(jsqlQuery, params));
-		TaskExecutor<List<DocumentEntity>> exec = Platform.getService(TaskExecutorService.class).createExecutor(false);
-		exec.exec(t, new Callback<List<DocumentEntity>>() {
+		Task<Stream<DocumentEntity>> t = Task.from(context -> manager.jsqlQuery(jsqlQuery, params));
+		TaskExecutor<Stream<DocumentEntity>> exec = Platform.getService(TaskExecutorService.class).createExecutor(false);
+		exec.exec(t, new Callback<Stream<DocumentEntity>>() {
 			@Override
-			public Void success(List<DocumentEntity> value) {
+			public Void success(Stream<DocumentEntity> value) {
 				callback.accept(value);
 				return null;
 			}
@@ -294,15 +295,15 @@ class DefaultDarwinoDocumentCollectionManagerAsync implements DarwinoDocumentCol
 	}
 
 	@Override
-	public void jsqlQuery(JsqlCursor jsqlQuery, Object params, Consumer<List<DocumentEntity>> callback)
+	public void jsqlQuery(JsqlCursor jsqlQuery, Object params, Consumer<Stream<DocumentEntity>> callback)
 			throws NullPointerException, ExecuteAsyncQueryException {
 		requireNonNull(callback, "callback is required"); //$NON-NLS-1$
 
-		Task<List<DocumentEntity>> t = Task.from(context -> manager.jsqlQuery(jsqlQuery, params));
-		TaskExecutor<List<DocumentEntity>> exec = Platform.getService(TaskExecutorService.class).createExecutor(false);
-		exec.exec(t, new Callback<List<DocumentEntity>>() {
+		Task<Stream<DocumentEntity>> t = Task.from(context -> manager.jsqlQuery(jsqlQuery, params));
+		TaskExecutor<Stream<DocumentEntity>> exec = Platform.getService(TaskExecutorService.class).createExecutor(false);
+		exec.exec(t, new Callback<Stream<DocumentEntity>>() {
 			@Override
-			public Void success(List<DocumentEntity> value) {
+			public Void success(Stream<DocumentEntity> value) {
 				callback.accept(value);
 				return null;
 			}
@@ -314,19 +315,19 @@ class DefaultDarwinoDocumentCollectionManagerAsync implements DarwinoDocumentCol
 	}
 
 	@Override
-	public void jsqlQuery(String jsqlQuery, Consumer<List<DocumentEntity>> callback) throws NullPointerException, ExecuteAsyncQueryException {
+	public void jsqlQuery(String jsqlQuery, Consumer<Stream<DocumentEntity>> callback) throws NullPointerException, ExecuteAsyncQueryException {
 		jsqlQuery(jsqlQuery, new JsonObject(), callback);
 	}
 	
 	@Override
-	public void storedCursor(String cursorName, Object params, Consumer<List<DocumentEntity>> callback) {
+	public void storedCursor(String cursorName, Object params, Consumer<Stream<DocumentEntity>> callback) {
 		requireNonNull(callback, "callback is required"); //$NON-NLS-1$
 
-		Task<List<DocumentEntity>> t = Task.from(context -> manager.storedCursor(cursorName, params));
-		TaskExecutor<List<DocumentEntity>> exec = Platform.getService(TaskExecutorService.class).createExecutor(false);
-		exec.exec(t, new Callback<List<DocumentEntity>>() {
+		Task<Stream<DocumentEntity>> t = Task.from(context -> manager.storedCursor(cursorName, params));
+		TaskExecutor<Stream<DocumentEntity>> exec = Platform.getService(TaskExecutorService.class).createExecutor(false);
+		exec.exec(t, new Callback<Stream<DocumentEntity>>() {
 			@Override
-			public Void success(List<DocumentEntity> value) {
+			public Void success(Stream<DocumentEntity> value) {
 				callback.accept(value);
 				return null;
 			}

@@ -41,6 +41,7 @@ import static org.hamcrest.Matchers.contains;
 import static jakarta.nosql.document.DocumentQuery.select;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
@@ -99,8 +100,8 @@ public class DocumentQueryTest extends AbstractDarwinoAppTest  {
                 .limit(2L)
                 .build();
 
-        List<DocumentEntity> entities = entityManager.select(query);
-        assertEquals(2, entities.size());
+        Stream<DocumentEntity> entities = entityManager.select(query);
+        assertEquals(2, entities.count());
 
     }
 
@@ -115,8 +116,8 @@ public class DocumentQueryTest extends AbstractDarwinoAppTest  {
                 .where("name").eq(name.get().get())
                 .skip(1L)
                 .build();
-        List<DocumentEntity> entities = entityManager.select(query);
-        assertEquals(2, entities.size());
+        Stream<DocumentEntity> entities = entityManager.select(query);
+        assertEquals(2, entities.count());
 
     }
 
@@ -133,8 +134,8 @@ public class DocumentQueryTest extends AbstractDarwinoAppTest  {
                 .limit(2L)
                 .build();
 
-        List<DocumentEntity> entities = entityManager.select(query);
-        assertEquals(1, entities.size());
+        Stream<DocumentEntity> entities = entityManager.select(query);
+        assertEquals(1, entities.count());
 
     }
 
@@ -148,9 +149,10 @@ public class DocumentQueryTest extends AbstractDarwinoAppTest  {
 
         DocumentQuery query = select().from(COLLECTION_NAME).build();
         Optional<Document> name = entity.find("name");
-        List<DocumentEntity> entities = entityManager.select(query);
-        assertFalse(entities.isEmpty());
-        assertTrue(entities.size() >= 4);
+        Stream<DocumentEntity> entities = entityManager.select(query);
+        long count = entities.count();
+        assertFalse(count == 0);
+        assertTrue(count >= 4);
     }
 
 
@@ -163,9 +165,9 @@ public class DocumentQueryTest extends AbstractDarwinoAppTest  {
         DocumentQuery query = select().from(COLLECTION_NAME)
         		.where("name").eq(name.get().get())
         		.build();
-        List<DocumentEntity> entities = entityManager.select(query);
-        assertFalse(entities.isEmpty());
-        DocumentEntity foundEntity = entities.get(0);
+        Stream<DocumentEntity> entities = entityManager.select(query);
+        DocumentEntity foundEntity = entities.findFirst().orElse(null);
+        assertNotEquals(null, foundEntity);
         Stream.of(
         	EntityConverter.ATTACHMENT_FIELD,
         	com.darwino.jsonstore.Document.SYSTEM_META_CUSER,
@@ -188,8 +190,8 @@ public class DocumentQueryTest extends AbstractDarwinoAppTest  {
                 .orderBy("name").asc()
                 .build();
 
-        List<DocumentEntity> entities = entityManager.select(query);
-        List<String> result = entities.stream().flatMap(e -> e.getDocuments().stream())
+        Stream<DocumentEntity> entities = entityManager.select(query);
+        List<String> result = entities.flatMap(e -> e.getDocuments().stream())
                 .filter(d -> "name".equals(d.getName()))
                 .map(d -> d.get(String.class))
                 .collect(Collectors.toList());
@@ -209,8 +211,8 @@ public class DocumentQueryTest extends AbstractDarwinoAppTest  {
         DocumentQuery query = select().from(COLLECTION_NAME)
                 .orderBy("name").desc()
                 .build();
-        List<DocumentEntity> entities = entityManager.select(query);
-        List<String> result = entities.stream().flatMap(e -> e.getDocuments().stream())
+        Stream<DocumentEntity> entities = entityManager.select(query);
+        List<String> result = entities.flatMap(e -> e.getDocuments().stream())
                 .filter(d -> "name".equals(d.getName()))
                 .map(d -> d.get(String.class))
                 .collect(Collectors.toList());
@@ -231,9 +233,9 @@ public class DocumentQueryTest extends AbstractDarwinoAppTest  {
                 .where("_id").eq(id.get().get())
                 .build();
 
-        List<DocumentEntity> entities = entityManager.select(query);
-        assertFalse(entities.isEmpty());
-        DocumentEntity foundEntity = entities.get(0);
+        Stream<DocumentEntity> entities = entityManager.select(query);
+        DocumentEntity foundEntity = entities.findFirst().orElse(null);
+        assertNotEquals(null, foundEntity);
         Stream.of(
         	EntityConverter.ATTACHMENT_FIELD,
         	com.darwino.jsonstore.Document.SYSTEM_META_CUSER,

@@ -34,8 +34,8 @@ import com.darwino.commons.json.JsonObject;
 
 import javax.inject.Inject;
 import java.lang.reflect.Proxy;
-import java.util.List;
 import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
@@ -94,7 +94,7 @@ public class DarwinoRepositoryAsyncProxyTest extends AbstractDarwinoAppTest {
 
     @Test
     public void shouldFindByNameFromJsql() {
-        Consumer<List<Person>> callBack = p -> {
+        Consumer<Stream<Person>> callBack = p -> {
         };
 
         JsonObject params = JsonObject.of("name", "Ada");
@@ -113,6 +113,6 @@ public class DarwinoRepositoryAsyncProxyTest extends AbstractDarwinoAppTest {
         void queryName(@Param("name") String name);
 
         @JSQL("select _unid unid from _default where $.form='Person' and $.name=:name")
-        void queryName(@Param("name") String name, Consumer<List<Person>> callBack);
+        void queryName(@Param("name") String name, Consumer<Stream<Person>> callBack);
     }
 }

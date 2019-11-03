@@ -28,7 +28,7 @@ import jakarta.nosql.document.DocumentCollectionManager;
 import jakarta.nosql.document.DocumentEntity;
 
 import java.util.Collection;
-import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * The Darwino implementation of {@link DocumentCollectionManager}
@@ -44,7 +44,7 @@ public interface DarwinoDocumentCollectionManager extends DocumentCollectionMana
      *                  in the Darwino session
      * @return the query result
      */
-    List<DocumentEntity> query(String query, Object params);
+    Stream<DocumentEntity> query(String query, Object params);
 
     /**
      * Executes the query and then returns the result
@@ -52,7 +52,7 @@ public interface DarwinoDocumentCollectionManager extends DocumentCollectionMana
      * @param query the query
      * @return the query result
      */
-    List<DocumentEntity> query(String query);
+    Stream<DocumentEntity> query(String query);
 
     /**
      * Executes the query and then returns the result
@@ -60,7 +60,7 @@ public interface DarwinoDocumentCollectionManager extends DocumentCollectionMana
      * @param cursor the cursor
      * @return the query result
      */
-    List<DocumentEntity> query(Cursor cursor);
+    Stream<DocumentEntity> query(Cursor cursor);
 
     /**
      * Searches in Darwino using Full Text Search
@@ -68,7 +68,7 @@ public interface DarwinoDocumentCollectionManager extends DocumentCollectionMana
      * @param query the query to be used
      * @return the elements from the query
      */
-    List<DocumentEntity> search(String query);
+    Stream<DocumentEntity> search(String query);
 
     /**
      * Searches in Darwino using Full Text Search
@@ -77,7 +77,7 @@ public interface DarwinoDocumentCollectionManager extends DocumentCollectionMana
      * @param orderBy the columns (and optional directions) to order the result by
      * @return the elements from the query
      */
-    List<DocumentEntity> search(String query, Collection<String> orderBy);
+    Stream<DocumentEntity> search(String query, Collection<String> orderBy);
 
     /**
      * Executes the JSQL query with params and then returns the result
@@ -88,7 +88,7 @@ public interface DarwinoDocumentCollectionManager extends DocumentCollectionMana
      * @return the query result
      * @throws NullPointerException when either jsqlQuery or params are null
      */
-    List<DocumentEntity> jsqlQuery(String jsqlQuery, Object params) throws NullPointerException;
+    Stream<DocumentEntity> jsqlQuery(String jsqlQuery, Object params) throws NullPointerException;
 
     /**
      * Executes the JSQL query with params and then returns the result
@@ -99,7 +99,7 @@ public interface DarwinoDocumentCollectionManager extends DocumentCollectionMana
      * @return the query result
      * @throws NullPointerException when either jsqlQuery or params are null
      */
-    List<DocumentEntity> jsqlQuery(JsqlCursor jsqlQuery, Object params) throws NullPointerException;
+    Stream<DocumentEntity> jsqlQuery(JsqlCursor jsqlQuery, Object params) throws NullPointerException;
 
     /**
      * Executes the JSQL query and then returns the result
@@ -108,7 +108,7 @@ public interface DarwinoDocumentCollectionManager extends DocumentCollectionMana
      * @return the query result
      * @throws NullPointerException when either jsqlQuery or params are null
      */
-    List<DocumentEntity> jsqlQuery(String jsqlQuery) throws NullPointerException;
+    Stream<DocumentEntity> jsqlQuery(String jsqlQuery) throws NullPointerException;
     
     /**
      * Executes a stored cursor and then returns the result
@@ -119,5 +119,5 @@ public interface DarwinoDocumentCollectionManager extends DocumentCollectionMana
      * @return the query result
      * @throws NullPointerException when either jsqlQuery or params are null
      */
-    List<DocumentEntity> storedCursor(String cursorName, Object params);
+    Stream<DocumentEntity> storedCursor(String cursorName, Object params);
 }

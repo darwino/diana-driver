@@ -42,8 +42,8 @@ import org.darwino.jnosql.diana.driver.DarwinoDocumentCollectionManager;
 import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 import java.util.List;
+import java.util.stream.Stream;
 
-import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.mockito.Matchers.any;
@@ -84,19 +84,21 @@ public class DefaultDarwinoTemplateTest extends AbstractDarwinoAppTest {
         entity.add(Document.of("_id", "Ada"));
         entity.add(Document.of("age", 10));
 
-        when(manager.search(any(String.class))).thenReturn(singletonList(entity));
-
+        when(manager.search(any(String.class))).thenReturn(Stream.of(entity));
+        when(manager.jsqlQuery(any(String.class))).thenReturn(Stream.of(entity));
+        when(manager.jsqlQuery(any(String.class), any(Object.class))).thenReturn(Stream.of(entity));
+        when(manager.jsqlQuery(any(JsqlCursor.class), any(Object.class))).thenReturn(Stream.of(entity));
     }
 
     @Test
-    public void shouldFindN1ql() {
+    public void shouldFindJsql() {
         JsonObject params = JsonObject.of("name", "Ada");
         template.jsqlQuery("select _unid unid from _default where $.form='Person' and $.name=:name", params);
         Mockito.verify(manager).jsqlQuery("select _unid unid from _default where $.form='Person' and $.name=:name", params);
     }
 
     @Test
-    public void shouldFindN1qlStatment() {
+    public void shouldFindJsqlStatment() {
         JsqlCursor statement = Mockito.mock(JsqlCursor.class);
         JsonObject params = JsonObject.of("name", "Ada");
         template.jsqlQuery(statement, params);
@@ -105,7 +107,7 @@ public class DefaultDarwinoTemplateTest extends AbstractDarwinoAppTest {
 
 
     @Test
-    public void shouldFindN1ql2() {
+    public void shouldFindJsql2() {
         template.jsqlQuery("select _unid unid from _default where $.form='Person' and $.name=:name");
         Mockito.verify(manager).jsqlQuery("select _unid unid from _default where $.form='Person' and $.name=:name");
     }

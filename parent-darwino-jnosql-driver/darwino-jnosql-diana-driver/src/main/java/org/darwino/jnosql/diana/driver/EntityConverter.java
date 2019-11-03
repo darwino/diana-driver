@@ -64,7 +64,7 @@ public final class EntityConverter {
 	private EntityConverter() {
 	}
 
-	static List<DocumentEntity> convert(Collection<String> keys, Store store) {
+	static Stream<DocumentEntity> convert(Collection<String> keys, Store store) {
 		// TODO create a lazy-loading list
 		return keys.stream().map(t -> {
 			try {
@@ -80,10 +80,10 @@ public final class EntityConverter {
 			} catch (NullPointerException | JsonException e) {
 				throw new RuntimeException(e);
 			}
-		}).collect(Collectors.toList());
+		});
 	}
 
-	static List<DocumentEntity> convert(Cursor cursor) throws JsonException {
+	static Stream<DocumentEntity> convert(Cursor cursor) throws JsonException {
 		// TODO create a lazy-loading list
 		List<DocumentEntity> result = new ArrayList<>();
 		cursor.find((entry) -> {
@@ -93,10 +93,10 @@ public final class EntityConverter {
 			result.add(DocumentEntity.of(name, documents));
 			return true;
 		});
-		return result;
+		return result.stream();
 	}
 	
-	static List<DocumentEntity> convert(Store store, JsqlCursor cursor) throws JsonException {
+	static Stream<DocumentEntity> convert(Store store, JsqlCursor cursor) throws JsonException {
 		// TODO create a lazy-loading list
 		List<DocumentEntity> result = new ArrayList<>();
 		cursor.find(e -> {
@@ -114,7 +114,7 @@ public final class EntityConverter {
 			result.add(DocumentEntity.of(name, documents));
 			return true;
 		});
-		return result;
+		return result.stream();
 	}
 
 	public static List<Document> toDocuments(com.darwino.jsonstore.Document doc) throws JsonException {

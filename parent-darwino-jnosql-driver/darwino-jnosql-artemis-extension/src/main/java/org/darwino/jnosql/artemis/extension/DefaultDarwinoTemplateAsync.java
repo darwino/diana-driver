@@ -21,25 +21,25 @@
  */
 package org.darwino.jnosql.artemis.extension;
 
-import org.darwino.jnosql.diana.driver.DarwinoDocumentCollectionManagerAsync;
-import jakarta.nosql.mapping.Converters;
-import org.jnosql.artemis.document.AbstractDocumentTemplateAsync;
-import jakarta.nosql.mapping.document.DocumentEntityConverter;
-import jakarta.nosql.mapping.reflection.ClassMappings;
-import jakarta.nosql.ExecuteAsyncQueryException;
-import jakarta.nosql.document.DocumentCollectionManagerAsync;
-import jakarta.nosql.document.DocumentEntity;
-
-import com.darwino.jsonstore.JsqlCursor;
+import java.util.Objects;
+import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 import javax.enterprise.inject.Instance;
 import javax.enterprise.inject.Typed;
 import javax.inject.Inject;
-import java.util.List;
-import java.util.Objects;
-import java.util.function.Consumer;
 
-import static java.util.stream.Collectors.toList;
+import org.darwino.jnosql.diana.driver.DarwinoDocumentCollectionManagerAsync;
+import org.eclipse.jnosql.artemis.document.AbstractDocumentTemplateAsync;
+
+import com.darwino.jsonstore.JsqlCursor;
+
+import jakarta.nosql.ExecuteAsyncQueryException;
+import jakarta.nosql.document.DocumentCollectionManagerAsync;
+import jakarta.nosql.document.DocumentEntity;
+import jakarta.nosql.mapping.Converters;
+import jakarta.nosql.mapping.document.DocumentEntityConverter;
+import jakarta.nosql.mapping.reflection.ClassMappings;
 
 /**
  * The default implementation of {@link DarwinoTemplateAsync}
@@ -91,64 +91,60 @@ class DefaultDarwinoTemplateAsync extends AbstractDocumentTemplateAsync implemen
 
     @SuppressWarnings("unchecked")
     @Override
-    public <T> void jsqlQuery(String jsqlQuery, Object params, Consumer<List<T>> callback)
+    public <T> void jsqlQuery(String jsqlQuery, Object params, Consumer<Stream<T>> callback)
             throws NullPointerException, ExecuteAsyncQueryException {
 
         Objects.requireNonNull(jsqlQuery, "jsqlQuery is required"); //$NON-NLS-1$
         Objects.requireNonNull(params, "params is required"); //$NON-NLS-1$
         Objects.requireNonNull(callback, "callback is required"); //$NON-NLS-1$
-        Consumer<List<DocumentEntity>> dianaCallBack = d -> callback.accept(
-                d.stream()
+        Consumer<Stream<DocumentEntity>> dianaCallBack = d -> callback.accept(
+                d
                         .map(getConverter()::toEntity)
-                        .map(o -> (T) o)
-                        .collect(toList()));
+                        .map(o -> (T) o));
         manager.get().jsqlQuery(jsqlQuery, params, dianaCallBack);
 
     }
 
-    @SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked")
 	@Override
-    public <T> void jsqlQuery(JsqlCursor jsqlQuery, Object params, Consumer<List<T>> callback)
+    public <T> void jsqlQuery(JsqlCursor jsqlQuery, Object params, Consumer<Stream<T>> callback)
             throws NullPointerException, ExecuteAsyncQueryException {
         Objects.requireNonNull(jsqlQuery, "jsqlQuery is required"); //$NON-NLS-1$
         Objects.requireNonNull(params, "params is required"); //$NON-NLS-1$
         Objects.requireNonNull(callback, "callback is required"); //$NON-NLS-1$
-        Consumer<List<DocumentEntity>> dianaCallBack = d -> callback.accept(
-                d.stream()
+        Consumer<Stream<DocumentEntity>> dianaCallBack = d -> callback.accept(
+                d
                         .map(getConverter()::toEntity)
-                        .map(o -> (T) o)
-                        .collect(toList()));
+                        .map(o -> (T) o));
         manager.get().jsqlQuery(jsqlQuery, params, dianaCallBack);
     }
 
-    @SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked")
     @Override
-    public <T> void jsqlQuery(String jsqlQuery, Consumer<List<T>> callback)
+    public <T> void jsqlQuery(String jsqlQuery, Consumer<Stream<T>> callback)
             throws NullPointerException, ExecuteAsyncQueryException {
 
         Objects.requireNonNull(jsqlQuery, "jsqlQuery is required"); //$NON-NLS-1$
         Objects.requireNonNull(callback, "callback is required"); //$NON-NLS-1$
 
-        Consumer<List<DocumentEntity>> dianaCallBack = d -> callback.accept(
-                d.stream()
-                        .map(getConverter()::toEntity)
-                        .map(o -> (T) o)
-                        .collect(toList()));
+        Consumer<Stream<DocumentEntity>> dianaCallBack = d -> callback.accept(
+                d
+                	.map(getConverter()::toEntity)
+                	.map(o -> (T) o));
         manager.get().jsqlQuery(jsqlQuery, dianaCallBack);
 
     }
 
     @SuppressWarnings("unchecked")
 	@Override
-	public <T> void search(String query, Consumer<List<T>> callback) throws NullPointerException, ExecuteAsyncQueryException {
+	public <T> void search(String query, Consumer<Stream<T>> callback) throws NullPointerException, ExecuteAsyncQueryException {
 		 Objects.requireNonNull(query, "query is required"); //$NON-NLS-1$
 	        Objects.requireNonNull(callback, "callback is required"); //$NON-NLS-1$
 
-	        Consumer<List<DocumentEntity>> dianaCallBack = d -> callback.accept(
-	                d.stream()
-	                        .map(getConverter()::toEntity)
-	                        .map(o -> (T) o)
-	                        .collect(toList()));
+	        Consumer<Stream<DocumentEntity>> dianaCallBack = d -> callback.accept(
+	                d
+						.map(getConverter()::toEntity)
+						.map(o -> (T) o));
 	        manager.get().search(query, dianaCallBack);
 	}
     
@@ -156,15 +152,14 @@ class DefaultDarwinoTemplateAsync extends AbstractDocumentTemplateAsync implemen
     
     @SuppressWarnings("unchecked")
 	@Override
-    public <T> void storedCursor(String cursorName, Object params, Consumer<List<T>> callback) {
+    public <T> void storedCursor(String cursorName, Object params, Consumer<Stream<T>> callback) {
     	Objects.requireNonNull(cursorName, "query is required"); //$NON-NLS-1$
         Objects.requireNonNull(callback, "callback is required"); //$NON-NLS-1$
 
-        Consumer<List<DocumentEntity>> dianaCallBack = d -> callback.accept(
-                d.stream()
+        Consumer<Stream<DocumentEntity>> dianaCallBack = d -> callback.accept(
+                d
                         .map(getConverter()::toEntity)
-                        .map(o -> (T) o)
-                        .collect(toList()));
+                        .map(o -> (T) o));
         manager.get().storedCursor(cursorName, params, dianaCallBack);
     }
 }

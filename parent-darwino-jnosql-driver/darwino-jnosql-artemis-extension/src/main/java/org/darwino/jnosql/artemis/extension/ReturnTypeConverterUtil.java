@@ -35,7 +35,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * Utilitarian class to return on dynamic query
+ * Utility class to return on dynamic query
  */
 final class ReturnTypeConverterUtil {
 
@@ -56,13 +56,13 @@ final class ReturnTypeConverterUtil {
         } else if (List.class.equals(returnType)
                 || Iterable.class.equals(returnType)
                 || Collection.class.equals(returnType)) {
-            return repository.select(query);
+            return repository.select(query).collect(Collectors.toList());
         } else if (Set.class.equals(returnType)) {
-            return repository.select(query).stream().collect(Collectors.toSet());
+            return repository.select(query).collect(Collectors.toSet());
         } else if (Queue.class.equals(returnType)) {
-            return repository.select(query).stream().collect(Collectors.toCollection(PriorityQueue::new));
+            return repository.select(query).collect(Collectors.toCollection(PriorityQueue::new));
         } else if (Stream.class.equals(returnType)) {
-            return repository.select(query).stream();
+            return repository.select(query);
         }
 
         return repository.select(query);

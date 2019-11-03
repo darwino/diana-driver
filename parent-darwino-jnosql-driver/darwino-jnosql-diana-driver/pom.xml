@@ -40,17 +40,17 @@
 			<version>${jnosql-version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.jnosql.diana</groupId>
+			<groupId>org.eclipse.jnosql.diana</groupId>
 			<artifactId>diana-core</artifactId>
 			<version>${jnosql-version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.jnosql.diana</groupId>
+			<groupId>org.eclipse.jnosql.diana</groupId>
 			<artifactId>diana-document</artifactId>
 			<version>${jnosql-version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.jnosql.diana</groupId>
+			<groupId>org.eclipse.jnosql.diana</groupId>
 			<artifactId>diana-driver-commons</artifactId>
 			<version>${jnosql-version}</version>
 		</dependency>

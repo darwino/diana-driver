@@ -38,6 +38,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import static jakarta.nosql.document.DocumentDeleteQuery.delete;
 import static jakarta.nosql.document.DocumentQuery.select;
@@ -86,8 +87,8 @@ public class DarwinoDocumentCollectionManagerAsyncTest extends AbstractDarwinoAp
 		DocumentQuery query = select().from(COLLECTION_NAME)
 				.where("name").eq(id.get().get())
 				.build();
-		List<DocumentEntity> entities = entityManager.select(query);
-		assertFalse(entities.isEmpty());
+		Stream<DocumentEntity> entities = entityManager.select(query);
+		assertFalse(entities.count() == 0);
 
 	}
 

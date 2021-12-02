@@ -30,9 +30,6 @@ import org.junit.runner.RunWith;
 @SuppressWarnings("nls")
 @RunWith(WeldJUnit4Runner.class)
 public class DarwinoExtensionTest extends AbstractDarwinoAppTest {
-	@Inject
-    private PersonRepositoryAsync personRepositoryAsync;
-
     @Inject
     private PersonRepository personRepository;
 
@@ -40,6 +37,5 @@ public class DarwinoExtensionTest extends AbstractDarwinoAppTest {
     public void shouldSaveOrientDB() {
         Person person = new Person("Ada", 10);
         personRepository.deleteById(person.getName());
-        personRepositoryAsync.deleteById(person.getName());
     }
 }

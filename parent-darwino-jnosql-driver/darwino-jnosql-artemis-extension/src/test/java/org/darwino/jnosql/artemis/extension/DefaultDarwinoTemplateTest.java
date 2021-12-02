@@ -25,7 +25,6 @@ import jakarta.nosql.mapping.Converters;
 import jakarta.nosql.mapping.document.DocumentEntityConverter;
 import jakarta.nosql.mapping.document.DocumentEventPersistManager;
 import jakarta.nosql.mapping.document.DocumentWorkflow;
-import jakarta.nosql.mapping.reflection.ClassMappings;
 import jakarta.nosql.document.Document;
 import jakarta.nosql.document.DocumentEntity;
 import org.junit.Before;
@@ -38,6 +37,7 @@ import com.darwino.jsonstore.JsqlCursor;
 
 import org.darwino.jnosql.artemis.extension.runner.WeldJUnit4Runner;
 import org.darwino.jnosql.diana.driver.DarwinoDocumentCollectionManager;
+import org.eclipse.jnosql.mapping.reflection.ClassMappings;
 
 import javax.enterprise.inject.Instance;
 import javax.inject.Inject;

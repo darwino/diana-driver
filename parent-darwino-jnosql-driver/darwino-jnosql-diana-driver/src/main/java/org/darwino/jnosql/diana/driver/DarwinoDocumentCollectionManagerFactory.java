@@ -21,23 +21,16 @@
  */
 package org.darwino.jnosql.diana.driver;
 
-import jakarta.nosql.document.DocumentCollectionManagerAsyncFactory;
 import jakarta.nosql.document.DocumentCollectionManagerFactory;
 
 import java.util.Objects;
 
-public class DarwinoDocumentCollectionManagerFactory implements DocumentCollectionManagerFactory, DocumentCollectionManagerAsyncFactory {
+public class DarwinoDocumentCollectionManagerFactory implements DocumentCollectionManagerFactory {
 
 	private final String databaseName;
 	
 	DarwinoDocumentCollectionManagerFactory(String databaseName) {
 		this.databaseName = databaseName;
-	}
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public DarwinoDocumentCollectionManagerAsync getAsync(String storeId) throws UnsupportedOperationException, NullPointerException {
-		return new DefaultDarwinoDocumentCollectionManagerAsync(get(storeId));
 	}
 
 	@SuppressWarnings("unchecked")

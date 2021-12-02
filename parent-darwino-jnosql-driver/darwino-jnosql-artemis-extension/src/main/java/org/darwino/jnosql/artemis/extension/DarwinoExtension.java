@@ -29,9 +29,8 @@ import javax.enterprise.inject.spi.ProcessAnnotatedType;
 import javax.enterprise.inject.spi.ProcessProducer;
 
 import org.darwino.jnosql.diana.driver.DarwinoDocumentCollectionManager;
-import org.darwino.jnosql.diana.driver.DarwinoDocumentCollectionManagerAsync;
-import org.eclipse.jnosql.artemis.DatabaseMetadata;
-import org.eclipse.jnosql.artemis.Databases;
+import org.eclipse.jnosql.mapping.DatabaseMetadata;
+import org.eclipse.jnosql.mapping.Databases;
 
 import static jakarta.nosql.mapping.DatabaseType.DOCUMENT;
 
@@ -66,26 +65,9 @@ public class DarwinoExtension implements Extension {
 			crudTypes.add(javaClass);
 		}
 	}
-
-	@SuppressWarnings("rawtypes")
-	<T extends DarwinoRepositoryAsync> void onProcessAnnotatedTypeAsync(@Observes final ProcessAnnotatedType<T> repo) {
-		Class<T> javaClass = repo.getAnnotatedType().getJavaClass();
-
-		if (DarwinoRepositoryAsync.class.equals(javaClass)) {
-			return;
-		}
-
-		if (Stream.of(javaClass.getInterfaces()).anyMatch(DarwinoRepositoryAsync.class::equals) && Modifier.isInterface(javaClass.getModifiers())) {
-			crudAsyncTypes.add(javaClass);
-		}
-	}
 	
 	<T, X extends DarwinoDocumentCollectionManager> void processProducer(@Observes final ProcessProducer<T, X> pp) {
         Databases.addDatabase(pp, DOCUMENT, databases);
-    }
-
-    <T, X extends DarwinoDocumentCollectionManagerAsync> void processProducerAsync(@Observes final ProcessProducer<T, X> pp) {
-        Databases.addDatabase(pp, DOCUMENT, databasesAsync);
     }
 
 	void onAfterBeanDiscovery(@Observes final AfterBeanDiscovery afterBeanDiscovery, final BeanManager beanManager) {
@@ -96,14 +78,7 @@ public class DarwinoExtension implements Extension {
             afterBeanDiscovery.addBean(bean);
         });
 
-        databasesAsync.forEach(type -> {
-            final DarwinoTemplateAsyncBean bean = new DarwinoTemplateAsyncBean(beanManager, type.getProvider());
-            afterBeanDiscovery.addBean(bean);
-        });
-
 		crudTypes.forEach(type -> afterBeanDiscovery.addBean(new DarwinoRepositoryBean(type, beanManager)));
-
-		crudAsyncTypes.forEach(type -> afterBeanDiscovery.addBean(new DarwinoRepositoryAsyncBean(type, beanManager)));
 
 		LOGGER.info("Finished the onAfterBeanDiscovery"); //$NON-NLS-1$
 	}

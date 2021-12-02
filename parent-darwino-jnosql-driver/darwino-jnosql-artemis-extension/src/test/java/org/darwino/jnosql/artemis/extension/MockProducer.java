@@ -22,7 +22,6 @@
 package org.darwino.jnosql.artemis.extension;
 
 import org.darwino.jnosql.diana.driver.DarwinoDocumentCollectionManager;
-import org.darwino.jnosql.diana.driver.DarwinoDocumentCollectionManagerAsync;
 import jakarta.nosql.document.Document;
 import jakarta.nosql.document.DocumentEntity;
 import org.mockito.Mockito;
@@ -40,10 +39,5 @@ public class MockProducer {
         entity.add(Document.of("name", "Ada"));
         Mockito.when(manager.insert(Mockito.any(DocumentEntity.class))).thenReturn(entity);
         return manager;
-    }
-
-    @Produces
-    public DarwinoDocumentCollectionManagerAsync getManagerAsync() {
-        return Mockito.mock(DarwinoDocumentCollectionManagerAsync.class);
     }
 }

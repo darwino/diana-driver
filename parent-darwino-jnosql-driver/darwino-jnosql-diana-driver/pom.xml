@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.darwino</groupId>
 		<artifactId>parent-darwino-jnosql-driver</artifactId>
-		<version>0.1.0-SNAPSHOT</version>
+		<version>1.0.0-SNAPSHOT</version>
 	</parent>
 	<artifactId>darwino-jnosql-diana-driver</artifactId>
 	
@@ -40,18 +40,23 @@
 			<version>${jnosql-version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.eclipse.jnosql.diana</groupId>
-			<artifactId>diana-core</artifactId>
+			<groupId>jakarta.nosql.mapping</groupId>
+			<artifactId>mapping-document</artifactId>
 			<version>${jnosql-version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.eclipse.jnosql.diana</groupId>
-			<artifactId>diana-document</artifactId>
+			<groupId>org.eclipse.jnosql.communication</groupId>
+			<artifactId>communication-driver-commons</artifactId>
 			<version>${jnosql-version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.eclipse.jnosql.diana</groupId>
-			<artifactId>diana-driver-commons</artifactId>
+			<groupId>org.eclipse.jnosql.mapping</groupId>
+			<artifactId>mapping-core</artifactId>
+			<version>${jnosql-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.jnosql.mapping</groupId>
+			<artifactId>mapping-document</artifactId>
 			<version>${jnosql-version}</version>
 		</dependency>
 		

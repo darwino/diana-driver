@@ -22,8 +22,9 @@
 package org.darwino.jnosql.diana.driver;
 
 import org.darwino.jnosql.diana.attachment.DarwinoDocumentAttachment;
+import org.eclipse.jnosql.communication.driver.attachment.EntityAttachment;
+
 import jakarta.nosql.ValueReader;
-import org.eclipse.jnosql.diana.driver.attachment.EntityAttachment;
 
 import com.darwino.commons.json.JsonException;
 import com.darwino.jsonstore.Attachment;
@@ -31,8 +32,8 @@ import com.darwino.jsonstore.Attachment;
 public class DarwinoAttachmentValueReader implements ValueReader {
 
 	@Override
-	public <T> boolean isCompatible(Class<T> clazz) {
-		return EntityAttachment.class.isAssignableFrom(clazz);
+	public boolean test(Class<?> t) {
+		return EntityAttachment.class.isAssignableFrom(t);
 	}
 
 	@SuppressWarnings("unchecked")

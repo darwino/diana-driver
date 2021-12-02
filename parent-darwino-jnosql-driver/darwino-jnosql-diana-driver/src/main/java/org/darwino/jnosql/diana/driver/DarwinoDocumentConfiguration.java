@@ -25,14 +25,13 @@ import com.darwino.commons.util.StringUtil;
 import com.darwino.platform.DarwinoApplication;
 import jakarta.nosql.Settings;
 import jakarta.nosql.document.DocumentConfiguration;
-import jakarta.nosql.document.DocumentConfigurationAsync;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import static java.util.Objects.requireNonNull;
 
-public class DarwinoDocumentConfiguration implements DocumentConfiguration, DocumentConfigurationAsync {
+public class DarwinoDocumentConfiguration implements DocumentConfiguration {
 	
 	public static final String DATABASE_ID = "databaseId"; //$NON-NLS-1$
 

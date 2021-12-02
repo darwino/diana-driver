@@ -23,13 +23,14 @@ package org.darwino.jnosql.diana.driver;
 
 import jakarta.nosql.Value;
 import jakarta.nosql.ValueWriter;
-import org.eclipse.jnosql.diana.writer.ValueWriterDecorator;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.StreamSupport;
+
+import org.eclipse.jnosql.communication.writer.ValueWriterDecorator;
 
 import static java.util.stream.Collectors.toList;
 
@@ -87,7 +88,7 @@ class ValueUtil {
     }
 
     private static Object getObject(Object val) {
-        if (VALUE_WRITER.isCompatible(val.getClass())) {
+        if (VALUE_WRITER.test(val.getClass())) {
             return VALUE_WRITER.write(val);
         }
         return val;

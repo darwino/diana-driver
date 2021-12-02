@@ -23,12 +23,13 @@ package org.darwino.jnosql.artemis.extension;
 
 import com.darwino.jsonstore.JsqlCursor;
 import org.darwino.jnosql.diana.driver.DarwinoDocumentCollectionManager;
+import org.eclipse.jnosql.mapping.document.AbstractDocumentTemplate;
+import org.eclipse.jnosql.mapping.reflection.ClassMappings;
+
 import jakarta.nosql.mapping.Converters;
-import org.eclipse.jnosql.artemis.document.AbstractDocumentTemplate;
 import jakarta.nosql.mapping.document.DocumentEntityConverter;
 import jakarta.nosql.mapping.document.DocumentEventPersistManager;
 import jakarta.nosql.mapping.document.DocumentWorkflow;
-import jakarta.nosql.mapping.reflection.ClassMappings;
 
 import javax.enterprise.inject.Instance;
 import javax.enterprise.inject.Typed;

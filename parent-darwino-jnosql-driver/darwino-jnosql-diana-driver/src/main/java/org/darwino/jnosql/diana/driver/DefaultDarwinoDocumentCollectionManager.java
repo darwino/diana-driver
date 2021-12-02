@@ -34,7 +34,6 @@ import jakarta.nosql.document.Document;
 import jakarta.nosql.document.DocumentDeleteQuery;
 import jakarta.nosql.document.DocumentEntity;
 import jakarta.nosql.document.DocumentQuery;
-import org.eclipse.jnosql.diana.driver.attachment.EntityAttachment;
 
 import java.io.IOException;
 import java.time.Duration;
@@ -42,6 +41,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
+
+import org.eclipse.jnosql.communication.driver.attachment.EntityAttachment;
 
 import static java.util.Objects.nonNull;
 import static java.util.Objects.requireNonNull;

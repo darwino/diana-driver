@@ -125,10 +125,12 @@ final class QueryConverter {
 			}
 
 			Object placeholder = document.get();
+			if(placeholder != null && placeholder.getClass().isEnum()) {
+				placeholder = placeholder.toString();
+			}
 			Object p = params;
 			switch (condition.getCondition()) {
 				case EQUALS:
-
 					return objOf(fac, name, objOf(fac, BaseParser.Op.EQ.getValue(), placeholder));
 				case LESSER_THAN:
 					return objOf(fac, name, objOf(fac, BaseParser.Op.LT.getValue(), placeholder));

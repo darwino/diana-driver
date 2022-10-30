@@ -21,7 +21,7 @@
  */
 package org.darwino.jnosql.artemis.extension;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.darwino.jnosql.artemis.extension.runner.WeldJUnit4Runner;
 import org.junit.Test;

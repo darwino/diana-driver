@@ -34,8 +34,8 @@ import com.darwino.platform.events.jsonstore.JsonStoreChangesTrigger;
 import com.darwino.platform.persistence.JsonStorePersistenceService;
 import app.AppDatabaseDef;
 
-import javax.servlet.ServletContext;
-import javax.servlet.ServletContextEvent;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletContextEvent;
 
 @SuppressWarnings("nls")
 public class AppContextListener extends AbstractDarwinoContextListener {

@@ -30,46 +30,67 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>jakarta.nosql.communication</groupId>
-			<artifactId>communication-core</artifactId>
+			<groupId>org.openntf.jakarta</groupId>
+			<artifactId>org.openntf.jakarta.nosql.communication.core</artifactId>
 			<version>${jnosql-version}</version>
 		</dependency>
 		<dependency>
-			<groupId>jakarta.nosql.communication</groupId>
-			<artifactId>communication-document</artifactId>
+			<groupId>org.openntf.jakarta</groupId>
+			<artifactId>org.openntf.jakarta.nosql.communication.document</artifactId>
 			<version>${jnosql-version}</version>
 		</dependency>
 		<dependency>
-			<groupId>jakarta.nosql.mapping</groupId>
-			<artifactId>mapping-document</artifactId>
+			<groupId>org.openntf.jakarta</groupId>
+			<artifactId>org.openntf.jakarta.nosql.mapping.document</artifactId>
 			<version>${jnosql-version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.eclipse.jnosql.communication</groupId>
-			<artifactId>communication-driver-commons</artifactId>
+			<groupId>org.openntf.jakarta</groupId>
+			<artifactId>org.openntf.org.eclipse.jnosql.communication.core</artifactId>
 			<version>${jnosql-version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.eclipse.jnosql.mapping</groupId>
-			<artifactId>mapping-core</artifactId>
+			<groupId>org.openntf.jakarta</groupId>
+			<artifactId>org.openntf.org.eclipse.jnosql.communication.document</artifactId>
+			<version>${jnosql-version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.openntf.jakarta</groupId>
+			<artifactId>org.openntf.org.eclipse.jnosql.communication.driver.commons</artifactId>
 			<version>${jnosql-version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.eclipse.jnosql.mapping</groupId>
-			<artifactId>mapping-document</artifactId>
+			<groupId>org.openntf.jakarta</groupId>
+			<artifactId>org.openntf.jakarta.nosql.mapping.core</artifactId>
 			<version>${jnosql-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.openntf.jakarta</groupId>
+			<artifactId>org.openntf.jakarta.nosql.mapping.document</artifactId>
+			<version>${jnosql-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.openntf.jakarta</groupId>
+			<artifactId>org.openntf.org.eclipse.jnosql.mapping.core</artifactId>
+			<version>${jnosql-version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.openntf.jakarta</groupId>
+			<artifactId>org.openntf.org.eclipse.jnosql.mapping.document</artifactId>
+			<version>${jnosql-version}</version>
+			<scope>test</scope>
 		</dependency>
 		
 		<dependency>
 			<groupId>jakarta.validation</groupId>
 			<artifactId>jakarta.validation-api</artifactId>
-			<version>2.0.1</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>jakarta.annotation</groupId>
 			<artifactId>jakarta.annotation-api</artifactId>
-			<version>1.3.4</version>
 			<scope>provided</scope>
 		</dependency>
 
@@ -86,8 +107,16 @@
 
 		<dependency>
 			<groupId>com.darwino</groupId>
+			<artifactId>dwo-jre-j2ee-commons</artifactId>
+			<version>${darwino-version}</version>
+			<classifier>jakarta</classifier>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.darwino</groupId>
 			<artifactId>dwo-jre-j2ee-platform</artifactId>
 			<version>${darwino-version}</version>
+			<classifier>jakarta</classifier>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -121,9 +150,8 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>servlet-api</artifactId>
-			<version>2.5</version>
+			<groupId>jakarta.servlet</groupId>
+			<artifactId>jakarta.servlet-api</artifactId>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>

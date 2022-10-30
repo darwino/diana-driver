@@ -5,7 +5,7 @@
 	<artifactId>parent-darwino-jnosql-driver</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
-	
+
 	<name>Darwino driver components for JNoSQL</name>
 	<url>http://darwino.com</url>
 
@@ -13,12 +13,12 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compile.targetLevel>1.8</maven.compile.targetLevel>
 		<maven.compile.sourceLevel>1.8</maven.compile.sourceLevel>
-        <maven.compile.version>3.5.1</maven.compile.version>
+		<maven.compile.version>3.5.1</maven.compile.version>
 		<maven.source.version>3.0.1</maven.source.version>
-		<maven.javadoc.version>3.0.1</maven.javadoc.version>
+		<maven.javadoc.version>3.4.1</maven.javadoc.version>
 
 		<jakarta-nosql-version>1.0.5</jakarta-nosql-version>
-		<jnosql-version>${project.version}</jnosql-version>
+		<jnosql-version>1.0.0.20220620160743</jnosql-version>
 		<hamcrest-all.version>1.3</hamcrest-all.version>
 		<darwino-version>2.6.0-SNAPSHOT</darwino-version>
 		<junit-version>4.13.1</junit-version>
@@ -40,9 +40,9 @@
 			<organizationUrl>http://darwino.com</organizationUrl>
 		</developer>
 	</developers>
-	
+
 	<inceptionYear>2017</inceptionYear>
-	
+
 	<distributionManagement>
 		<repository>
 			<id>artifactory.openntf.org</id>
@@ -51,6 +51,14 @@
 		</repository>
 	</distributionManagement>
 	
+	<repositories>
+		<repository>
+			<id>artifactory.openntf.org</id>
+			<name>artifactory.openntf.org</name>
+			<url>https://artifactory.openntf.org/openntf</url>
+		</repository>
+	</repositories>
+
 	<prerequisites>
 		<maven>3.0.0</maven>
 	</prerequisites>
@@ -58,8 +66,8 @@
 	<modules>
 		<module>darwino-jnosql-diana-driver</module>
 		<module>darwino-jnosql-artemis-extension</module>
-    </modules>
-	
+	</modules>
+
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
@@ -67,11 +75,18 @@
 				<artifactId>junit</artifactId>
 				<version>${junit-version}</version>
 			</dependency>
-	        <dependency>
-	            <groupId>org.mockito</groupId>
-	            <artifactId>mockito-all</artifactId>
-	            <version>1.10.19</version>
-	        </dependency>
+			<dependency>
+				<groupId>org.mockito</groupId>
+				<artifactId>mockito-all</artifactId>
+				<version>1.10.19</version>
+			</dependency>
+			<dependency>
+				<groupId>jakarta.platform</groupId>
+				<artifactId>jakarta.jakartaee-bom</artifactId>
+				<version>9.1.0</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 

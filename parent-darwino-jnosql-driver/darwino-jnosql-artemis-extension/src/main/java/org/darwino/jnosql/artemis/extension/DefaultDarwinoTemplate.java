@@ -31,10 +31,10 @@ import jakarta.nosql.mapping.document.DocumentEntityConverter;
 import jakarta.nosql.mapping.document.DocumentEventPersistManager;
 import jakarta.nosql.mapping.document.DocumentWorkflow;
 
-import javax.enterprise.inject.Instance;
-import javax.enterprise.inject.Typed;
-import javax.enterprise.inject.spi.CDI;
-import javax.inject.Inject;
+import jakarta.enterprise.inject.Instance;
+import jakarta.enterprise.inject.Typed;
+import jakarta.enterprise.inject.spi.CDI;
+import jakarta.inject.Inject;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;

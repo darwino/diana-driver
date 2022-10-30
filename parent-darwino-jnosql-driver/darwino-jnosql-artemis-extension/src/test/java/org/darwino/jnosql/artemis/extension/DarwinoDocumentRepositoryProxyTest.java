@@ -32,7 +32,7 @@ import org.mockito.Mockito;
 
 import com.darwino.commons.json.JsonObject;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import java.lang.reflect.Proxy;
 import java.time.Duration;
 import java.util.List;

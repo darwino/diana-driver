@@ -24,7 +24,7 @@ package org.darwino.jnosql.diana.driver.app.j2ee;
 import java.io.File;
 import java.io.IOException;
 
-import javax.servlet.ServletContext;
+import jakarta.servlet.ServletContext;
 
 import org.darwino.jnosql.diana.driver.app.AppManifest;
 

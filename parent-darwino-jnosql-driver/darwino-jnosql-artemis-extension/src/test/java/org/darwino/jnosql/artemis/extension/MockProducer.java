@@ -26,7 +26,7 @@ import jakarta.nosql.document.Document;
 import jakarta.nosql.document.DocumentEntity;
 import org.mockito.Mockito;
 
-import javax.enterprise.inject.Produces;
+import jakarta.enterprise.inject.Produces;
 
 @SuppressWarnings("nls")
 public class MockProducer {

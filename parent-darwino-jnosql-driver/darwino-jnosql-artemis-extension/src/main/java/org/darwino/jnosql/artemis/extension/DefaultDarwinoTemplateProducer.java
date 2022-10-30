@@ -23,9 +23,9 @@ package org.darwino.jnosql.artemis.extension;
 
 import java.util.Objects;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.Vetoed;
-import javax.inject.Inject;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.inject.Vetoed;
+import jakarta.inject.Inject;
 
 import org.darwino.jnosql.diana.driver.DarwinoDocumentCollectionManager;
 import org.eclipse.jnosql.mapping.reflection.ClassMappings;

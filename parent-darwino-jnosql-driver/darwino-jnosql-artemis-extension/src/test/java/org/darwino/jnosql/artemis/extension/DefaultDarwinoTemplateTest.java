@@ -39,8 +39,8 @@ import org.darwino.jnosql.artemis.extension.runner.WeldJUnit4Runner;
 import org.darwino.jnosql.diana.driver.DarwinoDocumentCollectionManager;
 import org.eclipse.jnosql.mapping.reflection.ClassMappings;
 
-import javax.enterprise.inject.Instance;
-import javax.inject.Inject;
+import jakarta.enterprise.inject.Instance;
+import jakarta.inject.Inject;
 import java.util.List;
 import java.util.stream.Stream;
 

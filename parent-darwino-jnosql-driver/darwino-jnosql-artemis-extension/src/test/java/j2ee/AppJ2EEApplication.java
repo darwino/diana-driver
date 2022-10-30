@@ -32,7 +32,7 @@ import com.darwino.sql.drivers.DBDriver;
 import com.darwino.sqlite.JreInstall;
 import app.AppManifest;
 
-import javax.servlet.ServletContext;
+import jakarta.servlet.ServletContext;
 import java.io.File;
 import java.io.IOException;
 

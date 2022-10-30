@@ -21,8 +21,8 @@
  */
 package org.darwino.jnosql.diana.driver.app.j2ee;
 
-import javax.servlet.ServletContext;
-import javax.servlet.ServletContextEvent;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletContextEvent;
 
 import org.darwino.jnosql.diana.driver.app.AppDatabaseDef;
 

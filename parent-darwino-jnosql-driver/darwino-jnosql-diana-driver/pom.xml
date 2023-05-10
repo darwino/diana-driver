@@ -51,12 +51,6 @@
 		</dependency>
 		<dependency>
 			<groupId>org.openntf.jakarta</groupId>
-			<artifactId>org.openntf.org.eclipse.jnosql.communication.document</artifactId>
-			<version>${jnosql-version}</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.openntf.jakarta</groupId>
 			<artifactId>org.openntf.org.eclipse.jnosql.communication.driver.commons</artifactId>
 			<version>${jnosql-version}</version>
 		</dependency>
@@ -69,18 +63,6 @@
 			<groupId>org.openntf.jakarta</groupId>
 			<artifactId>org.openntf.jakarta.nosql.mapping.document</artifactId>
 			<version>${jnosql-version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.openntf.jakarta</groupId>
-			<artifactId>org.openntf.org.eclipse.jnosql.mapping.core</artifactId>
-			<version>${jnosql-version}</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.openntf.jakarta</groupId>
-			<artifactId>org.openntf.org.eclipse.jnosql.mapping.document</artifactId>
-			<version>${jnosql-version}</version>
-			<scope>test</scope>
 		</dependency>
 		
 		<dependency>
@@ -103,56 +85,6 @@
 			<groupId>com.darwino</groupId>
 			<artifactId>dwo-platform</artifactId>
 			<version>${darwino-version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>com.darwino</groupId>
-			<artifactId>dwo-jre-j2ee-commons</artifactId>
-			<version>${darwino-version}</version>
-			<classifier>jakarta</classifier>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.darwino</groupId>
-			<artifactId>dwo-jre-j2ee-platform</artifactId>
-			<version>${darwino-version}</version>
-			<classifier>jakarta</classifier>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.darwino</groupId>
-			<artifactId>dwo-jre-jsonstore-jdbc-sqlite</artifactId>
-			<version>${darwino-version}</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.darwino</groupId>
-			<artifactId>dwo-jre-sqlite</artifactId>
-			<version>${darwino-version}</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.darwino</groupId>
-			<artifactId>dwo-rdbc-sqlite</artifactId>
-			<version>${darwino-version}</version>
-			<scope>test</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.hamcrest</groupId>
-			<artifactId>hamcrest-all</artifactId>
-			<version>${hamcrest-all.version}</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>jakarta.servlet</groupId>
-			<artifactId>jakarta.servlet-api</artifactId>
-			<scope>test</scope>
 		</dependency>
 	</dependencies>
 
